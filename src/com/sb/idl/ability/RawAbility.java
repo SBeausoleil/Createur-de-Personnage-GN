@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+@Deprecated
 public class RawAbility implements Serializable {
 
     private static final long serialVersionUID = 7399192258158490588L;
