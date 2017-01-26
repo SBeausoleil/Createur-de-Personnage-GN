@@ -4,7 +4,11 @@ public class Prayer extends Spell<Prayer> {
 
     private God god;
 
-    public Prayer(God god) {
+    
+
+    public Prayer(String name, long duration, long castingTime, String description, float range, int cost,
+	    Domain<Prayer> domain, God god) {
+	super(name, duration, castingTime, description, range, cost, domain);
 	this.god = god;
     }
 
