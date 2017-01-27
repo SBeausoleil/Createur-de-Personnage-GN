@@ -1,4 +1,4 @@
-package com.sb.idl;
+package com.sb.cdp;
 
 import java.io.Serializable;
 

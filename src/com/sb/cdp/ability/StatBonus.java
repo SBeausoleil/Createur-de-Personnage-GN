@@ -1,6 +1,6 @@
-package com.sb.idl.ability;
+package com.sb.cdp.ability;
 
-import com.sb.idl.PlayerCharacter;
+import com.sb.cdp.PlayerCharacter;
 
 public interface StatBonus {
     public void apply(PlayerCharacter personnage);

@@ -1,12 +1,12 @@
-package com.sb.idl.io;
+package com.sb.cdp.io;
 
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 
-import com.sb.idl.ability.AbilityParser;
-import com.sb.idl.ability.RawAbility;
+import com.sb.cdp.ability.AbilityParser;
+import com.sb.cdp.ability.RawAbility;
 
 public class RawAbilities {
 

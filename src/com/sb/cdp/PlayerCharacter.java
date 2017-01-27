@@ -1,13 +1,13 @@
-package com.sb.idl;
+package com.sb.cdp;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-import com.sb.idl.ability.Ability;
-import com.sb.idl.spell.God;
-import com.sb.idl.spell.Prayer;
-import com.sb.idl.spell.Spell;
+import com.sb.cdp.ability.Ability;
+import com.sb.cdp.spell.God;
+import com.sb.cdp.spell.Prayer;
+import com.sb.cdp.spell.Spell;
 
 public class PlayerCharacter {
     public static final String ENDURANCE = "endurance";

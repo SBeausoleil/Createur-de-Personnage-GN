@@ -1,7 +1,7 @@
-package com.sb.idl.ability;
+package com.sb.cdp.ability;
 
-import com.sb.idl.PlayerCharacter;
-import com.sb.idl.PlayerClass;
+import com.sb.cdp.PlayerCharacter;
+import com.sb.cdp.PlayerClass;
 
 public class Ability {
     private String name;

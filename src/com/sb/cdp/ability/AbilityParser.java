@@ -1,14 +1,15 @@
-package com.sb.idl.ability;
+package com.sb.cdp.ability;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.LinkedHashSet;
+import java.util.LinkedList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import com.sb.idl.PlayerClass;
+import com.sb.cdp.PlayerClass;
 
 public class AbilityParser {
 
@@ -31,8 +32,9 @@ public class AbilityParser {
     public static final int CLASSES = 5;
     public static final int PREREQUISITES = 6;
     public static final int DESCRIPTION = 7;
-    
+
     public static String noClassRequired = "général";
+    public static String noPrerequisites = "aucun";
 
     private static int extractLevel(String str) {
 	if (str == null || str.isEmpty())
@@ -94,14 +96,26 @@ public class AbilityParser {
 	// Classes
 	String[] elements = isolateElements(raw.getClasses());
 	PlayerClass[] classes = new PlayerClass[elements.length];
-	for (int i = 0; i < classes.length; i++)
-	    classes[i] = PlayerClass.get(elements[i]);
-	
+	if (classes.length == 1 && elements[0].equalsIgnoreCase(noClassRequired))
+	    classes = null;
+	else
+	    for (int i = 0; i < classes.length; i++)
+		classes[i] = PlayerClass.get(elements[i]);
+
 	// Conditions
-	
+	elements = isolateElements(raw.getPrerequisites());
+	Condition[] prerequisites;
+	if (elements.length == 1 && elements[0].equalsIgnoreCase(noPrerequisites))
+	    prerequisites = null;
+	else {
+	    prerequisites = new Condition[elements.length];
+	    for (int i = 0; i < prerequisites.length; i++) {
+		
+	    }
+	}
+
 	return ability;
     }
-
 
     private static String[] isolateElements(String str) {
 	String[] words = str.split(",");

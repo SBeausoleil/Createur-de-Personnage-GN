@@ -1,4 +1,4 @@
-package com.sb.idl.spell;
+package com.sb.cdp.spell;
 
 import java.util.Set;
 
