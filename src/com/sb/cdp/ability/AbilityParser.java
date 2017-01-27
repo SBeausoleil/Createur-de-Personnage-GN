@@ -11,6 +11,8 @@ import java.util.regex.Pattern;
 
 import com.sb.cdp.PlayerClass;
 
+// TODO refactor to remove all traces of RawAbility
+// TODO the mass parsing functions must be given an option to register an ability
 public class AbilityParser {
 
     /**
@@ -102,7 +104,7 @@ public class AbilityParser {
 	    for (int i = 0; i < classes.length; i++)
 		classes[i] = PlayerClass.get(elements[i]);
 
-	// Conditions
+	// Conditions // TODO finish once the two first TO DO tags are done.
 	elements = isolateElements(raw.getPrerequisites());
 	Condition[] prerequisites;
 	if (elements.length == 1 && elements[0].equalsIgnoreCase(noPrerequisites))

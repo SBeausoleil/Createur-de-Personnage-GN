@@ -166,4 +166,8 @@ public class Ability {
 	}
 	return accepted;
     }
+    
+    public boolean equals(Ability ability) {
+	return name.equals(ability.getName());
+    }
 }
