@@ -11,6 +11,10 @@ public class Ability {
     private String description;
     private StatBonus[] statBonuses;
 
+    public Ability(String name) {
+	this.name = name;
+    }
+
     public Ability(String name, int cost, PlayerClass[] classes, Condition[] prerequisites, StatBonus[] statBonuses,
 	    String description) {
 	this.name = name;
@@ -151,11 +155,11 @@ public class Ability {
 	    accepted = true;
 	else {
 	    outerLoop: for (PlayerClass neededClass : classes)
-	    for (PlayerClass playerClass : pc.getClasses())
-		if (neededClass.equals(playerClass)) {
-		    accepted = true;
-		    break outerLoop;
-		}
+		for (PlayerClass playerClass : pc.getClasses())
+		    if (neededClass.equals(playerClass)) {
+			accepted = true;
+			break outerLoop;
+		    }
 	}
 	if (accepted && prerequisites != null) {
 	    for (Condition prequesite : prerequisites)
@@ -166,7 +170,7 @@ public class Ability {
 	}
 	return accepted;
     }
-    
+
     public boolean equals(Ability ability) {
 	return name.equals(ability.getName());
     }
