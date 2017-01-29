@@ -41,12 +41,25 @@ public class PlayerClass {
 	this.description = description;
     }
 
+    /**
+     * Returns a PlayerClass with the specified name.
+     * @param className the name of the player class. Not case sensitive.
+     * @returna a PlayerClass with the specified name
+     */
     public static PlayerClass get(String className) {
-	PlayerClass pc = CLASSES.get(className);
+	PlayerClass pc = CLASSES.get(className.toLowerCase());
 	if (pc == null) {
 	    pc = new PlayerClass(className);
-	    CLASSES.put(className, pc);
+	    CLASSES.put(className.toLowerCase(), pc);
 	}
 	return pc;
+    }
+
+    /* (non-Javadoc)
+     * @see java.lang.Object#toString()
+     */
+    @Override
+    public String toString() {
+	return "PlayerClass [name=" + name + ", description=" + description + "]";
     }
 }

@@ -1,5 +1,7 @@
 package com.sb.cdp.ability;
 
+import java.util.Arrays;
+
 import com.sb.cdp.PlayerCharacter;
 import com.sb.cdp.PlayerClass;
 
@@ -173,5 +175,15 @@ public class Ability {
 
     public boolean equals(Ability ability) {
 	return name.equals(ability.getName());
+    }
+
+    /* (non-Javadoc)
+     * @see java.lang.Object#toString()
+     */
+    @Override
+    public String toString() {
+	return "Ability [name=" + name + ", cost=" + cost + ", classes=" + Arrays.toString(classes) + ", prerequisites="
+		+ Arrays.toString(prerequisites) + ", description=" + description + ", statBonuses="
+		+ Arrays.toString(statBonuses) + "]";
     }
 }

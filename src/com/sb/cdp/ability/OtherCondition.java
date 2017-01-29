@@ -36,4 +36,12 @@ public class OtherCondition implements Condition {
         this.description = description;
     }
 
+    /* (non-Javadoc)
+     * @see java.lang.Object#toString()
+     */
+    @Override
+    public String toString() {
+	return "OtherCondition [description=" + description + "]";
+    }
+
 }

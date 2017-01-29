@@ -14,8 +14,6 @@ import java.util.regex.Pattern;
 
 import com.sb.cdp.PlayerClass;
 
-// TODO refactor to remove all traces of RawAbility
-// TODO the mass parsing functions must be given an option to register an ability
 public class AbilityParser {
 
     /**
@@ -81,10 +79,11 @@ public class AbilityParser {
 	for (int i = 0; i < N_ABILITIES; i++) {
 	    int level = captures[LEVEL] != null ? extractLevel(captures[LEVEL]) + i : 0;
 	    String name = captures[NAME] + (level != 0 ? " " + level : "");
-	    if (i > 0) // When generating abilities from a range, add the precedent level of the skill to the prerequisites list. // TODO Come back on this later on, I feel this may bring in some minor bugs in future runs...
-		captures[PREREQUISITES] += captures[NAME] + (level - 1);
+	    String prerequisites = captures[PREREQUISITES];
+	    if (i > 0) // When generating abilities from a range, add the precedent level of the skill to the prerequisites list.
+		prerequisites += captures[NAME] + " " + (level - 1);
 	    rawAbilities.add(new RawAbility(name, Integer.parseInt(captures[COST]), captures[CLASSES],
-		    captures[PREREQUISITES], captures[DESCRIPTION]));
+		    prerequisites, captures[DESCRIPTION]));
 	}
     }
 
@@ -115,6 +114,7 @@ public class AbilityParser {
 	else
 	    for (int i = 0; i < classes.length; i++)
 		classes[i] = PlayerClass.get(elements[i]);
+	ability.setClasses(classes);
 
 	// Conditions // TODO finish once the two first TO DO tags are done.
 	elements = isolateElements(raw.prerequisites);
@@ -123,12 +123,19 @@ public class AbilityParser {
 	    prerequisites = null;
 	else {
 	    prerequisites = new Condition[elements.length];
-	    for (int i = 0; i < prerequisites.length; i++) {
-
-	    }
+	    for (int i = 0; i < prerequisites.length; i++)
+		prerequisites[i] = parseCondition(elements[i]);
 	}
+	ability.setPrerequisites(prerequisites);
+
+	// TODO Parse through the description searching for bonuses
 
 	abilities.put(ability.getName(), ability);
+    }
+
+    private static Condition parseCondition(String str) {
+	// TODO finish
+	return new OtherCondition(str); // Lazy solution for now
     }
 
     private static String[] isolateElements(String str) {
@@ -138,7 +145,7 @@ public class AbilityParser {
 	return words;
     }
 
-    private static class RawAbility {
+    private static class RawAbility { // Ah, structs. How I wish we had them.
 	String name;
 	int cost;
 	String classes;
@@ -152,5 +159,12 @@ public class AbilityParser {
 	    this.prerequisites = prerequisites;
 	    this.description = description;
 	}
+    }
+
+    public static void main(String[] args) throws FileNotFoundException, IOException {
+	File inlineFile = new File("Inline_Abilities.txt");
+	Map<String, Ability> abilities = parseAbilities(inlineFile, null);
+	for (Ability ability : abilities.values())
+	    System.out.println(ability);
     }
 }
