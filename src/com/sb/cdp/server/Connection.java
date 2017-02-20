@@ -6,8 +6,6 @@ import java.io.OutputStream;
 import java.net.Socket;
 import java.nio.ByteBuffer;
 
-import com.sb.cdp.User;
-
 public class Connection {
     private final Socket CONNECTED_TO;
     private OutputStream toClient;
@@ -33,9 +31,9 @@ public class Connection {
     }
 
     /**
-     * Returns the cONNECTED_TO.
+     * Returns the socket the connection is tied to.
      * 
-     * @return the cONNECTED_TO
+     * @return the socket the connection is tied to
      */
     public Socket getConnectedTo() {
 	return CONNECTED_TO;
