@@ -15,12 +15,7 @@ import java.util.regex.Pattern;
 import com.sb.cdp.PlayerClass;
 
 public class AbilityParser {
-
-    /**
-     * A .txt file containing each abilities, each one taking a line.
-     */
-    public static final File INLINE_FILE = new File("Inline_Abilities.txt");
-
+    
     /**
      * A very adaptable regex to capture groups of information within a potentially badly formatted
      * String.
@@ -41,11 +36,11 @@ public class AbilityParser {
 
     public static Map<String, Ability> parseAbilities(File inlineFile, Map<String, Ability> abilities)
 	    throws FileNotFoundException, IOException {
-	if (abilities == null)
-	    abilities = new HashMap<>();
-
 	Set<RawAbility> rawAbilities = new LinkedHashSet<>();
 	readRawAbilities(inlineFile, rawAbilities);
+
+	if (abilities == null)
+	    abilities = new HashMap<>((int) Math.ceil(rawAbilities.size() / 0.75)); // This prevents rehashing of the map's data and using more space than required.
 
 	for (RawAbility raw : rawAbilities)
 	    abilities.put(raw.name, new Ability(raw.name));
@@ -124,7 +119,7 @@ public class AbilityParser {
 	else {
 	    prerequisites = new Condition[elements.length];
 	    for (int i = 0; i < prerequisites.length; i++)
-		prerequisites[i] = parseCondition(elements[i]);
+		prerequisites[i] = parseCondition(elements[i], abilities);
 	}
 	ability.setPrerequisites(prerequisites);
 
@@ -133,9 +128,14 @@ public class AbilityParser {
 	abilities.put(ability.getName(), ability);
     }
 
-    private static Condition parseCondition(String str) {
-	// TODO finish
-	return new OtherCondition(str); // Lazy solution for now
+    private static Condition parseCondition(String str, Map<String, Ability> abilities) {
+	Condition condition = null;
+	Ability abilitySought = abilities.get(str);
+	if (abilitySought != null)
+	    condition = new AbilityRequirement(abilitySought);
+	else
+	    condition = new OtherCondition(str); // Lazy solution for now
+	return condition;
     }
 
     private static String[] isolateElements(String str) {

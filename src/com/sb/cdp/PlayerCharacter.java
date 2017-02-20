@@ -17,7 +17,7 @@ public class PlayerCharacter {
     public static int baseMana = 0;
     public static int baseKarma = 0;
     public static int xpPerLevel = 10;
-    
+
     private String name;
     private Set<PlayerClass> classes;
     private MoralAlignment moralALignment;
@@ -40,7 +40,7 @@ public class PlayerCharacter {
 	this.lawAlignment = lawAlignment;
 	this.xp = xp;
 	this.nAbilityPoints = nAbilityPoints;
-	
+
 	stats = new HashMap<>();
 	stats.put(ENDURANCE, baseEndurance);
 	stats.put(MANA, baseMana);
@@ -293,27 +293,27 @@ public class PlayerCharacter {
     public void setPrayers(Map<String, Prayer> prayers) {
 	this.prayers = prayers;
     }
-    
+
     public void addAbility(Ability ability) {
 	abilities.put(ability.getName(), ability);
     }
-    
+
     public void removeAbility(Ability ability) {
 	abilities.remove(ability.getName());
     }
-    
+
     public void addSpecialAbility(Ability ability) {
 	specialAbilities.put(ability.getName(), ability);
     }
-    
+
     public void removeSpecialAbility(Ability ability) {
 	specialAbilities.remove(ability.getName());
     }
-    
+
     public int getLevel() {
 	return xp / xpPerLevel;
     }
-    
+
     public int getAvailableAbilityPoints() {
 	int points = nAbilityPoints;
 	for (Ability ability : abilities.values())
@@ -322,7 +322,7 @@ public class PlayerCharacter {
 	    points -= specialAbility.getCost();
 	return points;
     }
-    
+
     public int getStat(String stat) {
 	if (hasStat(stat))
 	    return stats.get(stat);
@@ -332,7 +332,7 @@ public class PlayerCharacter {
     public void setStat(String stat, int value) {
 	stats.put(stat, value);
     }
-    
+
     public boolean hasStat(String stat) {
 	return stats.containsKey(stat);
     }

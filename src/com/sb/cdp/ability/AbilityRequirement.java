@@ -4,44 +4,50 @@ import com.sb.cdp.PlayerCharacter;
 
 public class AbilityRequirement implements Condition {
 
-    private Ability[] neededAbilities;
+    private Ability neededAbility;
 
-    public AbilityRequirement(Ability[] neededAbilities) {
-	this.neededAbilities = neededAbilities;
+    public AbilityRequirement(Ability neededAbility) {
+	this.neededAbility = neededAbility;
     }
 
     @Override
     public boolean accept(PlayerCharacter pc) {
-	for (Ability ability : neededAbilities)
-	    if (!pc.getAbilities().containsKey(ability.getName())
-		    && !pc.getSpecialAbilities().containsKey(ability.getName()))
-		return false;
-	return true;
-    }
-
-    /**
-     * Returns the abilities.
-     * 
-     * @return the abilities
-     */
-    public Ability[] getNeededAbilities() {
-	return neededAbilities;
-    }
-
-    /**
-     * Sets the value of abilities to that of the parameter.
-     * 
-     * @param abilities
-     *            the abilities to set
-     */
-    public void setNeededAbilities(Ability[] abilities) {
-	this.neededAbilities = abilities;
+	return pc.getAbilities().containsKey(neededAbility.getName())
+		|| pc.getSpecialAbilities().containsKey(neededAbility.getName());
     }
 
     @Override
     public String describe() {
-	StringBuilder sb = new StringBuilder("Habilité(s) requises: ");
-	return sb.toString();
+	return "Habilité requise: " + neededAbility.getName();
+    }
+
+    /**
+     * Returns the neededAbility.
+     * 
+     * @return the neededAbility
+     */
+    public Ability getNeededAbility() {
+	return neededAbility;
+    }
+
+    /**
+     * Sets the value of neededAbility to that of the parameter.
+     * 
+     * @param neededAbility
+     *            the neededAbility to set
+     */
+    public void setNeededAbility(Ability neededAbility) {
+	this.neededAbility = neededAbility;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see java.lang.Object#toString()
+     */
+    @Override
+    public String toString() {
+	return "AbilityRequirement [neededAbility=" + neededAbility.getName() + "]";
     }
 
 }

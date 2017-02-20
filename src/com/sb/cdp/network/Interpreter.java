@@ -1,4 +1,4 @@
-package com.sb.cdp.server;
+package com.sb.cdp.network;
 
 public interface Interpreter {
 
