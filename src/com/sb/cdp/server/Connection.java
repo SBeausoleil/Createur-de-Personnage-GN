@@ -22,6 +22,7 @@ public class Connection {
 	toClient.write(data);
     }
 
+    // TESTME There may be issues with this due to the streaming nature of TCP.
     public byte[] listenTo() throws IOException {
 	byte[] length = new byte[4]; // Message length (int Big Endian)
 	fromClient.read(length);
