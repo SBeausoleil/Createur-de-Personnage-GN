@@ -13,6 +13,16 @@ public class CharacterType {
 
     private static final Map<Classification, Map<String, CharacterType>> REGISTERED = new HashMap<>();
 
+    /**
+     * Initializes the REGISTERED map to hold the appropriate buckets for each existing Classification.
+     * @see #REGISTERED
+     * @see #Classification
+     */
+    static {
+	for (Classification classification : Classification.values())
+	    REGISTERED.put(classification, new HashMap<>());
+    }
+    
     private final String name;
     private String description;
     private Classification classification;
@@ -77,20 +87,28 @@ public class CharacterType {
      * @returna a PlayerClass with the specified name
      */
     public static CharacterType get(String typeName, Classification classification) {
-	Map<String, CharacterType> registeredClassification = REGISTERED.get(classification);
-	if (registeredClassification == null) {
-	    registeredClassification = new HashMap<>();
-	    REGISTERED.put(classification, registeredClassification);
-
-	}
-	CharacterType type = registeredClassification.get(typeName);
+	CharacterType type = REGISTERED.get(classification).get(typeName);
 	if (type == null) {
 	    type = new CharacterType(typeName, classification);
-	    registeredClassification.put(typeName, type);
+	    REGISTERED.get(classification).put(typeName, type);
 	}
 	return type;
     }
-
+    
+    /**
+     * Adds a CharacterType to the registered ones.
+     * Use this function with great caution, as it may overwrite previous values.
+     * @param name
+     * @param classification
+     * @param description
+     * @return the newly created CharacterType.
+     */
+    public static CharacterType put(String name, Classification classification, String description) {
+	CharacterType type = new CharacterType(name, classification);
+	type.setDescription(description);
+	REGISTERED.get(classification).put(name, type);
+	return type;
+    }
 
     /**
      * Returns the type.
