@@ -17,11 +17,11 @@ public class AbilityIO {
 		out.write('.');
 	    out.write(" Coût: " + ability.getCost());
 	    out.write(" Classe(s): ");
-	    for (int i = 0; i < ability.getClasses().length; i++) {
+	    /*for (int i = 0; i < ability.getClasses().length; i++) {
 		out.write(ability.getClasses()[i].getName());
 		if ((i + 1) < ability.getClasses().length)
 		    out.write(", ");
-	    }
+	    }*/
 	    out.write(" Prérequis: ");
 	}
     }

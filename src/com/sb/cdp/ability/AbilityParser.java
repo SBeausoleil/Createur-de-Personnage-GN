@@ -5,17 +5,20 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashSet;
+import java.util.LinkedList;
 import java.util.Map;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import com.sb.cdp.PlayerClass;
+import com.sb.cdp.CharacterType;
 
 public class AbilityParser {
-    
+
     /**
      * A very adaptable regex to capture groups of information within a potentially badly formatted
      * String.
@@ -31,8 +34,10 @@ public class AbilityParser {
     public static final int PREREQUISITES = 6;
     public static final int DESCRIPTION = 7;
 
-    public static String noClassRequired = "général";
+    public static String noTypeRequired = "général";
     public static String noPrerequisites = "aucun";
+
+    public static CharacterType.Classification preferParsingAs = CharacterType.Classification.CLASS;
 
     public static Map<String, Ability> parseAbilities(File inlineFile, Map<String, Ability> abilities)
 	    throws FileNotFoundException, IOException {
@@ -99,33 +104,81 @@ public class AbilityParser {
     }
 
     private static void parseAbility(RawAbility raw, Map<String, Ability> abilities) {
-	Ability ability = new Ability(raw.name, raw.cost, null, null, null, raw.description);
+	Ability ability = new Ability(raw.name, raw.cost, null, raw.description);
 	// Missing: Classes, Conditions, Bonuses
 	// Classes
+	Set<Condition> prerequisites = new HashSet<>();
 	String[] elements = isolateElements(raw.classes);
-	PlayerClass[] classes = new PlayerClass[elements.length];
-	if (classes.length == 1 && elements[0].equalsIgnoreCase(noClassRequired))
-	    classes = null;
-	else
-	    for (int i = 0; i < classes.length; i++)
-		classes[i] = PlayerClass.get(elements[i]);
-	ability.setClasses(classes);
+	prerequisites.addAll(parseCharacterTypeConditions(elements));
 
-	// Conditions // TODO finish once the two first TO DO tags are done.
+	// Conditions // TODO finish them
 	elements = isolateElements(raw.prerequisites);
-	Condition[] prerequisites;
-	if (elements.length == 1 && elements[0].equalsIgnoreCase(noPrerequisites))
-	    prerequisites = null;
-	else {
-	    prerequisites = new Condition[elements.length];
-	    for (int i = 0; i < prerequisites.length; i++)
-		prerequisites[i] = parseCondition(elements[i], abilities);
+	if (elements.length != 1 && !elements[0].equalsIgnoreCase(noPrerequisites)) {
+	    for (int i = 0; i < elements.length; i++)
+		prerequisites.add(parseCondition(elements[i], abilities));
 	}
-	ability.setPrerequisites(prerequisites);
-
-	// TODO Parse through the description searching for bonuses
+	ability.setPrerequisites(prerequisites.toArray(new Condition[prerequisites.size()]));
 
 	abilities.put(ability.getName(), ability);
+    }
+
+    /**
+     * Parses the class and race elements of the RawAbility into appropriate
+     * CharacterTypeConditions.
+     * By default, returns a set of size zero to a maximum of the number of
+     * CharacterType.Classificiation that exist.
+     * 
+     * @param elements
+     * @see CharacterType.Classification
+     * @return
+     */
+    private static Collection<CharacterTypeCondition> parseCharacterTypeConditions(String[] elements) {
+	HashMap<CharacterType.Classification, Set<CharacterType>> types = new HashMap<>();
+	for (CharacterType.Classification classification : CharacterType.Classification.values())
+	    types.put(classification, new HashSet<>());
+
+	// Puts all the needed types in their bucket
+	CharacterType current;
+	for (String element : elements) {
+	    current = select(CharacterType.find(element), element);
+	    types.get(current.getClassification()).add(current);
+	}
+
+	// Transform the non-empty buckets into CharacterTypeCondition
+	Collection<CharacterTypeCondition> conditions = new LinkedList<>();
+	for (CharacterType.Classification classification : types.keySet()) {
+	    Set<CharacterType> cts = types.get(classification);
+	    if (!cts.isEmpty())
+		conditions.add(new CharacterTypeCondition(cts));
+	}
+
+	return conditions;
+    }
+
+    /**
+     * Selects the appropriate CharacterType.
+     * If no CharacterType has been found, it creates a new CharacterType of the prefered
+     * classification.
+     * Otherwise if there is only one found, it returns it.
+     * If there are more than one found: it will find the one with the prefered parsing
+     * classification. If none are found of that classification, it returns the first.
+     * 
+     * @param find
+     * @param type
+     * @see #preferParsingAs
+     * @return the appropriate CharacterType
+     */
+    private static CharacterType select(CharacterType[] find, String type) {
+	if (find == null || find.length == 0)
+	    return CharacterType.get(type, preferParsingAs);
+	else if (find.length == 1)
+	    return find[0];
+	else {
+	    for (CharacterType ct : find)
+		if (ct.getClassification() == preferParsingAs)
+		    return ct;
+	    return find[0];
+	}
     }
 
     private static Condition parseCondition(String str, Map<String, Ability> abilities) {

@@ -3,28 +3,22 @@ package com.sb.cdp.ability;
 import java.util.Arrays;
 
 import com.sb.cdp.PlayerCharacter;
-import com.sb.cdp.PlayerClass;
 
 public class Ability {
     private String name;
     private int cost;
-    private PlayerClass[] classes;
     private Condition[] prerequisites;
     private String description;
-    private StatBonus[] statBonuses;
 
     public Ability(String name) {
 	this.name = name;
     }
 
-    public Ability(String name, int cost, PlayerClass[] classes, Condition[] prerequisites, StatBonus[] statBonuses,
-	    String description) {
+    public Ability(String name, int cost, Condition[] prerequisites, String description) {
 	this.name = name;
 	this.cost = cost;
-	this.classes = classes;
 	this.prerequisites = prerequisites;
 	this.description = description;
-	this.statBonuses = statBonuses;
     }
 
     /**
@@ -66,25 +60,6 @@ public class Ability {
     }
 
     /**
-     * Returns the classes.
-     * 
-     * @return the classes
-     */
-    public PlayerClass[] getClasses() {
-	return classes;
-    }
-
-    /**
-     * Sets the value of classes to that of the parameter.
-     * 
-     * @param classes
-     *            the classes to set
-     */
-    public void setClasses(PlayerClass[] classes) {
-	this.classes = classes;
-    }
-
-    /**
      * Returns the prerequisites.
      * 
      * @return the prerequisites
@@ -122,47 +97,9 @@ public class Ability {
 	this.description = description;
     }
 
-    /**
-     * Returns the statBonuses.
-     * 
-     * @return the statBonuses
-     */
-    public StatBonus[] getStatBonuses() {
-	return statBonuses;
-    }
-
-    /**
-     * Sets the value of statBonuses to that of the parameter.
-     * 
-     * @param statBonuses
-     *            the statBonuses to set
-     */
-    public void setStatBonuses(StatBonus[] statBonuses) {
-	this.statBonuses = statBonuses;
-    }
-
-    public void applyBonuses(PlayerCharacter pc) {
-	for (StatBonus bonus : statBonuses)
-	    bonus.apply(pc);
-    }
-
-    public void removeBonuses(PlayerCharacter pc) {
-	for (StatBonus bonus : statBonuses)
-	    bonus.remove(pc);
-    }
-
     public boolean accept(PlayerCharacter pc) {
 	boolean accepted = false;
-	if (classes == null)
-	    accepted = true;
-	else {
-	    outerLoop: for (PlayerClass neededClass : classes)
-		for (PlayerClass playerClass : pc.getClasses())
-		    if (neededClass.equals(playerClass)) {
-			accepted = true;
-			break outerLoop;
-		    }
-	}
+	// TODO deal with classes & races
 	if (accepted && prerequisites != null) {
 	    for (Condition prequesite : prerequisites)
 		if (!prequesite.accept(pc)) {
@@ -177,13 +114,14 @@ public class Ability {
 	return name.equals(ability.getName());
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see java.lang.Object#toString()
      */
     @Override
     public String toString() {
-	return "Ability [name=" + name + ", cost=" + cost + ", classes=" + Arrays.toString(classes) + ", prerequisites="
-		+ Arrays.toString(prerequisites) + ", description=" + description + ", statBonuses="
-		+ Arrays.toString(statBonuses) + "]";
+	return "Ability [name=" + name + ", cost=" + cost + ", prerequisites="
+		+ Arrays.toString(prerequisites) + ", description=" + description + "]";
     }
 }

@@ -19,7 +19,7 @@ public class PlayerCharacter {
     public static int xpPerLevel = 10;
 
     private String name;
-    private Set<PlayerClass> classes;
+    private Set<CharacterType> classes;
     private MoralAlignment moralALignment;
     private LawAlignment lawAlignment;
     private int xp;
@@ -32,7 +32,7 @@ public class PlayerCharacter {
     private Map<String, Spell> spells;
     private Map<String, Prayer> prayers;
 
-    public PlayerCharacter(String name, Set<PlayerClass> classes, MoralAlignment moralALignment,
+    public PlayerCharacter(String name, Set<CharacterType> classes, MoralAlignment moralALignment,
 	    LawAlignment lawAlignment, int xp, int nAbilityPoints) {
 	this.name = name;
 	this.classes = classes;
@@ -71,7 +71,7 @@ public class PlayerCharacter {
      * 
      * @return the classes
      */
-    public Set<PlayerClass> getClasses() {
+    public Set<CharacterType> getClasses() {
 	return classes;
     }
 
@@ -81,7 +81,7 @@ public class PlayerCharacter {
      * @param classes
      *            the classes to set
      */
-    public void setClasses(Set<PlayerClass> classes) {
+    public void setClasses(Set<CharacterType> classes) {
 	this.classes = classes;
     }
 
