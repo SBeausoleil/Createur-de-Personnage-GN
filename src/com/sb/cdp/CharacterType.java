@@ -14,7 +14,9 @@ public class CharacterType {
     private static final Map<Classification, Map<String, CharacterType>> REGISTERED = new HashMap<>();
 
     /**
-     * Initializes the REGISTERED map to hold the appropriate buckets for each existing Classification.
+     * Initializes the REGISTERED map to hold the appropriate buckets for each existing
+     * Classification.
+     * 
      * @see #REGISTERED
      * @see #Classification
      */
@@ -22,7 +24,7 @@ public class CharacterType {
 	for (Classification classification : Classification.values())
 	    REGISTERED.put(classification, new HashMap<>());
     }
-    
+
     private final String name;
     private String description;
     private Classification classification;
@@ -94,10 +96,11 @@ public class CharacterType {
 	}
 	return type;
     }
-    
+
     /**
      * Adds a CharacterType to the registered ones.
      * Use this function with great caution, as it may overwrite previous values.
+     * 
      * @param name
      * @param classification
      * @param description
@@ -129,7 +132,9 @@ public class CharacterType {
 	this.classification = type;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see java.lang.Object#toString()
      */
     @Override
