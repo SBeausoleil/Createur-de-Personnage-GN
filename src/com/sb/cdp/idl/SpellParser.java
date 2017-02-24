@@ -1,7 +1,9 @@
-package com.sb.cdp.spell;
+package com.sb.cdp.idl;
 
 import java.io.File;
 import java.util.Map;
+
+import com.sb.cdp.spell.Spell;
 
 public class SpellParser {
 

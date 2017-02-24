@@ -1,11 +1,17 @@
 package com.sb.cdp.spell;
 
 import java.util.Set;
+import java.util.TreeSet;
 
 public class Domain<SpellType extends Spell> {
     private String name;
     private Set<SpellType> spells;
 
+    public Domain(String name) {
+	this.name = name;
+	spells = new TreeSet<>();
+    }
+    
     public Domain(String name, Set<SpellType> spells) {
 	this.name = name;
 	this.spells = spells;

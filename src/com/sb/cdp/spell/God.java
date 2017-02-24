@@ -3,11 +3,13 @@ package com.sb.cdp.spell;
 public class God {
     private String name;
     private Domain<Prayer>[] domains;
+    private String symbol;
     private String description;
 
-    public God(String name, Domain<Prayer>[] domains, String description) {
+    public God(String name, Domain<Prayer>[] domains, String symbol, String description) {
 	this.name = name;
 	this.domains = domains;
+	this.symbol = symbol;
 	this.description = description;
     }
 
@@ -66,5 +68,24 @@ public class God {
      */
     public void setDescription(String description) {
 	this.description = description;
+    }
+
+    /**
+     * Returns the symbol.
+     * 
+     * @return the symbol
+     */
+    public String getSymbol() {
+	return symbol;
+    }
+
+    /**
+     * Sets the value of symbol to that of the parameter.
+     * 
+     * @param symbol
+     *            the symbol to set
+     */
+    public void setSymbol(String symbol) {
+	this.symbol = symbol;
     }
 }

@@ -1,4 +1,4 @@
-package com.sb.cdp.ability;
+package com.sb.cdp.idl;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -17,6 +17,11 @@ import java.util.regex.Pattern;
 
 import com.sb.cdp.CharacterType;
 import com.sb.cdp.CharacterTypePool;
+import com.sb.cdp.ability.Ability;
+import com.sb.cdp.ability.AbilityRequirement;
+import com.sb.cdp.ability.CharacterTypeCondition;
+import com.sb.cdp.ability.Condition;
+import com.sb.cdp.ability.OtherCondition;
 
 public class AbilityParser {
 

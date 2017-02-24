@@ -1,8 +1,10 @@
 package com.sb.cdp;
 
 import java.util.Map;
+import java.util.TreeMap;
 
 import com.sb.cdp.ability.Ability;
+import com.sb.cdp.spell.God;
 import com.sb.cdp.spell.Spell;
 
 public class RPG {
@@ -13,6 +15,26 @@ public class RPG {
     private Map<String, Library<String, Ability>> abilityLibraries;
     private Map<String, Library<String, Spell<?>>> spellLibraries;
     private Map<String, User> users;
+    private Map<String, God> gods;
+
+    public RPG(String name) {
+	this.name = name;
+	characterTypes = new CharacterTypePool();
+	abilityLibraries = new TreeMap<>();
+	spellLibraries = new TreeMap<>();
+	users = new TreeMap<>();
+	gods = new TreeMap<>();
+    }
+    
+    public RPG(String name, CharacterTypePool characterTypes, Map<String, Library<String, Ability>> abilityLibraries,
+	    Map<String, Library<String, Spell<?>>> spellLibraries, Map<String, User> users, Map<String, God> gods) {
+	this.name = name;
+	this.characterTypes = characterTypes;
+	this.abilityLibraries = abilityLibraries;
+	this.spellLibraries = spellLibraries;
+	this.users = users;
+	this.gods = gods;
+    }
 
     /**
      * Returns the name.
@@ -107,5 +129,24 @@ public class RPG {
      */
     public void setUsers(Map<String, User> users) {
 	this.users = users;
+    }
+
+    /**
+     * Returns the gods.
+     * 
+     * @return the gods
+     */
+    public Map<String, God> getGods() {
+	return gods;
+    }
+
+    /**
+     * Sets the value of gods to that of the parameter.
+     * 
+     * @param gods
+     *            the gods to set
+     */
+    public void setGods(Map<String, God> gods) {
+	this.gods = gods;
     }
 }

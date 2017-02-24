@@ -1,6 +1,9 @@
 package com.sb.cdp.spell;
 
 public class Spell<SpellType extends Spell> {
+    public static final float TOUCH = 0f;
+    public static final float SELF = -1f;
+    
     private String name;
     private long duration;
     /**
@@ -9,6 +12,13 @@ public class Spell<SpellType extends Spell> {
      */
     private long castingTime;
     private String description;
+    /**
+     * The range in meters of the spell.
+     * If equal to {@link #TOUCH}, the spell caster must touch the target.
+     * If equal to {@link #SELF}, the spell affects only the caster.
+     * @see #TOUCH
+     * @see #SELF
+     */
     private float range;
     private int cost;
     private Domain<SpellType> domain;
