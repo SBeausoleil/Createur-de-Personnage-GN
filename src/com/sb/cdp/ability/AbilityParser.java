@@ -16,6 +16,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.sb.cdp.CharacterType;
+import com.sb.cdp.CharacterTypePool;
 
 public class AbilityParser {
 
@@ -39,7 +40,7 @@ public class AbilityParser {
 
     public static CharacterType.Classification preferParsingAs = CharacterType.Classification.CLASS;
 
-    public static Map<String, Ability> parseAbilities(File inlineFile, Map<String, Ability> abilities)
+    public static Map<String, Ability> parseAbilities(File inlineFile, Map<String, Ability> abilities, CharacterTypePool ctPool)
 	    throws FileNotFoundException, IOException {
 	Set<RawAbility> rawAbilities = new LinkedHashSet<>();
 	readRawAbilities(inlineFile, rawAbilities);
@@ -51,7 +52,7 @@ public class AbilityParser {
 	    abilities.put(raw.name, new Ability(raw.name));
 
 	for (RawAbility raw : rawAbilities)
-	    parseAbility(raw, abilities);
+	    parseAbility(raw, abilities, ctPool);
 	return abilities;
     }
 
@@ -103,13 +104,13 @@ public class AbilityParser {
 	return Integer.parseInt(str.substring(++index));
     }
 
-    private static void parseAbility(RawAbility raw, Map<String, Ability> abilities) {
+    private static void parseAbility(RawAbility raw, Map<String, Ability> abilities, CharacterTypePool ctPool) {
 	Ability ability = new Ability(raw.name, raw.cost, null, raw.description);
 	// Missing: Classes, Conditions, Bonuses
 	// Classes
 	Set<Condition> prerequisites = new HashSet<>();
 	String[] elements = isolateElements(raw.classes);
-	prerequisites.addAll(parseCharacterTypeConditions(elements));
+	prerequisites.addAll(parseCharacterTypeConditions(elements, ctPool));
 
 	// Conditions // TODO finish them
 	elements = isolateElements(raw.prerequisites);
@@ -132,7 +133,7 @@ public class AbilityParser {
      * @see CharacterType.Classification
      * @return
      */
-    private static Collection<CharacterTypeCondition> parseCharacterTypeConditions(String[] elements) {
+    private static Collection<CharacterTypeCondition> parseCharacterTypeConditions(String[] elements, CharacterTypePool ctPool) {
 	HashMap<CharacterType.Classification, Set<CharacterType>> types = new HashMap<>();
 	for (CharacterType.Classification classification : CharacterType.Classification.values())
 	    types.put(classification, new HashSet<>());
@@ -140,7 +141,7 @@ public class AbilityParser {
 	// Puts all the needed types in their bucket
 	CharacterType current;
 	for (String element : elements) {
-	    current = select(CharacterType.find(element), element);
+	    current = select(ctPool.find(element), element, ctPool);
 	    types.get(current.getClassification()).add(current);
 	}
 
@@ -163,21 +164,21 @@ public class AbilityParser {
      * If there are more than one found: it will find the one with the prefered parsing
      * classification. If none are found of that classification, it returns the first.
      * 
-     * @param find
+     * @param found
      * @param type
      * @see #preferParsingAs
      * @return the appropriate CharacterType
      */
-    private static CharacterType select(CharacterType[] find, String type) {
-	if (find == null || find.length == 0)
-	    return CharacterType.get(type, preferParsingAs);
-	else if (find.length == 1)
-	    return find[0];
+    private static CharacterType select(CharacterType[] found, String type, CharacterTypePool ctPool) {
+	if (found == null || found.length == 0)
+	    return ctPool.get(type, preferParsingAs);
+	else if (found.length == 1)
+	    return found[0];
 	else {
-	    for (CharacterType ct : find)
+	    for (CharacterType ct : found)
 		if (ct.getClassification() == preferParsingAs)
 		    return ct;
-	    return find[0];
+	    return found[0];
 	}
     }
 
@@ -212,12 +213,5 @@ public class AbilityParser {
 	    this.prerequisites = prerequisites;
 	    this.description = description;
 	}
-    }
-
-    public static void main(String[] args) throws FileNotFoundException, IOException {
-	File inlineFile = new File("Inline_Abilities.txt");
-	Map<String, Ability> abilities = parseAbilities(inlineFile, null);
-	for (Ability ability : abilities.values())
-	    System.out.println(ability);
     }
 }
