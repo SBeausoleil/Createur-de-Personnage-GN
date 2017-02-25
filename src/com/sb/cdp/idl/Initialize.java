@@ -11,21 +11,66 @@ import com.sb.cdp.CharacterTypePool;
 import com.sb.cdp.Library;
 import com.sb.cdp.RPG;
 import com.sb.cdp.ability.Ability;
-import com.sb.cdp.spell.Domain;
-import com.sb.cdp.spell.God;
-import com.sb.cdp.spell.Prayer;
+import com.sb.cdp.magic.Domain;
+import com.sb.cdp.magic.God;
+import com.sb.cdp.magic.Prayer;
+import com.sb.cdp.magic.Spell;
 
 public class Initialize {
 
-    public static RPG initialize() {
-	RPG idl = new RPG("Île Des Légendes", null, null, null, null, null);
-	idl.setCharacterTypes(initializeCharacterType());
-	idl.setGods(initializeGods());
-	Library<Stri>
+    public static RPG initialize() throws FileNotFoundException, IOException {
+	RPG idl = new RPG("Île Des Légendes"); // IDL: Ile Des Legendes
+	idl.setCharacterTypes(characterType());
+	Library<String, Ability> abilities = abilities(idl.getCharacterTypes());
+	idl.getAbilityLibraries().put(abilities.getName(), abilities);
+	idl.setGods(gods());
+	Library<String, Domain<Spell>> spellDomains = spellDomains();
+	spells(spellDomains);
+	idl.getSpellLibraries().put(spellDomains.getName(), spellDomains);
+	Library<String, Domain<Prayer>> prayerDomains = prayerDomains(idl.getGods().values());
+	idl.getPrayerLibraries().put(prayerDomains.getName(), prayerDomains);
 	return idl;
     }
-    
-    public static CharacterTypePool initializeCharacterType() {
+
+    public static Library<String, Domain<Prayer>> prayerDomains(Iterable<God> gods) {
+	Library<String, Domain<Prayer>> domains = new Library<>("Prières publiques");
+	// Start by registering the already existing domains within the gods
+	for (God god : gods)
+	    for (Domain domain : god.getDomains())
+		domains.put(domain.getName(), domain);
+
+	domains.put("Guérison", new Domain<Prayer>("Guérison"));
+	domains.put("Bénédiction", new Domain<Prayer>("Bénédiction"));
+	domains.put("Protection", new Domain<Prayer>("Protection"));
+	domains.put("Divination", new Domain<Prayer>("Divination"));
+	return domains;
+    }
+
+    public static Library<String, Domain<Spell>> spellDomains() {
+	Library<String, Domain<Spell>> domains = new Library<>("Sorts publiques");
+	domains.put("Évocation", new Domain("Évocation",
+		"La magie d’évocation canalise l’énergie magique en une force d’attaque. L’évocateur est le spécialiste des attaques puissantes à distance ou au touché qu’elle soit dirigé envers une personne ou un groupe. L’évocateur  peut aussi devenir un combattant de mêlée redoutable. Que ce soit les améliorations d’armes, l’amélioration des capacités de combat ou tout ce qui peut aider aux guerriers pendant un combat."));
+	domains.put("Protection", new Domain("Protection",
+		"Cette école offre des sorts de protections contre les attaques physiques, mentales et magiques pour une personne ou un groupe. "));
+	domains.put("Nécromancie", new Domain("Nécromancie",
+		"Les nécromanciens utilisent les énergies magiques pour contrôler une entité morte, sans utiliser les pouvoirs de Narzul."));
+	domains.put("Divination", new Domain("Divination",
+		"Cette école permet de voir, de prédire ou d’influencer certaines choses que le commun des mortels ne peut contrôler."));
+	domains.put("Enchantement", new Domain("Enchantement",
+		"L’école de l’enchantement permet d’influencer et de soumettre l’esprit d’être vivant selon la volonté du magicien. Elle permet aussi d’enchanter des objets."));
+	domains.put("Général", new Domain("Général",
+		"Cette école  englobe tout ce qui n’a aucun rapport avec les autres magies."));
+	return domains;
+    }
+
+    public static Map<String, Domain<Spell>> spells(Map<String, Domain<Spell>> domains)
+	    throws FileNotFoundException, IOException {
+	// Will be changed later to read from a Json document. However until that will not be done until the whole data structure of the application is set in stone.
+	domains = SpellParser.parseSpells(new File("IDL_Spells.txt"), domains);
+	return domains;
+    }
+
+    public static CharacterTypePool characterType() {
 	CharacterTypePool ctPool = new CharacterTypePool();
 	ctPool.put("Aventurier", CharacterType.Classification.CLASS,
 		"Il est l’homme à tout faire. Du simple marchand à l’assassin ou au voleur.");
@@ -58,14 +103,15 @@ public class Initialize {
 	return ctPool;
     }
 
-    public static Library<String, Ability> initializeAbilities(CharacterTypePool ctPool)
+    public static Library<String, Ability> abilities(CharacterTypePool ctPool)
 	    throws FileNotFoundException, IOException {
 	Library<String, Ability> lib = new Library<>("Générale");
+	// Will be changed later to read from a Json document. However until that will not be done until the whole data structure of the application is set in stone.
 	AbilityParser.parseAbilities(new File("IDL_Inline_Abilities.txt"), lib.getData(), ctPool);
 	return lib;
     }
 
-    public static Map<String, God> initializeGods() {
+    public static Map<String, God> gods() {
 	Map<String, God> gods = new TreeMap<>();
 
 	gods.put("Zora", new God("Zora", new Domain[] { new Domain<Prayer>("Soleil") }, "Un soleil",
@@ -88,7 +134,7 @@ public class Initialize {
 	gods.put("Mentier", new God("Mentier", new Domain[] { new Domain<Prayer>("Temps") }, "Un Sablier",
 		"Dieu du temps. Mentier est un nouveau dieu qui est apparu depuis peu de temps. On raconte qu'il aurait été emprisonné dans le monde de Solunne et qu'il aurait dernièrement réussit à se sortir de sa prison. C'est pourquoi on ne sait pas grand chose de lui, sauf qu'il se présente comme le dieu du temps."));
 	//gods.put("Gaé", new God("Gaé", new Domain[] { new Domain<Prayer>("Vie") }, "Une fougère", ""));
-	
+
 	return gods;
     }
 

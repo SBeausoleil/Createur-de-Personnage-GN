@@ -4,8 +4,10 @@ import java.util.Map;
 import java.util.TreeMap;
 
 import com.sb.cdp.ability.Ability;
-import com.sb.cdp.spell.God;
-import com.sb.cdp.spell.Spell;
+import com.sb.cdp.magic.Domain;
+import com.sb.cdp.magic.God;
+import com.sb.cdp.magic.Prayer;
+import com.sb.cdp.magic.Spell;
 
 public class RPG {
 
@@ -13,7 +15,8 @@ public class RPG {
 
     private CharacterTypePool characterTypes;
     private Map<String, Library<String, Ability>> abilityLibraries;
-    private Map<String, Library<String, Spell<?>>> spellLibraries;
+    private Map<String, Library<String, Domain<Spell>>> spellLibraries;
+    private Map<String, Library<String, Domain<Prayer>>> prayerLibraries;
     private Map<String, User> users;
     private Map<String, God> gods;
 
@@ -22,18 +25,9 @@ public class RPG {
 	characterTypes = new CharacterTypePool();
 	abilityLibraries = new TreeMap<>();
 	spellLibraries = new TreeMap<>();
+	prayerLibraries = new TreeMap<>();
 	users = new TreeMap<>();
 	gods = new TreeMap<>();
-    }
-    
-    public RPG(String name, CharacterTypePool characterTypes, Map<String, Library<String, Ability>> abilityLibraries,
-	    Map<String, Library<String, Spell<?>>> spellLibraries, Map<String, User> users, Map<String, God> gods) {
-	this.name = name;
-	this.characterTypes = characterTypes;
-	this.abilityLibraries = abilityLibraries;
-	this.spellLibraries = spellLibraries;
-	this.users = users;
-	this.gods = gods;
     }
 
     /**
@@ -98,7 +92,7 @@ public class RPG {
      * 
      * @return the spellLibraries
      */
-    public Map<String, Library<String, Spell<?>>> getSpellLibraries() {
+    public Map<String, Library<String, Domain<Spell>>> getSpellLibraries() {
 	return spellLibraries;
     }
 
@@ -108,7 +102,7 @@ public class RPG {
      * @param spellLibraries
      *            the spellLibraries to set
      */
-    public void setSpellLibraries(Map<String, Library<String, Spell<?>>> spellLibraries) {
+    public void setSpellLibraries(Map<String, Library<String, Domain<Spell>>> spellLibraries) {
 	this.spellLibraries = spellLibraries;
     }
 
@@ -148,5 +142,21 @@ public class RPG {
      */
     public void setGods(Map<String, God> gods) {
 	this.gods = gods;
+    }
+
+    /**
+     * Returns the prayerLibraries.
+     * @return the prayerLibraries
+     */
+    public Map<String, Library<String, Domain<Prayer>>> getPrayerLibraries() {
+	return prayerLibraries;
+    }
+
+    /**
+     * Sets the value of prayerLibraries to that of the parameter.
+     * @param prayerLibraries the prayerLibraries to set
+     */
+    public void setPrayerLibraries(Map<String, Library<String, Domain<Prayer>>> prayerLibraries) {
+	this.prayerLibraries = prayerLibraries;
     }
 }

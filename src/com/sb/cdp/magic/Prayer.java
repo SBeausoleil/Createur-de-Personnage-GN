@@ -1,14 +1,16 @@
-package com.sb.cdp.spell;
+package com.sb.cdp.magic;
 
-public class Prayer extends Spell<Prayer> {
+public class Prayer extends Magic<Prayer> {
 
     private God god;
 
-    
+    public Prayer(String name) {
+	super(name);
+    }
 
-    public Prayer(String name, long duration, long castingTime, String description, float range, int cost,
+    public Prayer(String name, String duration, long castingTime, String description, String range, int cost,
 	    Domain<Prayer> domain, God god) {
-	super(name, duration, castingTime, description, range, cost, domain);
+	super(name, 0, duration, castingTime, description, range, cost, domain);
 	this.god = god;
     }
 

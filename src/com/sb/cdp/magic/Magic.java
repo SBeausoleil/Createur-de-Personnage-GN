@@ -1,30 +1,28 @@
-package com.sb.cdp.spell;
+package com.sb.cdp.magic;
 
-public class Spell<SpellType extends Spell> {
+public abstract class Magic<SpellType extends Magic> implements Comparable<Magic> {
     public static final float TOUCH = 0f;
     public static final float SELF = -1f;
     
     private String name;
-    private long duration;
+    private int level;
+    private String duration;
     /**
      * The time required to cast the spell.
      * It is either the number of words to be said (mage) or the length of the prayer (priest).
      */
     private long castingTime;
     private String description;
-    /**
-     * The range in meters of the spell.
-     * If equal to {@link #TOUCH}, the spell caster must touch the target.
-     * If equal to {@link #SELF}, the spell affects only the caster.
-     * @see #TOUCH
-     * @see #SELF
-     */
-    private float range;
+    private String range;
     private int cost;
     private Domain<SpellType> domain;
+    
+    public Magic(String name) {
+	this(name, 0, null, -1, null, null, -1, null);
+    }
 
-    public Spell(String name, long duration, long castingTime, String description, float range, int cost,
-	    Domain<SpellType> domain) {
+    public Magic(String name, int level, String duration, long castingTime, String description, String range,
+	    int cost, Domain<SpellType> domain) {
 	this.name = name;
 	this.duration = duration;
 	this.castingTime = castingTime;
@@ -58,7 +56,7 @@ public class Spell<SpellType extends Spell> {
      * 
      * @return the duration
      */
-    public long getDuration() {
+    public String getDuration() {
 	return duration;
     }
 
@@ -68,7 +66,7 @@ public class Spell<SpellType extends Spell> {
      * @param duration
      *            the duration to set
      */
-    public void setDuration(long duration) {
+    public void setDuration(String duration) {
 	this.duration = duration;
     }
 
@@ -115,7 +113,7 @@ public class Spell<SpellType extends Spell> {
      * 
      * @return the range
      */
-    public float getRange() {
+    public String getRange() {
 	return range;
     }
 
@@ -125,7 +123,7 @@ public class Spell<SpellType extends Spell> {
      * @param range
      *            the range to set
      */
-    public void setRange(float range) {
+    public void setRange(String range) {
 	this.range = range;
     }
 
@@ -165,5 +163,38 @@ public class Spell<SpellType extends Spell> {
      */
     public void setDomain(Domain<SpellType> domain) {
 	this.domain = domain;
+    }
+
+    /**
+     * Returns the level.
+     * @return the level
+     */
+    public int getLevel() {
+        return level;
+    }
+
+    /**
+     * Sets the value of level to that of the parameter.
+     * @param level the level to set
+     */
+    public void setLevel(int level) {
+        this.level = level;
+    }
+
+    /* (non-Javadoc)
+     * @see java.lang.Object#toString()
+     */
+    @Override
+    public String toString() {
+	return "Magic [name=" + name + ", level=" + level + ", duration=" + duration + ", castingTime=" + castingTime
+		+ ", description=" + description + ", range=" + range + ", cost=" + cost + ", domain=" + domain.getName() + "]";
+    }
+    
+    @Override
+    public int compareTo(Magic m) {
+	int nameCompareResult = name.compareTo(m.getName());
+	if (nameCompareResult == 0)
+	    return Integer.compare(level, m.getLevel());
+	return nameCompareResult;
     }
 }

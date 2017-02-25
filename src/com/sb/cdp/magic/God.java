@@ -1,4 +1,4 @@
-package com.sb.cdp.spell;
+package com.sb.cdp.magic;
 
 public class God {
     private String name;

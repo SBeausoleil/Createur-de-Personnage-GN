@@ -3,7 +3,6 @@ package com.sb.cdp;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.NavigableMap;
 import java.util.NavigableSet;
 import java.util.Set;
@@ -13,7 +12,7 @@ import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
-public class Library<T, E> {
+public class Library<T, E> implements Map<T, E> {
 
     // TODO add some form of version control to allow merging of libraries and updating etc...
     
@@ -89,6 +88,7 @@ public class Library<T, E> {
      * 
      * @see java.util.TreeMap#clear()
      */
+    @Override
     public void clear() {
 	data.clear();
     }
@@ -116,6 +116,7 @@ public class Library<T, E> {
      * @return
      * @see java.util.Map#compute(java.lang.Object, java.util.function.BiFunction)
      */
+    @Override
     public E compute(T key, BiFunction<? super T, ? super E, ? extends E> remappingFunction) {
 	return data.compute(key, remappingFunction);
     }
@@ -126,6 +127,7 @@ public class Library<T, E> {
      * @return
      * @see java.util.Map#computeIfAbsent(java.lang.Object, java.util.function.Function)
      */
+    @Override
     public E computeIfAbsent(T key, Function<? super T, ? extends E> mappingFunction) {
 	return data.computeIfAbsent(key, mappingFunction);
     }
@@ -136,6 +138,7 @@ public class Library<T, E> {
      * @return
      * @see java.util.Map#computeIfPresent(java.lang.Object, java.util.function.BiFunction)
      */
+    @Override
     public E computeIfPresent(T key, BiFunction<? super T, ? super E, ? extends E> remappingFunction) {
 	return data.computeIfPresent(key, remappingFunction);
     }
@@ -145,6 +148,7 @@ public class Library<T, E> {
      * @return
      * @see java.util.TreeMap#containsKey(java.lang.Object)
      */
+    @Override
     public boolean containsKey(Object key) {
 	return data.containsKey(key);
     }
@@ -154,6 +158,7 @@ public class Library<T, E> {
      * @return
      * @see java.util.TreeMap#containsValue(java.lang.Object)
      */
+    @Override
     public boolean containsValue(Object value) {
 	return data.containsValue(value);
     }
@@ -178,6 +183,7 @@ public class Library<T, E> {
      * @return
      * @see java.util.TreeMap#entrySet()
      */
+    @Override
     public Set<Entry<T, E>> entrySet() {
 	return data.entrySet();
     }
@@ -230,6 +236,7 @@ public class Library<T, E> {
      * @param action
      * @see java.util.TreeMap#forEach(java.util.function.BiConsumer)
      */
+    @Override
     public void forEach(BiConsumer<? super T, ? super E> action) {
 	data.forEach(action);
     }
@@ -239,6 +246,7 @@ public class Library<T, E> {
      * @return
      * @see java.util.TreeMap#get(java.lang.Object)
      */
+    @Override
     public E get(Object key) {
 	return data.get(key);
     }
@@ -249,6 +257,7 @@ public class Library<T, E> {
      * @return
      * @see java.util.Map#getOrDefault(java.lang.Object, java.lang.Object)
      */
+    @Override
     public E getOrDefault(Object key, E defaultValue) {
 	return data.getOrDefault(key, defaultValue);
     }
@@ -303,6 +312,7 @@ public class Library<T, E> {
      * @return
      * @see java.util.AbstractMap#isEmpty()
      */
+    @Override
     public boolean isEmpty() {
 	return data.isEmpty();
     }
@@ -311,6 +321,7 @@ public class Library<T, E> {
      * @return
      * @see java.util.TreeMap#keySet()
      */
+    @Override
     public Set<T> keySet() {
 	return data.keySet();
     }
@@ -356,6 +367,7 @@ public class Library<T, E> {
      * @return
      * @see java.util.Map#merge(java.lang.Object, java.lang.Object, java.util.function.BiFunction)
      */
+    @Override
     public E merge(T key, E value, BiFunction<? super E, ? super E, ? extends E> remappingFunction) {
 	return data.merge(key, value, remappingFunction);
     }
@@ -390,6 +402,7 @@ public class Library<T, E> {
      * @return
      * @see java.util.TreeMap#put(java.lang.Object, java.lang.Object)
      */
+    @Override
     public E put(T key, E value) {
 	return data.put(key, value);
     }
@@ -398,6 +411,7 @@ public class Library<T, E> {
      * @param map
      * @see java.util.TreeMap#putAll(java.util.Map)
      */
+    @Override
     public void putAll(Map<? extends T, ? extends E> map) {
 	data.putAll(map);
     }
@@ -408,6 +422,7 @@ public class Library<T, E> {
      * @return
      * @see java.util.Map#putIfAbsent(java.lang.Object, java.lang.Object)
      */
+    @Override
     public E putIfAbsent(T key, E value) {
 	return data.putIfAbsent(key, value);
     }
@@ -418,6 +433,7 @@ public class Library<T, E> {
      * @return
      * @see java.util.Map#remove(java.lang.Object, java.lang.Object)
      */
+    @Override
     public boolean remove(Object key, Object value) {
 	return data.remove(key, value);
     }
@@ -427,6 +443,7 @@ public class Library<T, E> {
      * @return
      * @see java.util.TreeMap#remove(java.lang.Object)
      */
+    @Override
     public E remove(Object key) {
 	return data.remove(key);
     }
@@ -438,6 +455,7 @@ public class Library<T, E> {
      * @return
      * @see java.util.TreeMap#replace(java.lang.Object, java.lang.Object, java.lang.Object)
      */
+    @Override
     public boolean replace(T key, E oldValue, E newValue) {
 	return data.replace(key, oldValue, newValue);
     }
@@ -448,6 +466,7 @@ public class Library<T, E> {
      * @return
      * @see java.util.TreeMap#replace(java.lang.Object, java.lang.Object)
      */
+    @Override
     public E replace(T key, E value) {
 	return data.replace(key, value);
     }
@@ -456,6 +475,7 @@ public class Library<T, E> {
      * @param function
      * @see java.util.TreeMap#replaceAll(java.util.function.BiFunction)
      */
+    @Override
     public void replaceAll(BiFunction<? super T, ? super E, ? extends E> function) {
 	data.replaceAll(function);
     }
@@ -464,6 +484,7 @@ public class Library<T, E> {
      * @return
      * @see java.util.TreeMap#size()
      */
+    @Override
     public int size() {
 	return data.size();
     }
@@ -513,6 +534,7 @@ public class Library<T, E> {
      * @return
      * @see java.util.TreeMap#values()
      */
+    @Override
     public Collection<E> values() {
 	return data.values();
     }

@@ -1,0 +1,47 @@
+[Évocation]
+{1}
+Désintegration mineure :!: Permet de détruire un petit objet non magique. Cet objet ne doit pas être relié à un autre (exemple, un cadenas sur une porte). L'objet doit être tenu en entier dans les mains du mage. Certaines rares exceptions peuvent exister. Lors de la destruction un comédien doit être averti. :!: Instantané :!: Contact
+Poussée magique :!: Repousse un personnage, une créature  de 3 mètres à l'aide d'une puissante rafale d'énergie. :!: instantané :!: 10 mètres
+Projectile magique :!: Lance un projectile magique qui inflige un point de dégât. Ce sort étant exigent le mage doit prendre une pause d'au moins 20 secondes entre chaque incantations. :!: Instantané :!: 10 mètres
+Brise boucle :!: Défait toute les boucle de ceinture sur un être vivant. :!: Instantané :!: 10 mètres
+Deuxième souffle :!: Ce sort permet la guérison d'un point d'endurance mais ce point est reperdu à la fin du combat (si en combat) ou dans cinq minutes (si hors de combat) :!: Combat ou 5 minutes :!: Personnel
+Main brulante :!:  Les mains du mage s'enflamment. La personne touchée prend un point de dégât et souffre pendant cinq secondes. :!: Instantané :!: Contact
+{2}
+Impulsion d'énergie :!: Inflige 1pt de dégât à la cible. De plus, celle-ci se tord de douleur pour 5 secondes :!: 5 secondes :!: Contact
+Explosion arcane :!: Inflige 1 point de dégât à toute personne qui se trouve dans la zone d'effet. Cette explosion a 2 mètres de diamètre. Son centre doit être désigné par un point fixe par le lanceur du sort (ex : un arbre, une être vivant, une roche etc.). :!: Instantanée :!: 10 mètres
+Magie de guerre innée :!:  Permet au mage de se battre avec une arme courte (épée, masse, etc.). :!: 1 heure :!: Personnel
+Force surnaturelle :!: Confère 2 points de force à la personne sur qui est lancé le sort. Non cumulatif avec aucun autre point de force. :!: 1 heure :!: Contact
+Poigne électrique :!: Paralyse la cible du sort pendant une minute ou la premiere attaque :!: 1 minute :!: toucher
+Empêtrement :!: Des liens magiques apparaissent autour des jambes de la cible et celle-ci tombe au sol  :!: Instantanée :!: 10 mètres
+[Protection]
+{1}
+protection magique mineur :!: Un champ de force recouvre la cible ce qui lui confère un point d'endurance supplémentaire. Ce point sera le premier à être perdu en cas d'attaque. Il ne peut être soigné et ne peut être lancé plus d'une fois par heure sur la  même cible. :!: 1 heures :!: Contact
+Bouclier éthéré :!: Le mage est protégé des deux prochaines attaques de projectile non magiques qu'il reçoit. (Flèche, dague de jet, roche...) :!: 1 heure :!: Personnel
+Repos du guerrier :!: Le mage régénère d’un point d’endurance apres 30 minutes. :!: 30 minutes :!: personnel
+Protection mineur contre le feu :!: Annule le premier point de dégât de feu reçu par le mage. :!: 1 heure ou premier dégât :!: Personnel
+Protection mineur contre l’eau ou la glace :!: Annule le premier point de dégât d’eau ou de glace reçu par le mage. :!: 1 heure ou premier dégât :!: personnel 
+Protection mineur contre la terre :!: Annule le premier point de dégât de terre reçu par le mage. :!: 1 heure ou premier dégât :!: personnel 
+Protection mineur contre l’air :!: Annule le premier point de dégât d’air  reçu par le mage. :!: 1 heure ou premier dégât :!: Personnel
+{2}
+Armure de mage :!: Crée une armure autour du mage qui le protège de deux points de dégâts au contact. Jusqu’à ce qu’il perde ces points. Non cumulatif à d’autres types de protection magique ou physique. :!: 1 heure :!: personnel 
+Bouclier :!: Permet au mage d’utiliser un vrai petit bouclier pendant une heure. Le mage doit trouver son bouclier. :!: 1 heures :!: personnel
+Instinct du félin :!: Lors d’une attaque sournoise le mage ne reçoit qu’un point de dégât. :!: 10 minutes :!: personnel 
+Armure magique :!: Protège le mage contre les 2 prochains projectiles magiques. :!: 1 heure :!: personnel 
+Vision trouble :!: Le mage doit être caché entièrement derrière quelque chose ou quelqu’un et il disparait aux yeux de ceux qui le recherchent. Le sort brise dès que le mage bouge :!: instantané :!: personnel
+[Nécromancie]
+{1}
+Froideur de la mort :!: Le nécromancien fait sentir un froid intense à sa victime sur ses jambes qui voit ralentir ses déplacement (n’affecte pas la vitesse des attaques) :!: 10 secondes :!: 10 mètres
+Animation de cadavre :!: Le nécromancien anime un cadavre ou un être vivant a 0 points d’endurance. Il ne peut  que suivre le nécromancien. :!: 10 minutes :!: contact 
+Contact avec l’au-delà :!: Permet de parler avec une personne morte depuis moins de 30 minutes pendant 1 minute ou une question :!: 1 minute ou 1 question :!: contact 
+La main du squelette :!: Rend la main de la cible en squelette. La cible ne peut plus rien tenir pendant la durée du sort. Le mage doit indiquer quelle main il vise. Une cible ne peut être affectée qu’une fois par jour. :!: 10 secondes :!: 10 mètres
+Odeur de la mort :!: Le mage sent tellement la mort que personne ne peut l’approcher s’il feint la mort. :!: 10 minutes :!: personnel
+{2}
+Animation de  squelette :!: Permet d’animer un cadavre qui exécute un seul ordre du mage. Le squelette ainsi relevé possède 1 point d’endurance et frappe de un, peu importe ce qu’il était. Le mage peut contrôler un seul cadavre animé à la fois. :!: 10 minutes :!: contact 
+Drain de vie :!: Ce sort permet de retirer 1 point d’endurance à la cible en la touchant de façon continue pendant 10 secondes. Le mage regagne le  point d’endurance qu’il inflige. :!: 10 secondes :!: contact 
+Peur de la mort :!: Le mage a la fin de son incantation crie très fort ce qui fait peur à la cible. La cible doit se sauver pendant 10 secondes. :!: 10 secondes :!: 1 mètre
+Détection des morts vivant :!: Détecte les morts vivant dans un rayon de 3 mètre. :!: instantané :!: 3 mètres 
+Protection contre l’éthéré :!: Protège le mage d’un toucher spectral. :!: 10 minutes :!: 1 être vivant
+[Divination]
+{1}
+Détection de la magie :!: Permet au mage de détecter l’aura de tous les objets et créatures magiques se trouvant autour de lui sans se déplacer. :!: instantané :!: personnel
+Détection de l’énergie négative :!: Détecte si un objet possède de l’énergie négative. :!: instantané :!: 1 objet

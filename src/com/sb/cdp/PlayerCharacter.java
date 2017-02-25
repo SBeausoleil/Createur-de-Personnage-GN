@@ -5,9 +5,9 @@ import java.util.Map;
 import java.util.Set;
 
 import com.sb.cdp.ability.Ability;
-import com.sb.cdp.spell.God;
-import com.sb.cdp.spell.Prayer;
-import com.sb.cdp.spell.Spell;
+import com.sb.cdp.magic.God;
+import com.sb.cdp.magic.Prayer;
+import com.sb.cdp.magic.Magic;
 
 public class PlayerCharacter {
     public static final String ENDURANCE = "endurance";
@@ -29,7 +29,7 @@ public class PlayerCharacter {
     private String background;
     private Map<String, Ability> abilities;
     private Map<String, Ability> specialAbilities;
-    private Map<String, Spell> spells;
+    private Map<String, Magic> spells;
     private Map<String, Prayer> prayers;
 
     public PlayerCharacter(String name, Set<CharacterType> classes, MoralAlignment moralALignment,
@@ -261,7 +261,7 @@ public class PlayerCharacter {
      * 
      * @return the spells
      */
-    public Map<String, Spell> getSpells() {
+    public Map<String, Magic> getSpells() {
 	return spells;
     }
 
@@ -271,7 +271,7 @@ public class PlayerCharacter {
      * @param spells
      *            the spells to set
      */
-    public void setSpells(Map<String, Spell> spells) {
+    public void setSpells(Map<String, Magic> spells) {
 	this.spells = spells;
     }
 

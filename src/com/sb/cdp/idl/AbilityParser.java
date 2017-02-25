@@ -45,7 +45,21 @@ public class AbilityParser {
 
     public static CharacterType.Classification preferParsingAs = CharacterType.Classification.CLASS;
 
-    public static Map<String, Ability> parseAbilities(File inlineFile, Map<String, Ability> abilities, CharacterTypePool ctPool)
+    /**
+     * Parses the abilities present into a text file.
+     * 
+     * @param inlineFile
+     * @param abilities
+     *            a map of abilities. May be null. Will be modified if non-null.
+     * @param ctPool
+     *            a pool of existing CharacterTypes. Will be modified if a CharacterType is needed
+     *            while parsing and does not exists yet.
+     * @return a map containing all the abilities, news and olds.
+     * @throws FileNotFoundException
+     * @throws IOException
+     */
+    public static Map<String, Ability> parseAbilities(File inlineFile, Map<String, Ability> abilities,
+	    CharacterTypePool ctPool)
 	    throws FileNotFoundException, IOException {
 	Set<RawAbility> rawAbilities = new LinkedHashSet<>();
 	readRawAbilities(inlineFile, rawAbilities);
@@ -65,8 +79,11 @@ public class AbilityParser {
 	    throws FileNotFoundException, IOException {
 	BufferedReader in = new BufferedReader(new FileReader(inlineFile));
 	String line = null;
-	while ((line = in.readLine()) != null)
+	while ((line = in.readLine()) != null) {
+	    if (line.isEmpty())
+		continue;
 	    parseRawAbilities(line, rawAbilities);
+	}
 	in.close();
     }
 
@@ -138,7 +155,8 @@ public class AbilityParser {
      * @see CharacterType.Classification
      * @return
      */
-    private static Collection<CharacterTypeCondition> parseCharacterTypeConditions(String[] elements, CharacterTypePool ctPool) {
+    private static Collection<CharacterTypeCondition> parseCharacterTypeConditions(String[] elements,
+	    CharacterTypePool ctPool) {
 	HashMap<CharacterType.Classification, Set<CharacterType>> types = new HashMap<>();
 	for (CharacterType.Classification classification : CharacterType.Classification.values())
 	    types.put(classification, new HashSet<>());

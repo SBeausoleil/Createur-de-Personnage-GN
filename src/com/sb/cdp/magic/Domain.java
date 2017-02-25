@@ -1,19 +1,28 @@
-package com.sb.cdp.spell;
+package com.sb.cdp.magic;
 
 import java.util.Set;
 import java.util.TreeSet;
 
-public class Domain<SpellType extends Spell> {
+public class Domain<SpellType extends Magic> {
     private String name;
+    private String description;
     private Set<SpellType> spells;
 
     public Domain(String name) {
 	this.name = name;
+	this.description = "";
 	spells = new TreeSet<>();
     }
     
-    public Domain(String name, Set<SpellType> spells) {
+    public Domain(String name, String description) {
 	this.name = name;
+	this.description = description;
+	spells = new TreeSet<>();
+    }
+    
+    public Domain(String name, String description, Set<SpellType> spells) {
+	this.name = name;
+	this.description = description;
 	this.spells = spells;
     }
 
@@ -53,5 +62,21 @@ public class Domain<SpellType extends Spell> {
      */
     public void setSpells(Set<SpellType> spells) {
 	this.spells = spells;
+    }
+
+    /**
+     * Returns the description.
+     * @return the description
+     */
+    public String getDescription() {
+        return description;
+    }
+
+    /**
+     * Sets the value of description to that of the parameter.
+     * @param description the description to set
+     */
+    public void setDescription(String description) {
+        this.description = description;
     }
 }
