@@ -48,17 +48,17 @@ public class Initialize {
 
     public static Library<String, Domain<Spell>> spellDomains() {
 	Library<String, Domain<Spell>> domains = new Library<>("Sorts publiques");
-	domains.put("Évocation", new Domain("Évocation",
+	domains.put("Évocation", new Domain<Spell>("Évocation",
 		"La magie d’évocation canalise l’énergie magique en une force d’attaque. L’évocateur est le spécialiste des attaques puissantes à distance ou au touché qu’elle soit dirigé envers une personne ou un groupe. L’évocateur  peut aussi devenir un combattant de mêlée redoutable. Que ce soit les améliorations d’armes, l’amélioration des capacités de combat ou tout ce qui peut aider aux guerriers pendant un combat."));
-	domains.put("Protection", new Domain("Protection",
+	domains.put("Protection", new Domain<Spell>("Protection",
 		"Cette école offre des sorts de protections contre les attaques physiques, mentales et magiques pour une personne ou un groupe. "));
-	domains.put("Nécromancie", new Domain("Nécromancie",
+	domains.put("Nécromancie", new Domain<Spell>("Nécromancie",
 		"Les nécromanciens utilisent les énergies magiques pour contrôler une entité morte, sans utiliser les pouvoirs de Narzul."));
-	domains.put("Divination", new Domain("Divination",
+	domains.put("Divination", new Domain<Spell>("Divination",
 		"Cette école permet de voir, de prédire ou d’influencer certaines choses que le commun des mortels ne peut contrôler."));
-	domains.put("Enchantement", new Domain("Enchantement",
+	domains.put("Enchantement", new Domain<Spell>("Enchantement",
 		"L’école de l’enchantement permet d’influencer et de soumettre l’esprit d’être vivant selon la volonté du magicien. Elle permet aussi d’enchanter des objets."));
-	domains.put("Général", new Domain("Général",
+	domains.put("Général", new Domain<Spell>("Général",
 		"Cette école  englobe tout ce qui n’a aucun rapport avec les autres magies."));
 	return domains;
     }
