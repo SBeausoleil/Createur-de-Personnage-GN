@@ -11,7 +11,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.sb.cdp.magic.Domain;
-import com.sb.cdp.magic.Spell;
+import com.sb.cdp.magic.Magic;
 
 public class SpellParser {
 
@@ -28,8 +28,8 @@ public class SpellParser {
     public static int castingTimeLevelMultiplier = 10;
     //public static int
     // TESTME
-    public static Map<String, Domain<Spell>> parseSpells(File spellsFile,
-	    Map<String, Domain<Spell>> domains) throws FileNotFoundException, IOException {
+    public static Map<String, Domain> parseSpells(File spellsFile,
+	    Map<String, Domain> domains) throws FileNotFoundException, IOException {
 	if (domains == null)
 	    domains = new TreeMap<>();
 
@@ -46,7 +46,7 @@ public class SpellParser {
 		if (matcher.find()) {
 		    currentDomain = domains.get(matcher.group(1).trim());
 		    if (currentDomain == null) {
-			currentDomain = new Domain(matcher.group(1).trim());
+			currentDomain = new Domain(matcher.group(1).trim(), Initialize.SPELL);
 			domains.put(currentDomain.getName(), currentDomain);
 		    }
 		} else {
@@ -71,15 +71,15 @@ public class SpellParser {
 	return domains;
     }
 
-    private static Spell parseSpell(Matcher matcher, Domain currentDomain, int currentLevel) {
-	Spell spell = new Spell(matcher.group(NAME).trim()); // Sets the name
+    private static Magic parseSpell(Matcher matcher, Domain currentDomain, int currentLevel) {
+	Magic spell = new Magic(matcher.group(NAME).trim()); // Sets the name
 	spell.setDescription(matcher.group(DESCRIPTION).trim());
 	spell.setRange(matcher.group(RANGE).trim());
 	spell.setDuration(matcher.group(DURATION).trim());
-	spell.setCastingTime(currentLevel * castingTimeLevelMultiplier);
+	spell.setCasting(currentLevel * castingTimeLevelMultiplier + " mots");
 	spell.setLevel(currentLevel);
 	spell.setDomain(currentDomain);
-	spell.setCost(cost(currentLevel));
+	spell.setCost(cost(currentLevel) + " mana");
 	return spell;
     }
 
@@ -98,11 +98,11 @@ public class SpellParser {
     }
 
     public static void main(String[] args) throws FileNotFoundException, IOException {
-	Map<String, Domain<Spell>> domains = new TreeMap<>();
+	Map<String, Domain> domains = new TreeMap<>();
 	parseSpells(new File("IDL_Spells.txt"), domains);
 
-	for (Domain<Spell> domain : domains.values())
-	    for (Spell spell : domain.getSpells())
+	for (Domain domain : domains.values())
+	    for (Magic spell : domain.getSpells())
 		System.out.println(spell);
     }
 }

@@ -12,51 +12,125 @@ import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
-public class Library<T, E> implements Map<T, E> {
+public class Library<K, V> implements Map<K, V>, Comparable<Library> {
 
     // TODO add some form of version control to allow merging of libraries and updating etc...
-    
+
     private String name;
-    private TreeMap<T, E> data;
+    private TreeMap<K, V> data;
+    private boolean isPublic;
+    private Class<V> valueType;
     
-    public Library(String name) {
+    public Library(String name, Class<V> valueType) {
 	this.name = name;
+	this.valueType = valueType;
+	data = new TreeMap<>();
+    }
+
+    public Library(String name, Class<V> valueType, boolean isPublic) {
+	this.name = name;
+	this.valueType = valueType;
+	this.isPublic = isPublic;
 	data = new TreeMap<>();
     }
 
     /**
      * Returns the name.
+     * 
      * @return the name
      */
     public String getName() {
-        return name;
+	return name;
     }
 
     /**
      * Sets the value of name to that of the parameter.
-     * @param name the name to set
+     * 
+     * @param name
+     *            the name to set
      */
     public void setName(String name) {
-        this.name = name;
+	this.name = name;
     }
 
     /**
      * Returns the data.
+     * 
      * @return the data
      */
-    public Map<T, E> getData() {
-        return data;
+    public Map<K, V> getData() {
+	return data;
     }
 
     /**
      * Sets the value of data to that of the parameter.
-     * @param data the data to set
+     * 
+     * @param data
+     *            the data to set
      */
-    public void setData(TreeMap<T, E> data) {
-        this.data = data;
+    public void setData(TreeMap<K, V> data) {
+	this.data = data;
     }
     
-    /* (non-Javadoc)
+
+    /**
+     * @return
+     * @see java.util.TreeMap#values()
+     */
+    @Override
+    public Collection<V> values() {
+	return data.values();
+    }
+
+    /**
+     * Returns the isPublic.
+     * 
+     * @return the isPublic
+     */
+    public boolean isPublic() {
+	return isPublic;
+    }
+
+    /**
+     * Sets the value of isPublic to that of the parameter.
+     * 
+     * @param isPublic
+     *            the isPublic to set
+     */
+    public void setPublic(boolean isPublic) {
+	this.isPublic = isPublic;
+    }
+
+    /**
+     * Returns the valueType.
+     * @return the valueType
+     */
+    public Class<V> getValueType() {
+        return valueType;
+    }
+
+    /**
+     * Sets the value of valueType to that of the parameter.
+     * @param valueType the valueType to set
+     */
+    public void setValueType(Class<V> valueType) {
+        this.valueType = valueType;
+    }
+
+    @Override
+    public int compareTo(Library lib) {
+	int comparison = name.compareTo(lib.name);
+	if (comparison != 0)
+	    return comparison;
+	comparison = valueType.getName().compareTo(lib.getValueType().getName());
+	if (comparison != 0)
+	    return comparison;
+	return Integer.compare(data.size(), lib.data.size());
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
      * @see java.lang.Object#toString()
      */
     @Override
@@ -65,13 +139,13 @@ public class Library<T, E> implements Map<T, E> {
     }
 
     // !!!--- Delegate methods to data after this point ---!!! //
-    
+
     /**
      * @param key
      * @return
      * @see java.util.TreeMap#ceilingEntry(java.lang.Object)
      */
-    public Entry<T, E> ceilingEntry(T key) {
+    public Entry<K, V> ceilingEntry(K key) {
 	return data.ceilingEntry(key);
     }
 
@@ -80,12 +154,11 @@ public class Library<T, E> implements Map<T, E> {
      * @return
      * @see java.util.TreeMap#ceilingKey(java.lang.Object)
      */
-    public T ceilingKey(T key) {
+    public K ceilingKey(K key) {
 	return data.ceilingKey(key);
     }
 
     /**
-     * 
      * @see java.util.TreeMap#clear()
      */
     @Override
@@ -106,7 +179,7 @@ public class Library<T, E> implements Map<T, E> {
      * @return
      * @see java.util.TreeMap#comparator()
      */
-    public Comparator<? super T> comparator() {
+    public Comparator<? super K> comparator() {
 	return data.comparator();
     }
 
@@ -117,7 +190,7 @@ public class Library<T, E> implements Map<T, E> {
      * @see java.util.Map#compute(java.lang.Object, java.util.function.BiFunction)
      */
     @Override
-    public E compute(T key, BiFunction<? super T, ? super E, ? extends E> remappingFunction) {
+    public V compute(K key, BiFunction<? super K, ? super V, ? extends V> remappingFunction) {
 	return data.compute(key, remappingFunction);
     }
 
@@ -128,7 +201,7 @@ public class Library<T, E> implements Map<T, E> {
      * @see java.util.Map#computeIfAbsent(java.lang.Object, java.util.function.Function)
      */
     @Override
-    public E computeIfAbsent(T key, Function<? super T, ? extends E> mappingFunction) {
+    public V computeIfAbsent(K key, Function<? super K, ? extends V> mappingFunction) {
 	return data.computeIfAbsent(key, mappingFunction);
     }
 
@@ -139,7 +212,7 @@ public class Library<T, E> implements Map<T, E> {
      * @see java.util.Map#computeIfPresent(java.lang.Object, java.util.function.BiFunction)
      */
     @Override
-    public E computeIfPresent(T key, BiFunction<? super T, ? super E, ? extends E> remappingFunction) {
+    public V computeIfPresent(K key, BiFunction<? super K, ? super V, ? extends V> remappingFunction) {
 	return data.computeIfPresent(key, remappingFunction);
     }
 
@@ -167,7 +240,7 @@ public class Library<T, E> implements Map<T, E> {
      * @return
      * @see java.util.TreeMap#descendingKeySet()
      */
-    public NavigableSet<T> descendingKeySet() {
+    public NavigableSet<K> descendingKeySet() {
 	return data.descendingKeySet();
     }
 
@@ -175,7 +248,7 @@ public class Library<T, E> implements Map<T, E> {
      * @return
      * @see java.util.TreeMap#descendingMap()
      */
-    public NavigableMap<T, E> descendingMap() {
+    public NavigableMap<K, V> descendingMap() {
 	return data.descendingMap();
     }
 
@@ -184,7 +257,7 @@ public class Library<T, E> implements Map<T, E> {
      * @see java.util.TreeMap#entrySet()
      */
     @Override
-    public Set<Entry<T, E>> entrySet() {
+    public Set<Entry<K, V>> entrySet() {
 	return data.entrySet();
     }
 
@@ -202,7 +275,7 @@ public class Library<T, E> implements Map<T, E> {
      * @return
      * @see java.util.TreeMap#firstEntry()
      */
-    public Entry<T, E> firstEntry() {
+    public Entry<K, V> firstEntry() {
 	return data.firstEntry();
     }
 
@@ -210,7 +283,7 @@ public class Library<T, E> implements Map<T, E> {
      * @return
      * @see java.util.TreeMap#firstKey()
      */
-    public T firstKey() {
+    public K firstKey() {
 	return data.firstKey();
     }
 
@@ -219,7 +292,7 @@ public class Library<T, E> implements Map<T, E> {
      * @return
      * @see java.util.TreeMap#floorEntry(java.lang.Object)
      */
-    public Entry<T, E> floorEntry(T key) {
+    public Entry<K, V> floorEntry(K key) {
 	return data.floorEntry(key);
     }
 
@@ -228,7 +301,7 @@ public class Library<T, E> implements Map<T, E> {
      * @return
      * @see java.util.TreeMap#floorKey(java.lang.Object)
      */
-    public T floorKey(T key) {
+    public K floorKey(K key) {
 	return data.floorKey(key);
     }
 
@@ -237,7 +310,7 @@ public class Library<T, E> implements Map<T, E> {
      * @see java.util.TreeMap#forEach(java.util.function.BiConsumer)
      */
     @Override
-    public void forEach(BiConsumer<? super T, ? super E> action) {
+    public void forEach(BiConsumer<? super K, ? super V> action) {
 	data.forEach(action);
     }
 
@@ -247,7 +320,7 @@ public class Library<T, E> implements Map<T, E> {
      * @see java.util.TreeMap#get(java.lang.Object)
      */
     @Override
-    public E get(Object key) {
+    public V get(Object key) {
 	return data.get(key);
     }
 
@@ -258,7 +331,7 @@ public class Library<T, E> implements Map<T, E> {
      * @see java.util.Map#getOrDefault(java.lang.Object, java.lang.Object)
      */
     @Override
-    public E getOrDefault(Object key, E defaultValue) {
+    public V getOrDefault(Object key, V defaultValue) {
 	return data.getOrDefault(key, defaultValue);
     }
 
@@ -277,7 +350,7 @@ public class Library<T, E> implements Map<T, E> {
      * @return
      * @see java.util.TreeMap#headMap(java.lang.Object, boolean)
      */
-    public NavigableMap<T, E> headMap(T toKey, boolean inclusive) {
+    public NavigableMap<K, V> headMap(K toKey, boolean inclusive) {
 	return data.headMap(toKey, inclusive);
     }
 
@@ -286,7 +359,7 @@ public class Library<T, E> implements Map<T, E> {
      * @return
      * @see java.util.TreeMap#headMap(java.lang.Object)
      */
-    public SortedMap<T, E> headMap(T toKey) {
+    public SortedMap<K, V> headMap(K toKey) {
 	return data.headMap(toKey);
     }
 
@@ -295,7 +368,7 @@ public class Library<T, E> implements Map<T, E> {
      * @return
      * @see java.util.TreeMap#higherEntry(java.lang.Object)
      */
-    public Entry<T, E> higherEntry(T key) {
+    public Entry<K, V> higherEntry(K key) {
 	return data.higherEntry(key);
     }
 
@@ -304,7 +377,7 @@ public class Library<T, E> implements Map<T, E> {
      * @return
      * @see java.util.TreeMap#higherKey(java.lang.Object)
      */
-    public T higherKey(T key) {
+    public K higherKey(K key) {
 	return data.higherKey(key);
     }
 
@@ -322,7 +395,7 @@ public class Library<T, E> implements Map<T, E> {
      * @see java.util.TreeMap#keySet()
      */
     @Override
-    public Set<T> keySet() {
+    public Set<K> keySet() {
 	return data.keySet();
     }
 
@@ -330,7 +403,7 @@ public class Library<T, E> implements Map<T, E> {
      * @return
      * @see java.util.TreeMap#lastEntry()
      */
-    public Entry<T, E> lastEntry() {
+    public Entry<K, V> lastEntry() {
 	return data.lastEntry();
     }
 
@@ -338,7 +411,7 @@ public class Library<T, E> implements Map<T, E> {
      * @return
      * @see java.util.TreeMap#lastKey()
      */
-    public T lastKey() {
+    public K lastKey() {
 	return data.lastKey();
     }
 
@@ -347,7 +420,7 @@ public class Library<T, E> implements Map<T, E> {
      * @return
      * @see java.util.TreeMap#lowerEntry(java.lang.Object)
      */
-    public Entry<T, E> lowerEntry(T key) {
+    public Entry<K, V> lowerEntry(K key) {
 	return data.lowerEntry(key);
     }
 
@@ -356,7 +429,7 @@ public class Library<T, E> implements Map<T, E> {
      * @return
      * @see java.util.TreeMap#lowerKey(java.lang.Object)
      */
-    public T lowerKey(T key) {
+    public K lowerKey(K key) {
 	return data.lowerKey(key);
     }
 
@@ -368,7 +441,7 @@ public class Library<T, E> implements Map<T, E> {
      * @see java.util.Map#merge(java.lang.Object, java.lang.Object, java.util.function.BiFunction)
      */
     @Override
-    public E merge(T key, E value, BiFunction<? super E, ? super E, ? extends E> remappingFunction) {
+    public V merge(K key, V value, BiFunction<? super V, ? super V, ? extends V> remappingFunction) {
 	return data.merge(key, value, remappingFunction);
     }
 
@@ -376,7 +449,7 @@ public class Library<T, E> implements Map<T, E> {
      * @return
      * @see java.util.TreeMap#navigableKeySet()
      */
-    public NavigableSet<T> navigableKeySet() {
+    public NavigableSet<K> navigableKeySet() {
 	return data.navigableKeySet();
     }
 
@@ -384,7 +457,7 @@ public class Library<T, E> implements Map<T, E> {
      * @return
      * @see java.util.TreeMap#pollFirstEntry()
      */
-    public Entry<T, E> pollFirstEntry() {
+    public Entry<K, V> pollFirstEntry() {
 	return data.pollFirstEntry();
     }
 
@@ -392,7 +465,7 @@ public class Library<T, E> implements Map<T, E> {
      * @return
      * @see java.util.TreeMap#pollLastEntry()
      */
-    public Entry<T, E> pollLastEntry() {
+    public Entry<K, V> pollLastEntry() {
 	return data.pollLastEntry();
     }
 
@@ -403,7 +476,7 @@ public class Library<T, E> implements Map<T, E> {
      * @see java.util.TreeMap#put(java.lang.Object, java.lang.Object)
      */
     @Override
-    public E put(T key, E value) {
+    public V put(K key, V value) {
 	return data.put(key, value);
     }
 
@@ -412,7 +485,7 @@ public class Library<T, E> implements Map<T, E> {
      * @see java.util.TreeMap#putAll(java.util.Map)
      */
     @Override
-    public void putAll(Map<? extends T, ? extends E> map) {
+    public void putAll(Map<? extends K, ? extends V> map) {
 	data.putAll(map);
     }
 
@@ -423,7 +496,7 @@ public class Library<T, E> implements Map<T, E> {
      * @see java.util.Map#putIfAbsent(java.lang.Object, java.lang.Object)
      */
     @Override
-    public E putIfAbsent(T key, E value) {
+    public V putIfAbsent(K key, V value) {
 	return data.putIfAbsent(key, value);
     }
 
@@ -444,7 +517,7 @@ public class Library<T, E> implements Map<T, E> {
      * @see java.util.TreeMap#remove(java.lang.Object)
      */
     @Override
-    public E remove(Object key) {
+    public V remove(Object key) {
 	return data.remove(key);
     }
 
@@ -456,7 +529,7 @@ public class Library<T, E> implements Map<T, E> {
      * @see java.util.TreeMap#replace(java.lang.Object, java.lang.Object, java.lang.Object)
      */
     @Override
-    public boolean replace(T key, E oldValue, E newValue) {
+    public boolean replace(K key, V oldValue, V newValue) {
 	return data.replace(key, oldValue, newValue);
     }
 
@@ -467,7 +540,7 @@ public class Library<T, E> implements Map<T, E> {
      * @see java.util.TreeMap#replace(java.lang.Object, java.lang.Object)
      */
     @Override
-    public E replace(T key, E value) {
+    public V replace(K key, V value) {
 	return data.replace(key, value);
     }
 
@@ -476,7 +549,7 @@ public class Library<T, E> implements Map<T, E> {
      * @see java.util.TreeMap#replaceAll(java.util.function.BiFunction)
      */
     @Override
-    public void replaceAll(BiFunction<? super T, ? super E, ? extends E> function) {
+    public void replaceAll(BiFunction<? super K, ? super V, ? extends V> function) {
 	data.replaceAll(function);
     }
 
@@ -497,7 +570,7 @@ public class Library<T, E> implements Map<T, E> {
      * @return
      * @see java.util.TreeMap#subMap(java.lang.Object, boolean, java.lang.Object, boolean)
      */
-    public NavigableMap<T, E> subMap(T fromKey, boolean fromInclusive, T toKey, boolean toInclusive) {
+    public NavigableMap<K, V> subMap(K fromKey, boolean fromInclusive, K toKey, boolean toInclusive) {
 	return data.subMap(fromKey, fromInclusive, toKey, toInclusive);
     }
 
@@ -507,7 +580,7 @@ public class Library<T, E> implements Map<T, E> {
      * @return
      * @see java.util.TreeMap#subMap(java.lang.Object, java.lang.Object)
      */
-    public SortedMap<T, E> subMap(T fromKey, T toKey) {
+    public SortedMap<K, V> subMap(K fromKey, K toKey) {
 	return data.subMap(fromKey, toKey);
     }
 
@@ -517,7 +590,7 @@ public class Library<T, E> implements Map<T, E> {
      * @return
      * @see java.util.TreeMap#tailMap(java.lang.Object, boolean)
      */
-    public NavigableMap<T, E> tailMap(T fromKey, boolean inclusive) {
+    public NavigableMap<K, V> tailMap(K fromKey, boolean inclusive) {
 	return data.tailMap(fromKey, inclusive);
     }
 
@@ -526,17 +599,9 @@ public class Library<T, E> implements Map<T, E> {
      * @return
      * @see java.util.TreeMap#tailMap(java.lang.Object)
      */
-    public SortedMap<T, E> tailMap(T fromKey) {
+    public SortedMap<K, V> tailMap(K fromKey) {
 	return data.tailMap(fromKey);
     }
 
-    /**
-     * @return
-     * @see java.util.TreeMap#values()
-     */
-    @Override
-    public Collection<E> values() {
-	return data.values();
-    }
 
 }

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.TitledPane?>
+<?import javafx.scene.effect.DropShadow?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.sb.cdp.gui.view.RootLayoutController">
+   <left>
+      <VBox alignment="TOP_CENTER" prefHeight="600.0" prefWidth="110.0" style="-fx-background-color: aabbff;" BorderPane.alignment="CENTER">
+         <effect>
+            <DropShadow />
+         </effect>
+         <children>
+            <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../../../resources/idl_symbol.jpg" />
+               </image>
+               <VBox.margin>
+                  <Insets />
+               </VBox.margin>
+            </ImageView>
+            <Button fx:id="myCharacters" mnemonicParsing="false" text="Mes Personnages" />
+            <TitledPane fx:id="rpg" text="GN">
+              <content>
+                <AnchorPane minHeight="0.0" minWidth="0.0" style="-fx-background-color: bbbbff;">
+                     <children>
+                        <VBox alignment="TOP_CENTER" layoutX="19.6" layoutY="19.6" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                           <children>
+                              <Button fx:id="abilities" mnemonicParsing="false" text="Abilités" />
+                              <Button fx:id="magic" mnemonicParsing="false" text="Magie" />
+                              <Button fx:id="domains" mnemonicParsing="false" text="Domaines" />
+                              <Button fx:id="gods" mnemonicParsing="false" text="Dieux" />
+                           </children>
+                        </VBox>
+                     </children>
+                  </AnchorPane>
+              </content>
+            </TitledPane>
+            <Button fx:id="save" mnemonicParsing="false" text="Sauvegarder" />
+            <Button fx:id="exit" mnemonicParsing="false" text="Quitter" />
+         </children>
+      </VBox>
+   </left>
+</BorderPane>

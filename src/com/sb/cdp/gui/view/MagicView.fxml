@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<AnchorPane prefHeight="100.0" prefWidth="400.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.sb.cdp.gui.view.MagicViewController">
+   <children>
+      <Label fx:id="name" layoutX="14.0" layoutY="14.0" text="NAME" AnchorPane.leftAnchor="5.0" AnchorPane.topAnchor="5.0">
+         <font>
+            <Font name="System Bold" size="14.0" />
+         </font>
+      </Label>
+      <Label fx:id="level" layoutX="358.0" layoutY="6.0" text="LEVEL" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0" />
+      <Label fx:id="duration" layoutX="8.0" layoutY="22.0" text="DURATION" AnchorPane.leftAnchor="5.0" AnchorPane.topAnchor="22.0" />
+      <Label fx:id="casting" layoutX="2.0" layoutY="42.0" text="CASTING" AnchorPane.leftAnchor="5.0" AnchorPane.topAnchor="37.0" />
+      <Label fx:id="range" layoutX="12.0" layoutY="59.0" text="RANGE" AnchorPane.leftAnchor="5.0" AnchorPane.topAnchor="52.0" />
+      <Label fx:id="cost" layoutX="350.0" layoutY="22.0" text="COST" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="22.0" />
+      <Label fx:id="domain" layoutX="186.0" layoutY="6.0" text="DOMAIN" AnchorPane.topAnchor="22.0" />
+      <Text fx:id="description" layoutX="3.0" layoutY="82.0" strokeType="OUTSIDE" strokeWidth="0.0" text="DESCRIPTION" AnchorPane.leftAnchor="5.0" AnchorPane.topAnchor="67.0" />
+      <Label fx:id="magicType" layoutX="177.0" layoutY="5.0" text="MAGIC TYPE" AnchorPane.topAnchor="5.0">
+         <font>
+            <Font name="System Italic" size="12.0" />
+         </font>
+      </Label>
+   </children>
+</AnchorPane>

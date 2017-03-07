@@ -18,8 +18,14 @@ public class CharacterTypeCondition implements Condition {
 	this.neededTypes = neededTypes;
     }
 
+    /**
+     * Checks if the PlayerCharacter has at least one of the neededTypes.
+     */
     @Override
     public boolean accept(PlayerCharacter pc) {
+	for (CharacterType pct : pc.getCharacterTypes())
+	    if (neededTypes.contains(pct))
+		return true;
 	return false;
     }
 

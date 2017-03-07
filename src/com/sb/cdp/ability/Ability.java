@@ -9,9 +9,10 @@ public class Ability {
     private int cost;
     private Condition[] prerequisites;
     private String description;
+    private int maxTimesTaken; // TODO integrate in the system the maximum number of times an ability can be taken
 
     public Ability(String name) {
-	this.name = name;
+	this(name, 0, null, null);
     }
 
     public Ability(String name, int cost, Condition[] prerequisites, String description) {
@@ -19,6 +20,7 @@ public class Ability {
 	this.cost = cost;
 	this.prerequisites = prerequisites;
 	this.description = description;
+	maxTimesTaken = 1;
     }
 
     /**
@@ -123,5 +125,21 @@ public class Ability {
     public String toString() {
 	return "Ability [name=" + name + ", cost=" + cost + ", prerequisites="
 		+ Arrays.toString(prerequisites) + ", description=" + description + "]";
+    }
+
+    /**
+     * Returns the maxTimesTaken.
+     * @return the maxTimesTaken
+     */
+    public int getMaxTimesTaken() {
+        return maxTimesTaken;
+    }
+
+    /**
+     * Sets the value of maxTimesTaken to that of the parameter.
+     * @param maxTimesTaken the maxTimesTaken to set
+     */
+    public void setMaxTimesTaken(int maxTimesTaken) {
+        this.maxTimesTaken = maxTimesTaken;
     }
 }

@@ -1,31 +1,27 @@
 package com.sb.cdp.magic;
 
-public abstract class Magic<SpellType extends Magic> implements Comparable<Magic> {
+public class Magic implements Comparable<Magic> {
     public static final float TOUCH = 0f;
     public static final float SELF = -1f;
-    
+
     private String name;
     private int level;
     private String duration;
-    /**
-     * The time required to cast the spell.
-     * It is either the number of words to be said (mage) or the length of the prayer (priest).
-     */
-    private long castingTime;
+    private String casting;
     private String description;
     private String range;
-    private int cost;
-    private Domain<SpellType> domain;
-    
+    private String cost;
+    private Domain domain;
+
     public Magic(String name) {
-	this(name, 0, null, -1, null, null, -1, null);
+	this(name, 0, null, null, null, null, null, null);
     }
 
-    public Magic(String name, int level, String duration, long castingTime, String description, String range,
-	    int cost, Domain<SpellType> domain) {
+    public Magic(String name, int level, String duration, String casting, String description, String range,
+	    String cost, Domain domain) {
 	this.name = name;
 	this.duration = duration;
-	this.castingTime = castingTime;
+	this.casting = casting;
 	this.description = description;
 	this.range = range;
 	this.cost = cost;
@@ -75,8 +71,8 @@ public abstract class Magic<SpellType extends Magic> implements Comparable<Magic
      * 
      * @return the castingTime
      */
-    public long getCastingTime() {
-	return castingTime;
+    public String getCasting() {
+	return casting;
     }
 
     /**
@@ -85,8 +81,8 @@ public abstract class Magic<SpellType extends Magic> implements Comparable<Magic
      * @param castingTime
      *            the castingTime to set
      */
-    public void setCastingTime(long castingTime) {
-	this.castingTime = castingTime;
+    public void setCasting(String castingTime) {
+	this.casting = castingTime;
     }
 
     /**
@@ -132,7 +128,7 @@ public abstract class Magic<SpellType extends Magic> implements Comparable<Magic
      * 
      * @return the cost
      */
-    public int getCost() {
+    public String getCost() {
 	return cost;
     }
 
@@ -142,7 +138,7 @@ public abstract class Magic<SpellType extends Magic> implements Comparable<Magic
      * @param cost
      *            the cost to set
      */
-    public void setCost(int cost) {
+    public void setCost(String cost) {
 	this.cost = cost;
     }
 
@@ -151,7 +147,7 @@ public abstract class Magic<SpellType extends Magic> implements Comparable<Magic
      * 
      * @return the domain
      */
-    public Domain<SpellType> getDomain() {
+    public Domain getDomain() {
 	return domain;
     }
 
@@ -161,40 +157,52 @@ public abstract class Magic<SpellType extends Magic> implements Comparable<Magic
      * @param domain
      *            the domain to set
      */
-    public void setDomain(Domain<SpellType> domain) {
+    public void setDomain(Domain domain) {
 	this.domain = domain;
     }
 
     /**
      * Returns the level.
+     * 
      * @return the level
      */
     public int getLevel() {
-        return level;
+	return level;
     }
 
     /**
      * Sets the value of level to that of the parameter.
-     * @param level the level to set
+     * 
+     * @param level
+     *            the level to set
      */
     public void setLevel(int level) {
-        this.level = level;
+	this.level = level;
     }
 
-    /* (non-Javadoc)
+    public String getType() {
+	if (domain != null)
+	    return domain.getMagicType();
+	return null;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
      * @see java.lang.Object#toString()
      */
     @Override
     public String toString() {
-	return "Magic [name=" + name + ", level=" + level + ", duration=" + duration + ", castingTime=" + castingTime
-		+ ", description=" + description + ", range=" + range + ", cost=" + cost + ", domain=" + domain.getName() + "]";
+	return "Magic [name=" + name + ", level=" + level + ", duration=" + duration + ", castingTime=" + casting
+		+ ", description=" + description + ", range=" + range + ", cost=" + cost + ", domain="
+		+ domain.getName() + "]";
     }
-    
+
     @Override
     public int compareTo(Magic m) {
-	int nameCompareResult = name.compareTo(m.getName());
-	if (nameCompareResult == 0)
-	    return Integer.compare(level, m.getLevel());
-	return nameCompareResult;
+	int compareResult = Integer.compare(level, m.getLevel());
+	if (compareResult == 0)
+	    compareResult = name.compareTo(m.getName());
+	return compareResult;
     }
 }

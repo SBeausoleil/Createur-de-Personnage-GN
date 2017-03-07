@@ -1,15 +1,17 @@
 package com.sb.cdp;
 
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import com.sb.cdp.ability.Ability;
 import com.sb.cdp.magic.God;
-import com.sb.cdp.magic.Prayer;
 import com.sb.cdp.magic.Magic;
 
-public class PlayerCharacter {
+public class PlayerCharacter implements LibraryPermissionHolder {
     public static final String ENDURANCE = "endurance";
     public static final String MANA = "mana";
     public static final String KARMA = "karma";
@@ -19,23 +21,24 @@ public class PlayerCharacter {
     public static int xpPerLevel = 10;
 
     private String name;
-    private Set<CharacterType> classes;
+    private Set<CharacterType> characterTypes;
     private MoralAlignment moralALignment;
     private LawAlignment lawAlignment;
     private int xp;
     private int nAbilityPoints;
     private Map<String, Integer> stats;
-    private Set<God> gods;
+    private LinkedHashSet<God> gods;
     private String background;
-    private Map<String, Ability> abilities;
-    private Map<String, Ability> specialAbilities;
-    private Map<String, Magic> spells;
-    private Map<String, Prayer> prayers;
+    private List<Ability> abilities;
+    private List<Ability> specialAbilities;
+    private Set<Magic> spells;
+    
+    private Set<Library> allowedLibraries;
 
-    public PlayerCharacter(String name, Set<CharacterType> classes, MoralAlignment moralALignment,
+    public PlayerCharacter(String name, LinkedHashSet<CharacterType> characterTypes, MoralAlignment moralALignment,
 	    LawAlignment lawAlignment, int xp, int nAbilityPoints) {
 	this.name = name;
-	this.classes = classes;
+	this.characterTypes = characterTypes;
 	this.moralALignment = moralALignment;
 	this.lawAlignment = lawAlignment;
 	this.xp = xp;
@@ -45,6 +48,8 @@ public class PlayerCharacter {
 	stats.put(ENDURANCE, baseEndurance);
 	stats.put(MANA, baseMana);
 	stats.put(KARMA, baseKarma);
+	
+	allowedLibraries = new HashSet<>();
     }
 
     /**
@@ -71,8 +76,8 @@ public class PlayerCharacter {
      * 
      * @return the classes
      */
-    public Set<CharacterType> getClasses() {
-	return classes;
+    public Set<CharacterType> getCharacterTypes() {
+	return characterTypes;
     }
 
     /**
@@ -81,8 +86,8 @@ public class PlayerCharacter {
      * @param classes
      *            the classes to set
      */
-    public void setClasses(Set<CharacterType> classes) {
-	this.classes = classes;
+    public void setCharacterTypes(Set<CharacterType> classes) {
+	this.characterTypes = classes;
     }
 
     /**
@@ -94,6 +99,7 @@ public class PlayerCharacter {
 	return moralALignment;
     }
 
+    
     /**
      * Sets the value of moralALignment to that of the parameter.
      * 
@@ -185,7 +191,7 @@ public class PlayerCharacter {
      * 
      * @return the gods
      */
-    public Set<God> getGods() {
+    public LinkedHashSet<God> getGods() {
 	return gods;
     }
 
@@ -195,7 +201,7 @@ public class PlayerCharacter {
      * @param gods
      *            the gods to set
      */
-    public void setGods(Set<God> gods) {
+    public void setGods(LinkedHashSet<God> gods) {
 	this.gods = gods;
     }
 
@@ -223,7 +229,7 @@ public class PlayerCharacter {
      * 
      * @return the abilities
      */
-    public Map<String, Ability> getAbilities() {
+    public List<Ability> getAbilities() {
 	return abilities;
     }
 
@@ -233,7 +239,7 @@ public class PlayerCharacter {
      * @param abilities
      *            the abilities to set
      */
-    public void setAbilities(Map<String, Ability> abilities) {
+    public void setAbilities(List<Ability> abilities) {
 	this.abilities = abilities;
     }
 
@@ -242,7 +248,7 @@ public class PlayerCharacter {
      * 
      * @return the specialAbilities
      */
-    public Map<String, Ability> getSpecialAbilities() {
+    public List<Ability> getSpecialAbilities() {
 	return specialAbilities;
     }
 
@@ -252,50 +258,12 @@ public class PlayerCharacter {
      * @param specialAbilities
      *            the specialAbilities to set
      */
-    public void setSpecialAbilities(Map<String, Ability> specialAbilities) {
+    public void setSpecialAbilities(List<Ability> specialAbilities) {
 	this.specialAbilities = specialAbilities;
     }
 
-    /**
-     * Returns the spells.
-     * 
-     * @return the spells
-     */
-    public Map<String, Magic> getSpells() {
-	return spells;
-    }
-
-    /**
-     * Sets the value of spells to that of the parameter.
-     * 
-     * @param spells
-     *            the spells to set
-     */
-    public void setSpells(Map<String, Magic> spells) {
-	this.spells = spells;
-    }
-
-    /**
-     * Returns the prayers.
-     * 
-     * @return the prayers
-     */
-    public Map<String, Prayer> getPrayers() {
-	return prayers;
-    }
-
-    /**
-     * Sets the value of prayers to that of the parameter.
-     * 
-     * @param prayers
-     *            the prayers to set
-     */
-    public void setPrayers(Map<String, Prayer> prayers) {
-	this.prayers = prayers;
-    }
-
     public void addAbility(Ability ability) {
-	abilities.put(ability.getName(), ability);
+	abilities.add(ability);
     }
 
     public void removeAbility(Ability ability) {
@@ -303,7 +271,7 @@ public class PlayerCharacter {
     }
 
     public void addSpecialAbility(Ability ability) {
-	specialAbilities.put(ability.getName(), ability);
+	specialAbilities.add(ability);
     }
 
     public void removeSpecialAbility(Ability ability) {
@@ -316,9 +284,9 @@ public class PlayerCharacter {
 
     public int getAvailableAbilityPoints() {
 	int points = nAbilityPoints;
-	for (Ability ability : abilities.values())
+	for (Ability ability : abilities)
 	    points -= ability.getCost();
-	for (Ability specialAbility : specialAbilities.values())
+	for (Ability specialAbility : specialAbilities)
 	    points -= specialAbility.getCost();
 	return points;
     }
@@ -335,5 +303,36 @@ public class PlayerCharacter {
 
     public boolean hasStat(String stat) {
 	return stats.containsKey(stat);
+    }
+
+    /**
+     * Returns the spells.
+     * @return the spells
+     */
+    public Set<Magic> getSpells() {
+        return spells;
+    }
+
+    /**
+     * Sets the value of spells to that of the parameter.
+     * @param spells the spells to set
+     */
+    public void setSpells(Set<Magic> spells) {
+        this.spells = spells;
+    }
+
+    @Override
+    public Set<Library> getAllowedLibraries() {
+	return allowedLibraries;
+    }
+
+    @Override
+    public void setAllowedLibraries(Set<Library> allowedLibraries) {
+	this.allowedLibraries = allowedLibraries;
+    }
+
+    @Override
+    public void allow(Library allowedLibrary) {
+	allowedLibraries.add(allowedLibrary);
     }
 }

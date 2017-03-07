@@ -12,8 +12,8 @@ public class AbilityRequirement implements Condition {
 
     @Override
     public boolean accept(PlayerCharacter pc) {
-	return pc.getAbilities().containsKey(neededAbility.getName())
-		|| pc.getSpecialAbilities().containsKey(neededAbility.getName());
+	return pc.getAbilities().contains(neededAbility)
+		|| pc.getSpecialAbilities().contains(neededAbility);
     }
 
     @Override

@@ -12,58 +12,60 @@ import com.sb.cdp.Library;
 import com.sb.cdp.RPG;
 import com.sb.cdp.ability.Ability;
 import com.sb.cdp.magic.Domain;
+import com.sb.cdp.magic.DomainLibrary;
 import com.sb.cdp.magic.God;
-import com.sb.cdp.magic.Prayer;
-import com.sb.cdp.magic.Spell;
 
 public class Initialize {
+
+    public static final String PRAYER = "Prière";
+    public static final String SPELL = "Sort";
 
     public static RPG initialize() throws FileNotFoundException, IOException {
 	RPG idl = new RPG("Île Des Légendes"); // IDL: Ile Des Legendes
 	idl.setCharacterTypes(characterType());
-	Library<String, Ability> abilities = abilities(idl.getCharacterTypes());
+	Library<String, Ability> abilities = readAbilities(idl.getCharacterTypes());
 	idl.getAbilityLibraries().put(abilities.getName(), abilities);
 	idl.setGods(gods());
-	Library<String, Domain<Spell>> spellDomains = spellDomains();
-	spells(spellDomains);
-	idl.getSpellLibraries().put(spellDomains.getName(), spellDomains);
-	Library<String, Domain<Prayer>> prayerDomains = prayerDomains(idl.getGods().values());
-	idl.getPrayerLibraries().put(prayerDomains.getName(), prayerDomains);
+	DomainLibrary spellDomains = spellDomains();
+	readSpells(spellDomains);
+	idl.registerDomainLibrary(spellDomains);
+	DomainLibrary prayerDomains = prayerDomains(idl.getGods().values());
+	idl.registerDomainLibrary(prayerDomains);
 	return idl;
     }
 
-    public static Library<String, Domain<Prayer>> prayerDomains(Iterable<God> gods) {
-	Library<String, Domain<Prayer>> domains = new Library<>("Prières publiques");
+    public static DomainLibrary prayerDomains(Iterable<God> gods) {
+	DomainLibrary domains = new DomainLibrary("Prières publiques", PRAYER);
 	// Start by registering the already existing domains within the gods
 	for (God god : gods)
 	    for (Domain domain : god.getDomains())
 		domains.put(domain.getName(), domain);
 
-	domains.put("Guérison", new Domain<Prayer>("Guérison"));
-	domains.put("Bénédiction", new Domain<Prayer>("Bénédiction"));
-	domains.put("Protection", new Domain<Prayer>("Protection"));
-	domains.put("Divination", new Domain<Prayer>("Divination"));
+	domains.put("Guérison", new Domain("Guérison", PRAYER));
+	domains.put("Bénédiction", new Domain("Bénédiction", PRAYER));
+	domains.put("Protection", new Domain("Protection", PRAYER));
+	domains.put("Divination", new Domain("Divination", PRAYER));
 	return domains;
     }
 
-    public static Library<String, Domain<Spell>> spellDomains() {
-	Library<String, Domain<Spell>> domains = new Library<>("Sorts publiques");
-	domains.put("Évocation", new Domain<Spell>("Évocation",
+    public static DomainLibrary spellDomains() {
+	DomainLibrary domains = new DomainLibrary("Sorts publiques", SPELL);
+	domains.put("Évocation", new Domain("Évocation", SPELL,
 		"La magie d’évocation canalise l’énergie magique en une force d’attaque. L’évocateur est le spécialiste des attaques puissantes à distance ou au touché qu’elle soit dirigé envers une personne ou un groupe. L’évocateur  peut aussi devenir un combattant de mêlée redoutable. Que ce soit les améliorations d’armes, l’amélioration des capacités de combat ou tout ce qui peut aider aux guerriers pendant un combat."));
-	domains.put("Protection", new Domain<Spell>("Protection",
+	domains.put("Protection", new Domain("Protection", SPELL,
 		"Cette école offre des sorts de protections contre les attaques physiques, mentales et magiques pour une personne ou un groupe. "));
-	domains.put("Nécromancie", new Domain<Spell>("Nécromancie",
+	domains.put("Nécromancie", new Domain("Nécromancie", SPELL,
 		"Les nécromanciens utilisent les énergies magiques pour contrôler une entité morte, sans utiliser les pouvoirs de Narzul."));
-	domains.put("Divination", new Domain<Spell>("Divination",
+	domains.put("Divination", new Domain("Divination", SPELL,
 		"Cette école permet de voir, de prédire ou d’influencer certaines choses que le commun des mortels ne peut contrôler."));
-	domains.put("Enchantement", new Domain<Spell>("Enchantement",
+	domains.put("Enchantement", new Domain("Enchantement", SPELL,
 		"L’école de l’enchantement permet d’influencer et de soumettre l’esprit d’être vivant selon la volonté du magicien. Elle permet aussi d’enchanter des objets."));
-	domains.put("Général", new Domain<Spell>("Général",
+	domains.put("Général", new Domain("Général", SPELL,
 		"Cette école  englobe tout ce qui n’a aucun rapport avec les autres magies."));
 	return domains;
     }
 
-    public static Map<String, Domain<Spell>> spells(Map<String, Domain<Spell>> domains)
+    public static Map<String, Domain> readSpells(Map<String, Domain> domains)
 	    throws FileNotFoundException, IOException {
 	// Will be changed later to read from a Json document. However until that will not be done until the whole data structure of the application is set in stone.
 	domains = SpellParser.parseSpells(new File("IDL_Spells.txt"), domains);
@@ -103,9 +105,9 @@ public class Initialize {
 	return ctPool;
     }
 
-    public static Library<String, Ability> abilities(CharacterTypePool ctPool)
+    public static Library<String, Ability> readAbilities(CharacterTypePool ctPool)
 	    throws FileNotFoundException, IOException {
-	Library<String, Ability> lib = new Library<>("Générale");
+	Library<String, Ability> lib = new Library<>("Générale", Ability.class);
 	// Will be changed later to read from a Json document. However until that will not be done until the whole data structure of the application is set in stone.
 	AbilityParser.parseAbilities(new File("IDL_Inline_Abilities.txt"), lib.getData(), ctPool);
 	return lib;
@@ -114,26 +116,26 @@ public class Initialize {
     public static Map<String, God> gods() {
 	Map<String, God> gods = new TreeMap<>();
 
-	gods.put("Zora", new God("Zora", new Domain[] { new Domain<Prayer>("Soleil") }, "Un soleil",
+	gods.put("Zora", new God("Zora", new Domain[] { new Domain("Soleil", PRAYER) }, "Un soleil",
 		"Déesse de la lumière, du jour, du renouveau, de la force, de la semence et de la vie, de la chaleur, et de beaucoup d'autres choses aussi. Elle est représentée par un soleil, déesse créatrice de Solunne et de la moitié de ses habitants.En couple avec son égal, Uter, qui ont résolu depuis l'an 1207 le conflit qui les opposaient.Ses fidèles sont neutres à bon. Jadis il y avait une branche secrète qui était \"evil\", mais les rumeurs disent qu'elle n'existent plus aujourd'hui."));
-	gods.put("Uter", new God("Uter", new Domain[] { new Domain<Prayer>("Nuit") }, "Une lune",
+	gods.put("Uter", new God("Uter", new Domain[] { new Domain("Nuit", PRAYER) }, "Une lune",
 		"Dieu de la nuit et du mystère, de l'oeil qui veille, de la passion, du sommeil, du renouveau, de la naissance, de l'imaginaire, du pouvoir. Il est représenté par la lune. Ses fidèles sont neutres à bons. Jadis, tout comme pour Zora, il existait une branche secrète \"évil\" et qui a disparue de nos jours."));
-	gods.put("Éode", new God("Éode", new Domain[] { new Domain<Prayer>("Neutralité") }, "Une étoile",
+	gods.put("Éode", new God("Éode", new Domain[] { new Domain("Neutralité", PRAYER) }, "Une étoile",
 		"Dieu de la neutralité, de la vie, de l'équilibre, de la justice, de la philosophie, des arts, des sciences, de la nature et de sa protection. Éode est représenté par une étoile à 4 branches. On voit souvent une épée au centre de l'étoile à 4 branches. "));
-	gods.put("Ayka", new God("Ayka", new Domain[] { new Domain<Prayer>("Souffrance") },
+	gods.put("Ayka", new God("Ayka", new Domain[] { new Domain("Souffrance", PRAYER) },
 		"Visage bleu d'une femme criant et souffrant ",
 		"Déesse de la souffrance, des supplices, des mensonges, de la traîtrise, de la confusion.Ses fidèles se cachent aux yeux de tous. Ils sont plutôt chaotiques dans leurs attitudes. Ils recherchent la souffrance autant pour eux que pour les autres, cette souffrance les comble. Elle ne cherche pas à tuer, mais plutôt à faire souffrir. Plusieurs sages pensent qu'elle tire son pouvoir de la souffrance ainsi produit. La couleur bleue la représente assez bien. On reconnaît l'existence de plusieurs artefacts puissants qu'elle aurait fabriqués dans un seul but, faire souffrir. Ils sont facilement identifiables. Son ascension comme déesse est plutôt nébuleuse. Personne ne sait d'où elle vient."));
-	gods.put("Ramu", new God("Ramu", new Domain[] { new Domain<Prayer>("Guerre") }, "Une tête de granit",
+	gods.put("Ramu", new God("Ramu", new Domain[] { new Domain("Guerre", PRAYER) }, "Une tête de granit",
 		"Dieu de la guerre, des géants, des barbares et de plusieurs races de nains. Il est souvent représenté par une tête de granite.On sait que jadis Ramu était un barbare qui s'est levé contre la cruauté qu'une armée s'apprêtait à faire subir à un village sans défense. Il se serait interposé entre l'armée et le village et se serait battu avec tellement de vigueur que les dieux en ont été touchés par un tel acte d'héroïsme. Lors de sa mort inévitable, son corps aurait disparu. Le temps de la bataille a permis aux habitants de fuir le village et ainsi éviter une mort certaine. Depuis ce temps, les barbares chantent les louanges de leur héros. On raconte qu'Il est toujours là, dans les Cieux, et qui attend... d'aider les héros."));
-	gods.put("Zoter", new God("Zoter", new Domain[] { new Domain<Prayer>("Chaos") }, "Une spirale",
+	gods.put("Zoter", new God("Zoter", new Domain[] { new Domain("Chaos", PRAYER) }, "Une spirale",
 		"Dieu du conflit et du chaos.Il est né de l'Union d'Uter et de Zora lors de la fin du conflit. Une énergie en a émergé donnant naissance à deux divinités, Zoter et sa soeur Terra. Il a été endormi sur l'île des légendes à cause de nombreuses actions des plus cruelles et des plus destructrices. Il est souvent vu comme un jeune garçon crieur et chialeur qui passe son temps à injurier les gens autour de lui. Il est le Chaos. On ne compte pas de prêtre à son service, s'amusant plutôt à voir ses adeptes mourir pour sa cause, créer le Chaos."));
-	gods.put("Terra", new God("Terra", new Domain[] { new Domain<Prayer>("Nature") }, "Une feuille d'hêtre",
+	gods.put("Terra", new God("Terra", new Domain[] { new Domain("Nature", PRAYER) }, "Une feuille d'hêtre",
 		"Déesse de la protection, déesse gardienne dite la Sauveuse. Elle est tout à l'opposé de son frère Zoter. Pour éviter une guerre avec les mages des tours noirs et blanches elle a été endormi tout prêt de son frère. Elle est la gardienne du repos de Zoter. Elle est surtout associée à l'Île des Légendes, lieu de son seul temple. On raconte qu'elle aurait laissé des secrets protégés par des druides. Elle est souvent identifiée comme une guerrière en armure complète, l'épée à la main, les cheveux au vent. On dit aussi que son visage change selon les événements. On raconte qu'Éode l'aide beaucoup, mais ce ne sont que des rumeurs."));
-	gods.put("Narzul", new God("Narzul", new Domain[] { new Domain<Prayer>("Mort") }, "Une faux",
+	gods.put("Narzul", new God("Narzul", new Domain[] { new Domain("Mort", PRAYER) }, "Une faux",
 		"Dieu de la mort. Il est souvent vu comme un homme sombre et encapuchonné d'une cape noire. On ne sait rien de lui. Il a souvent été appelé ''le messager du grand Dormeur''. Nul ne sait d'où il vient et comment il est venu dans ce monde. Avant l'événement de l'Île, personne ne le connaissait et les autres dieux avaient le contrôle total sur la mort. Depuis la guerre de l'Île, en l'an de grâce 2007 du mois d'octobre, ce dieu est devenu maître de la mort. Il a le contrôle de ce site étrange et met en échec toutes les armées que l'Union (les forces de Zora et d'Uter réuni) envoie contre lui. Il a pris possession de la moitié du royaume de Zalte et l'autre ne ressemble qu'à un vaste champ de désolation créé par d'innombrables combats. L'Union a réussi à éviter à tous les Zoratiens et les Uteriens de tomber sous son pouvoir lors de la mort de l'un d'eux. Mais les autres...On sait qu'il recherche quelque chose et qu'il est furieux de ne pas  avoir pu le trouver sur l'Île. On dit que sa colère est tel qu'il a l'intention de tout détruire sur les terres de Solunne. En espérant que les forces de l'Union puissent un jour le détruire. (Information datant de l'an de grâce 2009). Les armées de Narzul ont été enfin vaincues. On raconte que des héros auraient réussi à le vaincre en utilisant un artefact puissant. Nous savons, tout de même, que plusieurs de ses lieutenants ont réussi à se sauver, promettant de retrouver leur Dieu et d'en finir avec les humains et Éode. "));
-	gods.put("Mentier", new God("Mentier", new Domain[] { new Domain<Prayer>("Temps") }, "Un Sablier",
+	gods.put("Mentier", new God("Mentier", new Domain[] { new Domain("Temps", PRAYER) }, "Un Sablier",
 		"Dieu du temps. Mentier est un nouveau dieu qui est apparu depuis peu de temps. On raconte qu'il aurait été emprisonné dans le monde de Solunne et qu'il aurait dernièrement réussit à se sortir de sa prison. C'est pourquoi on ne sait pas grand chose de lui, sauf qu'il se présente comme le dieu du temps."));
-	//gods.put("Gaé", new God("Gaé", new Domain[] { new Domain<Prayer>("Vie") }, "Une fougère", ""));
+	//gods.put("Gaé", new God("Gaé", new Domain[] { new Domain("Vie") }, "Une fougère", ""));
 
 	return gods;
     }

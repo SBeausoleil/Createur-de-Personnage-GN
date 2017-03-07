@@ -1,22 +1,29 @@
 package com.sb.cdp;
 
 import java.util.Map;
+import java.util.Set;
 import java.util.TreeMap;
+import java.util.TreeSet;
 
 import com.sb.cdp.ability.Ability;
-import com.sb.cdp.magic.Domain;
+import com.sb.cdp.magic.DomainLibrary;
 import com.sb.cdp.magic.God;
-import com.sb.cdp.magic.Prayer;
-import com.sb.cdp.magic.Spell;
 
 public class RPG {
 
     private String name;
 
     private CharacterTypePool characterTypes;
+    /**
+     * A map of all the registered ability libraries.
+     * Map key: the name of the library.
+     */
     private Map<String, Library<String, Ability>> abilityLibraries;
-    private Map<String, Library<String, Domain<Spell>>> spellLibraries;
-    private Map<String, Library<String, Domain<Prayer>>> prayerLibraries;
+    /**
+     * A map of all the registered Magic libraries.
+     * Map key: the magic type of the DomainLibrary.
+     */
+    private Map<String, Set<DomainLibrary>> domainLibraries;
     private Map<String, User> users;
     private Map<String, God> gods;
 
@@ -24,8 +31,7 @@ public class RPG {
 	this.name = name;
 	characterTypes = new CharacterTypePool();
 	abilityLibraries = new TreeMap<>();
-	spellLibraries = new TreeMap<>();
-	prayerLibraries = new TreeMap<>();
+	domainLibraries = new TreeMap<>();
 	users = new TreeMap<>();
 	gods = new TreeMap<>();
     }
@@ -88,25 +94,6 @@ public class RPG {
     }
 
     /**
-     * Returns the spellLibraries.
-     * 
-     * @return the spellLibraries
-     */
-    public Map<String, Library<String, Domain<Spell>>> getSpellLibraries() {
-	return spellLibraries;
-    }
-
-    /**
-     * Sets the value of spellLibraries to that of the parameter.
-     * 
-     * @param spellLibraries
-     *            the spellLibraries to set
-     */
-    public void setSpellLibraries(Map<String, Library<String, Domain<Spell>>> spellLibraries) {
-	this.spellLibraries = spellLibraries;
-    }
-
-    /**
      * Returns the users.
      * 
      * @return the users
@@ -145,18 +132,22 @@ public class RPG {
     }
 
     /**
-     * Returns the prayerLibraries.
-     * @return the prayerLibraries
+     * Returns the domainLibraries.
+     * Be careful when modifying the Map or it's underlying set when using this method. If you wish
+     * to insert new data, use the {@link #registerDomainLibrary(DomainLibrary)} method instead.
+     * 
+     * @return the domainLibraries
      */
-    public Map<String, Library<String, Domain<Prayer>>> getPrayerLibraries() {
-	return prayerLibraries;
+    public Map<String, Set<DomainLibrary>> getDomainLibraries() {
+	return domainLibraries;
     }
 
-    /**
-     * Sets the value of prayerLibraries to that of the parameter.
-     * @param prayerLibraries the prayerLibraries to set
-     */
-    public void setPrayerLibraries(Map<String, Library<String, Domain<Prayer>>> prayerLibraries) {
-	this.prayerLibraries = prayerLibraries;
+    public void registerDomainLibrary(DomainLibrary dl) {
+	Set<DomainLibrary> registeredLibraries = domainLibraries.get(dl.getMagicType());
+	if (registeredLibraries == null) {
+	    registeredLibraries = new TreeSet<>();
+	    domainLibraries.put(dl.getMagicType(), registeredLibraries);
+	}
+	registeredLibraries.add(dl);
     }
 }

@@ -2,11 +2,11 @@ package com.sb.cdp.magic;
 
 public class God {
     private String name;
-    private Domain<Prayer>[] domains;
+    private Domain[] domains;
     private String symbol;
     private String description;
 
-    public God(String name, Domain<Prayer>[] domains, String symbol, String description) {
+    public God(String name, Domain[] domains, String symbol, String description) {
 	this.name = name;
 	this.domains = domains;
 	this.symbol = symbol;
@@ -37,7 +37,7 @@ public class God {
      * 
      * @return the domains
      */
-    public Domain<Prayer>[] getDomains() {
+    public Domain[] getDomains() {
 	return domains;
     }
 
@@ -47,7 +47,7 @@ public class God {
      * @param domains
      *            the domains to set
      */
-    public void setDomains(Domain<Prayer>[] domains) {
+    public void setDomains(Domain[] domains) {
 	this.domains = domains;
     }
 
