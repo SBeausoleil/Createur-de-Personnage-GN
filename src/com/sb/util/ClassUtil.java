@@ -74,7 +74,8 @@ public final class ClassUtil {
 	System.out.println(instanceOf(Integer.class, Number.class));
 	
 	
-	Number[] numbers = new Number[] { new Integer(0), new Double(0), new Integer(2) };
+	Number[] numbers = new Number[] { new Integer(0), new Double(1.1), new Integer(2) };
 	System.out.println(Arrays.toString(keep(numbers, Integer.class)));
+	System.out.println(Arrays.toString(filter(numbers, Integer.class)));
     }
 }
