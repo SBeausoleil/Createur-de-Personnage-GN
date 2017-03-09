@@ -32,7 +32,8 @@ public class CharacterTypeCondition implements Condition {
     @Override
     public String describe() {
 	boolean plural = neededTypes.size() > 1;
-	StringBuilder sb = new StringBuilder(String.format("%1 classe%2/race%2 suivante%2 doit être possédée: ", plural ? "L'une des" : "La ", plural ? "S" : ""));
+	StringBuilder sb = new StringBuilder(String.format("%1$s classe%2$s/race%2$s suivante%2$s doit être possédée: ",
+		plural ? "L'une des" : "La ", plural ? "s" : ""));
 	int i = 0;
 	for (CharacterType type : neededTypes) {
 	    sb.append(type.getName());
@@ -44,26 +45,30 @@ public class CharacterTypeCondition implements Condition {
 
     /**
      * Returns the neededTypes.
+     * 
      * @return the neededTypes
      */
     public Set<CharacterType> getNeededTypes() {
-        return neededTypes;
+	return neededTypes;
     }
 
     /**
      * Sets the value of neededTypes to that of the parameter.
-     * @param neededTypes the neededTypes to set
+     * 
+     * @param neededTypes
+     *            the neededTypes to set
      */
     public void setNeededTypes(Set<CharacterType> neededTypes) {
-        this.neededTypes = neededTypes;
+	this.neededTypes = neededTypes;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see java.lang.Object#toString()
      */
     @Override
     public String toString() {
 	return "CharacterTypeCondition [neededTypes=" + neededTypes + "]";
     }
-
 }
