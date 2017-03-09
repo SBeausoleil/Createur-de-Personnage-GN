@@ -3,7 +3,6 @@ package com.sb.cdp.gui.view;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TitledPane;
-import javafx.scene.layout.VBox;
 
 public class RootLayoutController {
     @FXML
@@ -22,6 +21,10 @@ public class RootLayoutController {
     private Button save;
     @FXML
     private Button exit;
+    
+    {
+	System.out.println("Beggining construction of a RootLayoutController");
+    }
     
     public RootLayoutController() {}
     

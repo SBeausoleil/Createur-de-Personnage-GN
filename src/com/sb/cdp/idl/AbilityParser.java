@@ -127,14 +127,15 @@ public class AbilityParser {
     }
 
     private static void parseAbility(RawAbility raw, Map<String, Ability> abilities, CharacterTypePool ctPool) {
-	Ability ability = new Ability(raw.name, raw.cost, null, raw.description);
+	Ability ability = new Ability(raw.name, raw.cost, null, null, raw.description);
 	// Missing: Classes, Conditions, Bonuses
 	// Classes
-	Set<Condition> prerequisites = new HashSet<>();
+
 	String[] elements = isolateElements(raw.classes);
-	prerequisites.addAll(parseCharacterTypeConditions(elements, ctPool));
+	ability.setCharacterTypeConditions(parseCharacterTypeConditions(elements, ctPool));
 
 	// Conditions // TODO finish them
+	Set<Condition> prerequisites = new HashSet<>();
 	elements = isolateElements(raw.prerequisites);
 	if (elements.length != 1 && !elements[0].equalsIgnoreCase(noPrerequisites)) {
 	    for (int i = 0; i < elements.length; i++)
@@ -155,17 +156,19 @@ public class AbilityParser {
      * @see CharacterType.Classification
      * @return
      */
-    private static Collection<CharacterTypeCondition> parseCharacterTypeConditions(String[] elements,
+    private static CharacterTypeCondition[] parseCharacterTypeConditions(String[] elements,
 	    CharacterTypePool ctPool) {
 	HashMap<CharacterType.Classification, Set<CharacterType>> types = new HashMap<>();
 	for (CharacterType.Classification classification : CharacterType.Classification.values())
 	    types.put(classification, new HashSet<>());
 
+	// IMPROVE come back on this. Going back on it, it looks weird.
 	// Puts all the needed types in their bucket
 	CharacterType current;
 	for (String element : elements) {
 	    current = select(ctPool.find(element), element, ctPool);
-	    types.get(current.getClassification()).add(current);
+	    if (current != null)
+		types.get(current.getClassification()).add(current);
 	}
 
 	// Transform the non-empty buckets into CharacterTypeCondition
@@ -176,13 +179,13 @@ public class AbilityParser {
 		conditions.add(new CharacterTypeCondition(cts));
 	}
 
-	return conditions;
+	return conditions.toArray(new CharacterTypeCondition[conditions.size()]);
     }
 
     /**
      * Selects the appropriate CharacterType.
      * If no CharacterType has been found, it creates a new CharacterType of the prefered
-     * classification.
+     * classification, except if the type is "général" and there is no CharacterType with that name.
      * Otherwise if there is only one found, it returns it.
      * If there are more than one found: it will find the one with the prefered parsing
      * classification. If none are found of that classification, it returns the first.
@@ -193,6 +196,9 @@ public class AbilityParser {
      * @return the appropriate CharacterType
      */
     private static CharacterType select(CharacterType[] found, String type, CharacterTypePool ctPool) {
+	if (type.equals(noTypeRequired) && (found == null || found.length == 0))
+	    return null;
+
 	if (found == null || found.length == 0)
 	    return ctPool.get(type, preferParsingAs);
 	else if (found.length == 1)

@@ -1,41 +1,49 @@
 package com.sb.cdp.gui.view;
 
+import java.io.IOException;
+
+import com.sb.cdp.DesktopApplication;
 import com.sb.cdp.Library;
 import com.sb.cdp.ability.Ability;
 
-import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableColumn.CellDataFeatures;
-import javafx.scene.control.TableView;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.control.ListView;
+import javafx.scene.control.TitledPane;
 import javafx.scene.layout.AnchorPane;
-import javafx.util.Callback;
 
 public class AbilityLibraryViewController {
+    {
+	System.out.println("Beginning construction of an AbilityLibraryViewController");
+    }
+
     @FXML
-    private TableView<Ability> table;
+    private TitledPane titledPane;
     @FXML
-    private TableColumn<Ability, AnchorPane /* AbilityView.FXML */> column;
+    private ListView<AnchorPane> list;
 
     private Library<String, Ability> abilities;
 
     public AbilityLibraryViewController() {}
 
-    // !!! TESTME !!!
     @FXML
-    private void initialize() {
-	column.setCellValueFactory(new Callback<CellDataFeatures<Ability, AnchorPane>, ObservableValue<AnchorPane>>() {
-	    @Override
-	    public ObservableValue<AnchorPane> call(CellDataFeatures<Ability, AnchorPane> abilityCell) {
-		// Create an AnchorPane for this ability
-		// TODO
-		/*FXMLLoader loader = new FXMLLoader();
-		loader.setLocation(MainApp.class.getResource("view/AbilityView.fxml"));
-		rootLayout = (BorderPane) loader.load();*/
-		return null;
-	    }
+    private void initialize() {}
 
-	});
+    /**
+     * @param ability
+     * @return
+     * @throws IOException
+     */
+    private AnchorPane makeAbilityView(Ability ability) throws IOException {
+	FXMLLoader loader = new FXMLLoader();
+	loader.setLocation(DesktopApplication.class.getResource("gui/view/AbilityView.fxml"));
+	AnchorPane abilityView = (AnchorPane) loader.load();
+
+	AbilityViewController controller = loader.getController();
+	controller.setAbility(ability);
+	return abilityView;
     }
 
     /**
@@ -55,5 +63,19 @@ public class AbilityLibraryViewController {
      */
     public void setAbilities(Library<String, Ability> abilities) {
 	this.abilities = abilities;
+	titledPane.setText(abilities.getName());
+	showAbilities();
+    }
+
+    private void showAbilities() {
+	ObservableList<AnchorPane> views = FXCollections.observableArrayList();
+	for (Ability ability : abilities.values()) {
+	    try {
+		views.add(makeAbilityView(ability));
+	    } catch (IOException e) {
+		throw new RuntimeException(e);
+	    }
+	}
+	list.setItems(views);
     }
 }

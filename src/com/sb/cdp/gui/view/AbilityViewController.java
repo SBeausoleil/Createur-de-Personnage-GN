@@ -2,10 +2,8 @@ package com.sb.cdp.gui.view;
 
 import com.sb.cdp.ability.Ability;
 import com.sb.cdp.ability.AbilityUtil;
-import com.sb.cdp.ability.CharacterTypeCondition;
 import com.sb.cdp.ability.Condition;
 import com.sb.util.ArrayUtil;
-import com.sb.util.ClassUtil;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
@@ -40,9 +38,8 @@ public class AbilityViewController {
     private void showAbility() {
 	name.setText(ability.getName());
 	cost.setText(Integer.toString(ability.getCost()));
-	classRaceRequirements.setText(AbilityUtil.characterTypeConditionsToString(ability.getPrerequisites()));
-	Condition[] prerequisites = (Condition[]) ClassUtil.filter(ability.getPrerequisites(), CharacterTypeCondition.class);
-	otherRequirements.setText(ArrayUtil.join(prerequisites, Condition::describe, ", "));
+	classRaceRequirements.setText(AbilityUtil.characterTypeConditionsToString(ability.getCharacterTypeConditions()));
+	otherRequirements.setText(ArrayUtil.join(ability.getPrerequisites(), Condition::describe, ", "));
 	description.setText(ability.getDescription());
     }
 

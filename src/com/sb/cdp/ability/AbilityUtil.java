@@ -14,18 +14,6 @@ import com.sb.util.ArrayUtil;
 public final class AbilityUtil {
 
     private AbilityUtil() {} // Do not instantiate
-
-    public static String characterTypeConditionsToString(Condition[] conditions) {
-	return characterTypeConditionsToString(selectCharacterTypeConditions(conditions));
-    }
-
-    private static CharacterTypeCondition[] selectCharacterTypeConditions(Condition[] conditions) {
-	ArrayList<CharacterTypeCondition> list = new ArrayList<>();
-	for (Condition condition : conditions)
-	    if (condition instanceof CharacterTypeCondition)
-		list.add((CharacterTypeCondition) condition);
-	return list.toArray(new CharacterTypeCondition[list.size()]);
-    }
     
     public static String characterTypeConditionsToString(CharacterTypeCondition[] conditions) {
 	String message;

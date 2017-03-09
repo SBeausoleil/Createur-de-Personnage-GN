@@ -3,7 +3,9 @@ package com.sb.cdp;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
-import com.sb.cdp.gui.FXUtil;
+import com.sb.cdp.ability.Ability;
+import com.sb.cdp.gui.view.AbilityLibraryViewController;
+import com.sb.cdp.gui.view.UserEditViewController;
 import com.sb.cdp.idl.Initialize;
 
 import javafx.application.Application;
@@ -43,19 +45,58 @@ public class DesktopApplication extends Application {
 	primaryStage.setTitle("Gestionnaire de GN");
 
 	initRootLayout();
-	initUserPage();
+	//initUserEditPage();
+	initAbilityLibraryView();
     }
 
-    private void initUserPage() {
-	AnchorPane userEditPage = (AnchorPane) FXUtil.load("gui/view/UserEditView.fxml");
-	rootLayout.setCenter(userEditPage);
+    private void initAbilityLibraryView() {
+	try {
+	    FXMLLoader loader = new FXMLLoader();
+	    loader.setLocation(DesktopApplication.class.getResource("gui/view/AbilityLibraryView.fxml"));
+	    AnchorPane abilityLibraryView = (AnchorPane) loader.load();
+
+	    AbilityLibraryViewController controller = loader.getController();
+	    System.out.println("Controller: " + controller);
+	    //System.out.println(idl);
+	    //System.out.println(idl.getAbilityLibraries());
+	    Library<String, Ability> generalAbilities = idl.getAbilityLibraries().get("Générale");
+	    //System.out.println(generalAbilities);
+	    controller.setAbilities(generalAbilities); 
+	    rootLayout.setCenter(abilityLibraryView);
+	} catch (IOException e) {
+	    System.err.println("UserEditView.fxml is missing.");
+	    throw new RuntimeException(e);
+	}
+    }
+
+    private void initUserEditPage() {
+	try {
+	    FXMLLoader loader = new FXMLLoader();
+	    loader.setLocation(DesktopApplication.class.getResource("gui/view/UserEditView.fxml"));
+	    AnchorPane userEditPage = (AnchorPane) loader.load();
+
+	    UserEditViewController controller = loader.getController();
+	    controller.setUser(user);
+	    rootLayout.setCenter(userEditPage);
+	} catch (IOException e) {
+	    System.err.println("UserEditView.fxml is missing.");
+	    throw new RuntimeException(e);
+	}
+
     }
 
     private void initRootLayout() {
-	rootLayout = (BorderPane) FXUtil.load("gui/view/RootLayout.fxml");
-	Scene scene = new Scene(rootLayout);
-	primaryStage.setScene(scene);
-	primaryStage.show();
+	try {
+	    FXMLLoader loader = new FXMLLoader();
+	    loader.setLocation(DesktopApplication.class.getResource("gui/view/RootLayout.fxml"));
+	    rootLayout = (BorderPane) loader.load();
+
+	    Scene scene = new Scene(rootLayout);
+	    primaryStage.setScene(scene);
+	    primaryStage.show();
+	} catch (IOException e) {
+	    System.err.println("Critical error: RootLayout.fxml is missing");
+	}
     }
 
     public static void main(String[] args) {

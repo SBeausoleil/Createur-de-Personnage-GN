@@ -7,17 +7,19 @@ import com.sb.cdp.PlayerCharacter;
 public class Ability {
     private String name;
     private int cost;
+    private CharacterTypeCondition[] characterTypeConditions;
     private Condition[] prerequisites;
     private String description;
     private int maxTimesTaken; // TODO integrate in the system the maximum number of times an ability can be taken
 
     public Ability(String name) {
-	this(name, 0, null, null);
+	this(name, 0, null, null, null);
     }
 
-    public Ability(String name, int cost, Condition[] prerequisites, String description) {
+    public Ability(String name, int cost, CharacterTypeCondition[] characterTypeConditions, Condition[] prerequisites, String description) {
 	this.name = name;
 	this.cost = cost;
+	this.characterTypeConditions = characterTypeConditions;
 	this.prerequisites = prerequisites;
 	this.description = description;
 	maxTimesTaken = 1;
@@ -141,5 +143,21 @@ public class Ability {
      */
     public void setMaxTimesTaken(int maxTimesTaken) {
         this.maxTimesTaken = maxTimesTaken;
+    }
+
+    /**
+     * Returns the characterTypeConditions.
+     * @return the characterTypeConditions
+     */
+    public CharacterTypeCondition[] getCharacterTypeConditions() {
+        return characterTypeConditions;
+    }
+
+    /**
+     * Sets the value of characterTypeConditions to that of the parameter.
+     * @param characterTypeConditions the characterTypeConditions to set
+     */
+    public void setCharacterTypeConditions(CharacterTypeCondition[] characterTypeConditions) {
+        this.characterTypeConditions = characterTypeConditions;
     }
 }
