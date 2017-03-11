@@ -4,9 +4,11 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 
 import com.sb.cdp.ability.Ability;
+import com.sb.cdp.gui.FXUtil;
 import com.sb.cdp.gui.view.AbilityLibraryViewController;
-import com.sb.cdp.gui.view.UserEditViewController;
-import com.sb.cdp.idl.Initialize;
+import com.sb.cdp.gui.view.RootLayoutController;
+import com.sb.cdp.idl.Initializer;
+import com.sb.util.Pair;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -27,7 +29,7 @@ public class DesktopApplication extends Application {
     public DesktopApplication() {
 	idl = null;
 	try {
-	    idl = Initialize.initialize();
+	    idl = Initializer.initialize();
 	} catch (FileNotFoundException e) {
 	    System.err.println("One of the files needed for the initialization of the RPG has not been found.");
 	    e.printStackTrace();
@@ -45,58 +47,22 @@ public class DesktopApplication extends Application {
 	primaryStage.setTitle("Gestionnaire de GN");
 
 	initRootLayout();
-	//initUserEditPage();
 	initAbilityLibraryView();
     }
 
     private void initAbilityLibraryView() {
-	try {
-	    FXMLLoader loader = new FXMLLoader();
-	    loader.setLocation(DesktopApplication.class.getResource("gui/view/AbilityLibraryView.fxml"));
-	    AnchorPane abilityLibraryView = (AnchorPane) loader.load();
-
-	    AbilityLibraryViewController controller = loader.getController();
-	    System.out.println("Controller: " + controller);
-	    //System.out.println(idl);
-	    //System.out.println(idl.getAbilityLibraries());
-	    Library<String, Ability> generalAbilities = idl.getAbilityLibraries().get("Générale");
-	    //System.out.println(generalAbilities);
-	    controller.setAbilities(generalAbilities); 
-	    rootLayout.setCenter(abilityLibraryView);
-	} catch (IOException e) {
-	    System.err.println("UserEditView.fxml is missing.");
-	    throw new RuntimeException(e);
-	}
-    }
-
-    private void initUserEditPage() {
-	try {
-	    FXMLLoader loader = new FXMLLoader();
-	    loader.setLocation(DesktopApplication.class.getResource("gui/view/UserEditView.fxml"));
-	    AnchorPane userEditPage = (AnchorPane) loader.load();
-
-	    UserEditViewController controller = loader.getController();
-	    controller.setUser(user);
-	    rootLayout.setCenter(userEditPage);
-	} catch (IOException e) {
-	    System.err.println("UserEditView.fxml is missing.");
-	    throw new RuntimeException(e);
-	}
+	Library<String, Ability> generalAbilities = idl.getAbilityLibraries().get("Générale");
+	rootLayout.setCenter(FXUtil.abilityLibraryView(generalAbilities).getX());
 
     }
 
     private void initRootLayout() {
-	try {
-	    FXMLLoader loader = new FXMLLoader();
-	    loader.setLocation(DesktopApplication.class.getResource("gui/view/RootLayout.fxml"));
-	    rootLayout = (BorderPane) loader.load();
-
-	    Scene scene = new Scene(rootLayout);
-	    primaryStage.setScene(scene);
-	    primaryStage.show();
-	} catch (IOException e) {
-	    System.err.println("Critical error: RootLayout.fxml is missing");
-	}
+	Pair<BorderPane, RootLayoutController> rootLayoutPair = FXUtil.rootLayout();
+	this.rootLayout = rootLayoutPair.getX();
+	// TODO do stuff to the controller
+	Scene scene = new Scene(rootLayout);
+	primaryStage.setScene(scene);
+	primaryStage.show();
     }
 
     public static void main(String[] args) {

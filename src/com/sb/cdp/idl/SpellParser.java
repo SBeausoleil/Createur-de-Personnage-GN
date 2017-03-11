@@ -46,7 +46,7 @@ public class SpellParser {
 		if (matcher.find()) {
 		    currentDomain = domains.get(matcher.group(1).trim());
 		    if (currentDomain == null) {
-			currentDomain = new Domain(matcher.group(1).trim(), Initialize.SPELL);
+			currentDomain = new Domain(matcher.group(1).trim(), Initializer.SPELL);
 			domains.put(currentDomain.getName(), currentDomain);
 		    }
 		} else {

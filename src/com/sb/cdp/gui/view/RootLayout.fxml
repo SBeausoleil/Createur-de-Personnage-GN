@@ -6,7 +6,6 @@
 <?import javafx.scene.effect.DropShadow?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.VBox?>
 
@@ -27,20 +26,16 @@
             </ImageView>
             <Button fx:id="myCharacters" mnemonicParsing="false" text="Mes Personnages" />
             <TitledPane fx:id="rpg" text="GN">
-              <content>
-                <AnchorPane minHeight="0.0" minWidth="0.0" style="-fx-background-color: bbbbff;">
+               <content>
+                  <VBox alignment="TOP_CENTER">
                      <children>
-                        <VBox alignment="TOP_CENTER" layoutX="19.6" layoutY="19.6" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                           <children>
-                              <Button fx:id="abilities" mnemonicParsing="false" text="Abilités" />
-                              <Button fx:id="magic" mnemonicParsing="false" text="Magie" />
-                              <Button fx:id="domains" mnemonicParsing="false" text="Domaines" />
-                              <Button fx:id="gods" mnemonicParsing="false" text="Dieux" />
-                           </children>
-                        </VBox>
+                        <Button fx:id="abilities" mnemonicParsing="false" text="Abilités" />
+                        <Button fx:id="magic" mnemonicParsing="false" text="Magie" />
+                        <Button fx:id="domains" mnemonicParsing="false" text="Domaines" />
+                        <Button fx:id="gods" mnemonicParsing="false" text="Dieux" />
                      </children>
-                  </AnchorPane>
-              </content>
+                  </VBox>
+               </content>
             </TitledPane>
             <Button fx:id="save" mnemonicParsing="false" text="Sauvegarder" />
             <Button fx:id="exit" mnemonicParsing="false" text="Quitter" />

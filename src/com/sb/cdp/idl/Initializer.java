@@ -15,7 +15,7 @@ import com.sb.cdp.magic.Domain;
 import com.sb.cdp.magic.DomainLibrary;
 import com.sb.cdp.magic.God;
 
-public class Initialize {
+public class Initializer {
 
     public static final String PRAYER = "Prière";
     public static final String SPELL = "Sort";

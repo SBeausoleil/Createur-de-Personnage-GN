@@ -6,6 +6,7 @@ import com.sb.cdp.ability.Condition;
 import com.sb.util.ArrayUtil;
 
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Text;
@@ -21,10 +22,10 @@ public class AbilityViewController {
     private Label otherRequirements;
     @FXML
     private Text description;
-    
+
     @FXML
     private AnchorPane anchorPane;
-    
+
     private Ability ability;
 
     public AbilityViewController() {}
@@ -38,26 +39,29 @@ public class AbilityViewController {
     private void showAbility() {
 	name.setText(ability.getName());
 	cost.setText(Integer.toString(ability.getCost()));
-	classRaceRequirements.setText(AbilityUtil.characterTypeConditionsToString(ability.getCharacterTypeConditions()));
+	classRaceRequirements.setText(
+		AbilityUtil.characterTypeConditionsToString(ability.getCharacterTypeConditions()));
 	otherRequirements.setText(ArrayUtil.join(ability.getPrerequisites(), Condition::describe, ", "));
 	description.setText(ability.getDescription());
     }
 
     /**
      * Returns the ability.
+     * 
      * @return the ability
      */
     public Ability getAbility() {
-        return ability;
+	return ability;
     }
 
     /**
      * Sets the value of ability to that of the parameter.
-     * @param ability the ability to set
+     * 
+     * @param ability
+     *            the ability to set
      */
     public void setAbility(Ability ability) {
-        this.ability = ability;
-        showAbility();
+	this.ability = ability;
+	showAbility();
     }
-    
 }

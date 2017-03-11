@@ -9,10 +9,6 @@ import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
 
 public class UserEditViewController {
-
-    {
-	System.out.println("Beggining construction of a UserEditViewController");
-    }
     
     @FXML
     private TextField firstNameField;

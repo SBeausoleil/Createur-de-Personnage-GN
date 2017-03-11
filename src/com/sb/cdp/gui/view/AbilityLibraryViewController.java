@@ -15,16 +15,12 @@ import javafx.scene.control.TitledPane;
 import javafx.scene.layout.AnchorPane;
 
 public class AbilityLibraryViewController {
-    {
-	System.out.println("Beginning construction of an AbilityLibraryViewController");
-    }
-
     @FXML
     private TitledPane titledPane;
     @FXML
     private ListView<AnchorPane> list;
 
-    private Library<String, Ability> abilities;
+    private Library<?, Ability> abilities;
 
     public AbilityLibraryViewController() {}
 
@@ -51,7 +47,7 @@ public class AbilityLibraryViewController {
      * 
      * @return the abilities
      */
-    public Library<String, Ability> getAbilities() {
+    public Library<?, Ability> getAbilities() {
 	return abilities;
     }
 
@@ -61,7 +57,7 @@ public class AbilityLibraryViewController {
      * @param abilities
      *            the abilities to set
      */
-    public void setAbilities(Library<String, Ability> abilities) {
+    public void setAbilities(Library<?, Ability> abilities) {
 	this.abilities = abilities;
 	titledPane.setText(abilities.getName());
 	showAbilities();

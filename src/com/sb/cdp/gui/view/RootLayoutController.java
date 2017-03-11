@@ -22,10 +22,6 @@ public class RootLayoutController {
     @FXML
     private Button exit;
     
-    {
-	System.out.println("Beggining construction of a RootLayoutController");
-    }
-    
     public RootLayoutController() {}
     
     @FXML
