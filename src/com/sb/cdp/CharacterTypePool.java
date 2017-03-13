@@ -1,5 +1,6 @@
 package com.sb.cdp;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -72,5 +73,9 @@ public class CharacterTypePool {
 	type.setDescription(description);
 	REGISTERED.get(classification).put(name, type);
 	return type;
+    }
+    
+    public Collection<CharacterType> get(Classification classification) {
+	return REGISTERED.get(classification).values();
     }
 }
