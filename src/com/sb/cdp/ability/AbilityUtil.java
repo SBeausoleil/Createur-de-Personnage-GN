@@ -1,7 +1,5 @@
 package com.sb.cdp.ability;
 
-import java.util.ArrayList;
-
 import com.sb.cdp.CharacterType;
 import com.sb.util.ArrayUtil;
 
