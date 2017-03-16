@@ -4,9 +4,12 @@ import java.io.IOException;
 
 import com.sb.cdp.DesktopApplication;
 import com.sb.cdp.Library;
+import com.sb.cdp.PlayerCharacter;
+import com.sb.cdp.RPG;
 import com.sb.cdp.User;
 import com.sb.cdp.ability.Ability;
 import com.sb.cdp.gui.view.AbilityLibraryViewController;
+import com.sb.cdp.gui.view.CharacterEditViewController;
 import com.sb.cdp.gui.view.RootLayoutController;
 import com.sb.cdp.gui.view.UserEditViewController;
 import com.sb.util.Pair;
@@ -52,6 +55,22 @@ public final class FXUtil {
 	    pair.setX((AnchorPane) loader.load());
 	    pair.setY(loader.getController());
 	    pair.getY().setAbilities(library);
+	    return pair;
+	} catch (IOException e) {
+	    throw new RuntimeException(e);
+	}
+    }
+    
+    public static Pair<AnchorPane, CharacterEditViewController> characterEditView(RPG rpg, PlayerCharacter pc) {
+	try {
+	    Pair<AnchorPane, CharacterEditViewController> pair = new Pair();
+	    FXMLLoader loader = new FXMLLoader();
+	    loader.setLocation(DesktopApplication.class.getResource("gui/view/CharacterEditView.fxml"));
+	    pair.setX(loader.load());
+	    CharacterEditViewController controller = loader.getController();
+	    pair.setY(controller);
+	    controller.setRpg(rpg);
+	    controller.setPlayerCharacter(pc);
 	    return pair;
 	} catch (IOException e) {
 	    throw new RuntimeException(e);
