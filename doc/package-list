@@ -1,0 +1,10 @@
+com.sb.cdp
+com.sb.cdp.ability
+com.sb.cdp.gui
+com.sb.cdp.gui.view
+com.sb.cdp.idl
+com.sb.cdp.io
+com.sb.cdp.magic
+com.sb.cdp.network
+com.sb.cdp.server
+com.sb.util
