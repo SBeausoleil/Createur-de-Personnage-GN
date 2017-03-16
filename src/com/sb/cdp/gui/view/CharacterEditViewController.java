@@ -156,7 +156,7 @@ public class CharacterEditViewController {
     private void addGodChoice() {
 	ChoiceBox newChoice = new ChoiceBox<>();
 	setGodChoices(newChoice);
-	classPane.getChildren().add(gods.size(), newChoice); // Do not switch this line and the next. If you do, add "- 1" to "gods.size()" argument. This keeps the new ChoiceBox before the "+" button.
+	godPane.getChildren().add(gods.size(), newChoice); // Do not switch this line and the next. If you do, add "- 1" to "gods.size()" argument. This keeps the new ChoiceBox before the "+" button.
 	gods.add(newChoice);
     }
     
