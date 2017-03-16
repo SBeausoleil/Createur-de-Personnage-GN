@@ -12,9 +12,9 @@ import com.sb.cdp.magic.God;
 import com.sb.cdp.magic.Magic;
 
 public class PlayerCharacter implements LibraryPermissionHolder {
-    public static final String ENDURANCE = "endurance";
-    public static final String MANA = "mana";
-    public static final String KARMA = "karma";
+    public static final String ENDURANCE = "Endurance";
+    public static final String MANA = "Mana";
+    public static final String KARMA = "Karma";
     public static int baseEndurance = 1;
     public static int baseMana = 0;
     public static int baseKarma = 0;
@@ -22,8 +22,8 @@ public class PlayerCharacter implements LibraryPermissionHolder {
 
     private String name;
     private Set<CharacterType> characterTypes;
-    private MoralAlignment moralALignment;
     private LawAlignment lawAlignment;
+    private MoralAlignment moralALignment;
     private int xp;
     private int nAbilityPoints;
     private Map<String, Integer> stats;
@@ -32,18 +32,14 @@ public class PlayerCharacter implements LibraryPermissionHolder {
     private List<Ability> abilities;
     private List<Ability> specialAbilities;
     private Set<Magic> spells;
-    
+
     private Set<Library> allowedLibraries;
 
-    public PlayerCharacter(String name, LinkedHashSet<CharacterType> characterTypes, MoralAlignment moralALignment,
-	    LawAlignment lawAlignment, int xp, int nAbilityPoints) {
+    public PlayerCharacter(String name) {
 	this.name = name;
-	this.characterTypes = characterTypes;
-	this.moralALignment = moralALignment;
-	this.lawAlignment = lawAlignment;
-	this.xp = xp;
-	this.nAbilityPoints = nAbilityPoints;
-
+	
+	characterTypes = new LinkedHashSet<>();
+	
 	stats = new HashMap<>();
 	stats.put(ENDURANCE, baseEndurance);
 	stats.put(MANA, baseMana);
@@ -99,7 +95,6 @@ public class PlayerCharacter implements LibraryPermissionHolder {
 	return moralALignment;
     }
 
-    
     /**
      * Sets the value of moralALignment to that of the parameter.
      * 
@@ -307,18 +302,21 @@ public class PlayerCharacter implements LibraryPermissionHolder {
 
     /**
      * Returns the spells.
+     * 
      * @return the spells
      */
     public Set<Magic> getSpells() {
-        return spells;
+	return spells;
     }
 
     /**
      * Sets the value of spells to that of the parameter.
-     * @param spells the spells to set
+     * 
+     * @param spells
+     *            the spells to set
      */
     public void setSpells(Set<Magic> spells) {
-        this.spells = spells;
+	this.spells = spells;
     }
 
     @Override

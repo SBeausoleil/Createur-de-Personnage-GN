@@ -11,7 +11,7 @@
 
 <BorderPane prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.sb.cdp.gui.view.RootLayoutController">
    <left>
-      <VBox alignment="TOP_CENTER" prefHeight="600.0" prefWidth="110.0" style="-fx-background-color: aabbff;" BorderPane.alignment="CENTER">
+      <VBox alignment="TOP_CENTER" prefHeight="600.0" prefWidth="110.0" style="-fx-background-color: #bbbbff;" BorderPane.alignment="CENTER">
          <effect>
             <DropShadow />
          </effect>
@@ -24,21 +24,21 @@
                   <Insets />
                </VBox.margin>
             </ImageView>
-            <Button fx:id="myCharacters" mnemonicParsing="false" text="Mes Personnages" />
-            <TitledPane fx:id="rpg" text="GN">
+            <Button fx:id="myCharacters" mnemonicParsing="false" onAction="#handleCharacters" text="Mes Personnages" />
+            <TitledPane fx:id="rpg" alignment="CENTER" contentDisplay="CENTER" graphicTextGap="0.0" text="GN" textAlignment="CENTER">
                <content>
-                  <VBox alignment="TOP_CENTER">
+                  <VBox alignment="TOP_CENTER" fillWidth="true" style="-fx-background-color: #bbbbff;">
                      <children>
-                        <Button fx:id="abilities" mnemonicParsing="false" text="Abilités" />
-                        <Button fx:id="magic" mnemonicParsing="false" text="Magie" />
-                        <Button fx:id="domains" mnemonicParsing="false" text="Domaines" />
-                        <Button fx:id="gods" mnemonicParsing="false" text="Dieux" />
+                        <Button fx:id="abilities" mnemonicParsing="false" onAction="#handleAbilities" text="Abilités" />
+                        <Button fx:id="magic" mnemonicParsing="false" onAction="#handleMagic" text="Magie" />
+                        <Button fx:id="domains" mnemonicParsing="false" onAction="#handleDomains" text="Domaines" />
+                        <Button fx:id="gods" mnemonicParsing="false" onAction="#handleGods" text="Dieux" />
                      </children>
                   </VBox>
                </content>
             </TitledPane>
-            <Button fx:id="save" mnemonicParsing="false" text="Sauvegarder" />
-            <Button fx:id="exit" mnemonicParsing="false" text="Quitter" />
+            <Button fx:id="save" mnemonicParsing="false" onAction="#handleSave" text="Sauvegarder" />
+            <Button fx:id="exit" mnemonicParsing="false" onAction="#handleExit" text="Quitter" />
          </children>
       </VBox>
    </left>

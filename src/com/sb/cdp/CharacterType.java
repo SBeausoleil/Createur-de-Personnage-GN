@@ -71,7 +71,6 @@ public class CharacterType {
      */
     @Override
     public String toString() {
-	return "CharacterType [name=" + name + ", description=" + description + ", classification=" + classification
-		+ "]";
+	return name;
     }
 }

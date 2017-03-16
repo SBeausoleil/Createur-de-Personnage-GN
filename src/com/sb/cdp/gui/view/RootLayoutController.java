@@ -21,9 +21,9 @@ public class RootLayoutController {
     private Button save;
     @FXML
     private Button exit;
-    
+
     public RootLayoutController() {}
-    
+
     @FXML
     private void initialize() {
 	// Setting the buttons' width to Double.MAX_VALUE makes them take all the space available in their VBox cell.
@@ -35,5 +35,41 @@ public class RootLayoutController {
 	gods.setPrefWidth(Double.MAX_VALUE);
 	save.setPrefWidth(Double.MAX_VALUE);
 	exit.setPrefWidth(Double.MAX_VALUE);
+    }
+    
+    @FXML
+    private void handleCharacters() {
+	// TODO
+    }
+    
+    @FXML
+    private void handleAbilities() {
+	// TODO
+    }
+    
+    @FXML
+    private void handleMagic() {
+	// TODO
+    }
+    
+    @FXML
+    private void handleDomains() {
+	// TODO
+    }
+
+    @FXML
+    private void handleGods() {
+	// TODO
+    }
+        
+    @FXML
+    private void handleSave() {
+	// TODO
+    }
+
+    @FXML
+    private void handleExit() {
+	// TODO
+	System.exit(0);
     }
 }

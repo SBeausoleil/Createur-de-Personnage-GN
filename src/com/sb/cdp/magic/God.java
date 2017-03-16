@@ -88,4 +88,9 @@ public class God {
     public void setSymbol(String symbol) {
 	this.symbol = symbol;
     }
+    
+    @Override
+    public String toString() {
+	return name;
+    }
 }

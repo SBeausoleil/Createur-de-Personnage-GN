@@ -3,7 +3,7 @@ package com.sb.cdp;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
-import com.sb.cdp.ability.Ability;
+import com.sb.cdp.CharacterType.Classification;
 import com.sb.cdp.gui.FXUtil;
 import com.sb.cdp.gui.view.RootLayoutController;
 import com.sb.cdp.idl.Initializer;
@@ -41,22 +41,11 @@ public class DesktopApplication extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
 	this.primaryStage = primaryStage;
-	primaryStage.setTitle("Gestionnaire de GN");
+	primaryStage.setTitle("Arcane");
 
-	initRootLayout();
-	initAbilityLibraryView();
-    }
-
-    private void initAbilityLibraryView() {
-	Library<String, Ability> generalAbilities = idl.getAbilityLibraries().get("Générale");
-	rootLayout.setCenter(FXUtil.abilityLibraryView(generalAbilities).getX());
-
-    }
-
-    private void initRootLayout() {
-	Pair<BorderPane, RootLayoutController> rootLayoutPair = FXUtil.rootLayout();
-	this.rootLayout = rootLayoutPair.getX();
-	// TODO do stuff to the controller
+	this.rootLayout = FXUtil.rootLayout().getX();
+	rootLayout.setCenter(FXUtil.characterEditView(idl, testCharacter()).getX());
+	
 	Scene scene = new Scene(rootLayout);
 	primaryStage.setScene(scene);
 	primaryStage.show();
@@ -68,66 +57,92 @@ public class DesktopApplication extends Application {
 
     /**
      * Returns the primaryStage.
+     * 
      * @return the primaryStage
      */
     public Stage getPrimaryStage() {
-        return primaryStage;
+	return primaryStage;
     }
 
     /**
      * Sets the value of primaryStage to that of the parameter.
-     * @param primaryStage the primaryStage to set
+     * 
+     * @param primaryStage
+     *            the primaryStage to set
      */
     public void setPrimaryStage(Stage primaryStage) {
-        this.primaryStage = primaryStage;
+	this.primaryStage = primaryStage;
     }
 
     /**
      * Returns the rootLayout.
+     * 
      * @return the rootLayout
      */
     public BorderPane getRootLayout() {
-        return rootLayout;
+	return rootLayout;
     }
 
     /**
      * Sets the value of rootLayout to that of the parameter.
-     * @param rootLayout the rootLayout to set
+     * 
+     * @param rootLayout
+     *            the rootLayout to set
      */
     public void setRootLayout(BorderPane rootLayout) {
-        this.rootLayout = rootLayout;
+	this.rootLayout = rootLayout;
     }
 
     /**
      * Returns the user.
+     * 
      * @return the user
      */
     public User getUser() {
-        return user;
+	return user;
     }
 
     /**
      * Sets the value of user to that of the parameter.
-     * @param user the user to set
+     * 
+     * @param user
+     *            the user to set
      */
     public void setUser(User user) {
-        this.user = user;
+	this.user = user;
     }
 
     /**
      * Returns the idl.
+     * 
      * @return the idl
      */
     public RPG getIdl() {
-        return idl;
+	return idl;
     }
 
     /**
      * Sets the value of idl to that of the parameter.
-     * @param idl the idl to set
+     * 
+     * @param idl
+     *            the idl to set
      */
     public void setIdl(RPG idl) {
-        this.idl = idl;
+	this.idl = idl;
     }
 
+    
+    private PlayerCharacter testCharacter() {
+	PlayerCharacter pc = new PlayerCharacter("Milo");
+	pc.setLawAlignment(LawAlignment.LAWFUL);
+	pc.setMoralALignment(MoralAlignment.NEUTRAL);
+	pc.setXp(13);
+	
+	pc.getCharacterTypes().add(idl.getCharacterTypes().get("Aventurier", Classification.CLASS));
+	pc.getCharacterTypes().add(idl.getCharacterTypes().get("Guerrier", Classification.CLASS));
+	pc.getCharacterTypes().add(idl.getCharacterTypes().get("Elf", Classification.RACE));
+	pc.getCharacterTypes().add(idl.getCharacterTypes().get("Humain", Classification.RACE));
+	
+	return pc;
+    }
 }
