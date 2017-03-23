@@ -29,10 +29,10 @@
                      <children>
                         <VBox layoutX="-6.0" layoutY="37.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                            <children>
-                              <GridPane prefWidth="585.0">
+                              <GridPane>
                                  <columnConstraints>
-                                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="290.0" minWidth="10.0" prefWidth="116.0" />
-                                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="474.0" minWidth="10.0" prefWidth="474.0" />
+                                    <ColumnConstraints hgrow="SOMETIMES" />
+                                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="498.0" minWidth="10.0" prefWidth="498.0" />
                                  </columnConstraints>
                                  <rowConstraints>
                                     <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
@@ -47,7 +47,7 @@
                                     <Label text="Race" GridPane.rowIndex="1" />
                                     <Label text="Classe" GridPane.rowIndex="2" />
                                     <Label text="Alignement" GridPane.rowIndex="3" />
-                                    <FlowPane columnHalignment="CENTER" hgap="5.0" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="3">
+                                    <FlowPane hgap="5.0" GridPane.columnIndex="1" GridPane.rowIndex="3">
                                        <children>
                                           <ChoiceBox fx:id="lawAlignment">
                                              <FlowPane.margin>
@@ -65,7 +65,7 @@
                                        </GridPane.margin>
                                     </FlowPane>
                                     <TextField fx:id="name" promptText="Text" GridPane.columnIndex="1" />
-                                    <FlowPane fx:id="racePane" columnHalignment="CENTER" hgap="5.0" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                                    <FlowPane fx:id="racePane" hgap="5.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
                                        <GridPane.margin>
                                           <Insets top="3.0" />
                                        </GridPane.margin>
@@ -80,9 +80,10 @@
                                                 <Insets />
                                              </FlowPane.margin>
                                           </Button>
+                                          <Button fx:id="removeRace" mnemonicParsing="false" onAction="#removeRaceChoice" text="-" />
                                        </children>
                                     </FlowPane>
-                                    <FlowPane fx:id="classPane" hgap="5.0" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                                    <FlowPane fx:id="classPane" hgap="5.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
                                        <GridPane.margin>
                                           <Insets top="3.0" />
                                        </GridPane.margin>
@@ -92,15 +93,16 @@
                                                 <Insets />
                                              </FlowPane.margin>
                                           </ChoiceBox>
-                                          <Button fx:id="addClass" mnemonicParsing="false" text="+">
+                                          <Button fx:id="addClass" mnemonicParsing="false" onAction="#addClassChoice" text="+">
                                              <FlowPane.margin>
                                                 <Insets />
                                              </FlowPane.margin>
                                           </Button>
+                                          <Button fx:id="removeClass" mnemonicParsing="false" onAction="#removeClassChoice" text="-" />
                                        </children>
                                     </FlowPane>
                                     <Label text="XP" GridPane.rowIndex="4" />
-                                    <FlowPane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="4">
+                                    <FlowPane GridPane.columnIndex="1" GridPane.rowIndex="4">
                                        <GridPane.margin>
                                           <Insets top="3.0" />
                                        </GridPane.margin>
@@ -139,10 +141,9 @@
             <content>
               <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>
-                        <VBox alignment="TOP_CENTER" layoutX="262.0" layoutY="39.0" prefHeight="200.0" prefWidth="100.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                        <VBox fx:id="abilitiesBox" alignment="TOP_CENTER" layoutX="262.0" layoutY="39.0" prefHeight="200.0" prefWidth="100.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                            <children>
                               <Button fx:id="modifyAbilities" mnemonicParsing="false" text="Modifier" />
-                              <ListView fx:id="abilitiesList" prefWidth="200.0" />
                            </children>
                         </VBox>
                      </children></AnchorPane>
@@ -188,6 +189,7 @@
                                           <Insets />
                                        </FlowPane.margin>
                                     </Button>
+                                    <Button fx:id="removeGod" mnemonicParsing="false" onAction="#removeGodChoice" text="-" />
                                  </children>
                               </FlowPane>
                               <Button fx:id="modifyMagic" mnemonicParsing="false" text="Modifier" />

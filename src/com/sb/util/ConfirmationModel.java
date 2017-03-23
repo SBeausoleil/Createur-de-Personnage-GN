@@ -60,6 +60,7 @@ public class ConfirmationModel<E> {
 	confirmed = pending;
 	pending = null;
     }
+
     /*
      * (non-Javadoc)
      * 
@@ -68,5 +69,19 @@ public class ConfirmationModel<E> {
     @Override
     public String toString() {
 	return "ConfirmationModel [confirmed=" + confirmed + ", pending=" + pending + "]";
+    }
+
+    /**
+     * Returns the last modified of the two models.
+     * If one of the two is null, returns the non-null.
+     * If both are non-null, return the submitted.
+     * If both are null, return null.
+     * 
+     * @return
+     */
+    public E getActive() {
+	if (pending != null)
+	    return pending;
+	return confirmed;
     }
 }

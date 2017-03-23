@@ -4,10 +4,9 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 
 import com.sb.cdp.CharacterType.Classification;
+import com.sb.cdp.ability.Ability;
 import com.sb.cdp.gui.FXUtil;
-import com.sb.cdp.gui.view.RootLayoutController;
 import com.sb.cdp.idl.Initializer;
-import com.sb.util.Pair;
 
 import javafx.application.Application;
 import javafx.scene.Scene;
@@ -143,6 +142,12 @@ public class DesktopApplication extends Application {
 	pc.getCharacterTypes().add(idl.getCharacterTypes().get("Elf", Classification.RACE));
 	pc.getCharacterTypes().add(idl.getCharacterTypes().get("Humain", Classification.RACE));
 	
+	Library<String, Ability> lib = idl.getAbilityLibraries().get(Initializer.ABILITY_LIBRARY);
+	pc.getAbilities().add(lib.get("Arme courte"));
+	pc.getAbilities().add(lib.get("Armures"));
+	pc.getAbilities().add(lib.get("Esquive"));
+	
+	pc.getGods().add(idl.getGods().get("Terra"));
 	return pc;
     }
 }

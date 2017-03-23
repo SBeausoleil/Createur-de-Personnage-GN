@@ -18,7 +18,7 @@
          <children>
             <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
                <image>
-                  <Image url="@../../../resources/idl_symbol.jpg" />
+                  <Image url="@../../resources/idl_symbol.jpg" />
                </image>
                <VBox.margin>
                   <Insets />

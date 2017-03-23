@@ -7,13 +7,18 @@ import java.util.Map.Entry;
 import com.sb.cdp.CharacterType;
 import com.sb.cdp.CharacterType.Classification;
 import com.sb.cdp.LawAlignment;
+import com.sb.cdp.Library;
 import com.sb.cdp.MoralAlignment;
 import com.sb.cdp.PlayerCharacter;
 import com.sb.cdp.RPG;
+import com.sb.cdp.ability.Ability;
+import com.sb.cdp.gui.FXUtil;
+import com.sb.cdp.magic.God;
 
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ListView;
@@ -23,10 +28,11 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.VBox;
 import javafx.util.Callback;
 
 // TESTME
-public class CharacterEditViewController {
+public class CharacterEditViewController implements Updateable {
 
     // BUTTONS MENU //
     @FXML
@@ -48,6 +54,8 @@ public class CharacterEditViewController {
     @FXML
     private Button addRace;
     @FXML
+    private Button removeRace;
+    @FXML
     private FlowPane racePane;
     @FXML
     private ChoiceBox firstClassChoice;
@@ -57,6 +65,8 @@ public class CharacterEditViewController {
     private LinkedList<ChoiceBox> classes;
     @FXML
     private Button addClass;
+    @FXML
+    private Button removeClass;
     @FXML
     private FlowPane classPane;
     @FXML
@@ -76,7 +86,7 @@ public class CharacterEditViewController {
     @FXML
     private Button modifyAbilities;
     @FXML
-    private ListView abilitiesList;
+    private VBox abilitiesBox;
 
     // STATS TAB //
     @FXML
@@ -95,6 +105,8 @@ public class CharacterEditViewController {
     private LinkedList<ChoiceBox> gods;
     @FXML
     private Button addGod;
+    @FXML
+    private Button removeGod;
     @FXML
     private FlowPane godPane;
     @FXML
@@ -125,6 +137,9 @@ public class CharacterEditViewController {
 	classes.add(firstClassChoice);
 	gods = new LinkedList<>();
 	gods.add(firstGodChoice);
+	
+	lawAlignment.setItems(FXCollections.observableArrayList(LawAlignment.values()));
+	moralAlignment.setItems(FXCollections.observableArrayList(MoralAlignment.values()));
     }
 
     public void setRpg(RPG rpg) {
@@ -140,35 +155,69 @@ public class CharacterEditViewController {
     private void addRaceChoice() {
 	ChoiceBox newChoice = new ChoiceBox<>();
 	setRaceChoices(newChoice);
-	racePane.getChildren().add(races.size(), newChoice); // Do not switch this line and the next. If you do, add "- 1" to "races.size()" argument. This keeps the new ChoiceBox before the "+" button.
+	addToPane(newChoice, racePane);
 	races.add(newChoice);
+    }
+
+    @FXML
+    private void removeRaceChoice() {
+	if (!races.isEmpty()) {
+	    races.removeLast();
+	    removeFromPane(racePane);
+	}
     }
 
     @FXML
     private void addClassChoice() {
 	ChoiceBox newChoice = new ChoiceBox<>();
 	setClassChoices(newChoice);
-	classPane.getChildren().add(classes.size(), newChoice); // Do not switch this line and the next. If you do, add "- 1" to "classes.size()" argument. This keeps the new ChoiceBox before the "+" button.
+	addToPane(newChoice, classPane);
 	classes.add(newChoice);
+    }
+
+    @FXML
+    private void removeClassChoice() {
+	if (!classes.isEmpty()) {
+	    classes.removeLast();
+	    removeFromPane(classPane);
+	}
     }
 
     @FXML
     private void addGodChoice() {
 	ChoiceBox newChoice = new ChoiceBox<>();
 	setGodChoices(newChoice);
-	godPane.getChildren().add(gods.size(), newChoice); // Do not switch this line and the next. If you do, add "- 1" to "gods.size()" argument. This keeps the new ChoiceBox before the "+" button.
+	addToPane(newChoice, godPane);
 	gods.add(newChoice);
     }
-    
+
+    @FXML
+    private void removeGodChoice() {
+	if (!gods.isEmpty()) {
+	    gods.removeLast();
+	    removeFromPane(godPane);
+	}
+    }
+
+    private void addToPane(Node node, FlowPane pane) {
+	// Do not switch this line and the next. If you do, add "- 1" to "coll.size()" argument. This keeps the new ChoiceBox before the "+" and "-".
+	pane.getChildren().add(pane.getChildren().size() - 2, node);
+    }
+
+    private void removeFromPane(FlowPane pane) {
+	pane.getChildren().remove(pane.getChildren().size() - 3);
+    }
+
     private void initializeOptions() {
 	if (rpg == null)
 	    throw new IllegalStateException("Cannot initialize the options while the rpg is null.");
 
-	setRaceChoices(firstRaceChoice);
-	setClassChoices(firstClassChoice);
-	setGodChoices(firstGodChoice);
-	lawAlignment.setItems(FXCollections.observableArrayList(LawAlignment.values()));
-	moralAlignment.setItems(FXCollections.observableArrayList(MoralAlignment.values()));
+	for (ChoiceBox cb : races)
+	    setRaceChoices(cb);
+	for (ChoiceBox cb : classes)
+	    setClassChoices(cb);
+	for (ChoiceBox cb : gods)
+	    setGodChoices(cb);
     }
 
     private void setClassChoices(ChoiceBox choiceBox) {
@@ -241,6 +290,27 @@ public class CharacterEditViewController {
 		    });
 	    statsTable.setItems(FXCollections.observableArrayList(pc.getStats().entrySet()));
 
+	    // Abilities
+	    Library<String, Ability> abilities = new Library<>("Abilités", Ability.class);
+	    Library<String, Ability> specialAbilities = new Library<>("Abilités spéciales", Ability.class);
+
+	    for (Ability ability : pc.getAbilities())
+		abilities.put(ability.getName(), ability);
+	    for (Ability ability : pc.getSpecialAbilities())
+		specialAbilities.put(ability.getName(), ability);
+
+	    abilitiesBox.getChildren().add(FXUtil.abilityLibraryView(abilities).getX());
+	    abilitiesBox.getChildren().add(FXUtil.abilityLibraryView(specialAbilities).getX());
+
+	    // Magic
+	    int nGods = 0;
+	    for (God god : pc.getGods()) {
+		if (nGods != 0)
+		    addGodChoice();
+		gods.getLast().setValue(god);
+		nGods++;
+	    }
+
 	} else {
 	    name.setText("");
 	    // TODO
@@ -249,5 +319,11 @@ public class CharacterEditViewController {
 
     public PlayerCharacter getPlayerCharacter() {
 	return pc;
+    }
+
+    @Override
+    public void update() {
+	initializeOptions();
+	initializePlayerCharacterInfo();
     }
 }

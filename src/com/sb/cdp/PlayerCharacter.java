@@ -3,6 +3,7 @@ package com.sb.cdp;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -39,6 +40,9 @@ public class PlayerCharacter implements LibraryPermissionHolder {
 	this.name = name;
 	
 	characterTypes = new LinkedHashSet<>();
+	gods = new LinkedHashSet<>();
+	abilities = new LinkedList<>();
+	specialAbilities = new LinkedList<>();
 	
 	stats = new HashMap<>();
 	stats.put(ENDURANCE, baseEndurance);
