@@ -5,15 +5,13 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.AnchorPane?>
 
-
-<AnchorPane xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8.0.111">
+<AnchorPane fx:id="pane" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.sb.cdp.gui.view.UserCharacterViewController">
    <children>
-      <Label layoutX="196.0" layoutY="66.0" text="PLAYER CHARACTER NAME" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="5.0" />
+      <Label fx:id="characterName" layoutX="196.0" layoutY="66.0" text="CHARACTER NAME" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="5.0" />
       <ButtonBar layoutX="289.0" layoutY="4.0" minWidth="400.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <buttons>
-            <Button mnemonicParsing="false" text="Confirmé" />
-            <Button mnemonicParsing="false" text="Soumis" />
-            <Button mnemonicParsing="false" text="Supprimer" />
+            <Button fx:id="confirmed" mnemonicParsing="false" text="Confirmé" />
+            <Button fx:id="submitted" mnemonicParsing="false" text="Soumis" />
          </buttons>
       </ButtonBar>
    </children>

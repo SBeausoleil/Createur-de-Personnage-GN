@@ -39,6 +39,6 @@ public class UserCharacterViewController implements Updateable {
 	if (userCharacter.getPending() == null && pane.getChildren().contains(submitted))
 	    pane.getChildren().remove(submitted);
 	else if (userCharacter.getPending() != null && !pane.getChildren().contains(submitted))
-	    pane.getChildren().add(submitted);
+	    pane.getChildren().add(submitted); // Add the submitted before the delete button
     }
 }
