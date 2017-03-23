@@ -98,6 +98,10 @@ public class User implements LibraryPermissionHolder {
     public void setEmail(String email) {
 	this.email = email;
     }
+    
+    public Map<String, ConfirmationModel<PlayerCharacter>> getCharacters() {
+	return characters;
+    }
 
     public void addAsConfirmed(PlayerCharacter pc) {
 	ConfirmationModel<PlayerCharacter> cm = new ConfirmationModel<>(pc);
