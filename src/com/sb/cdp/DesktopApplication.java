@@ -7,6 +7,7 @@ import com.sb.cdp.CharacterType.Classification;
 import com.sb.cdp.ability.Ability;
 import com.sb.cdp.gui.FXUtil;
 import com.sb.cdp.idl.Initializer;
+import com.sb.util.DateUtil;
 
 import javafx.application.Application;
 import javafx.scene.Scene;
@@ -15,6 +16,8 @@ import javafx.stage.Stage;
 
 public class DesktopApplication extends Application {
 
+    private static DesktopApplication app;
+    
     private Stage primaryStage;
     private BorderPane rootLayout;
 
@@ -23,6 +26,8 @@ public class DesktopApplication extends Application {
 
     // Called by the superclass
     public DesktopApplication() {
+	app = this;
+	
 	idl = null;
 	try {
 	    idl = Initializer.initialize();
@@ -34,6 +39,8 @@ public class DesktopApplication extends Application {
 	}
 	if (idl == null)
 	    System.exit(1);
+	user = testUser();
+	
     }
 
     // Called by the superclass Application after the constructor
@@ -43,7 +50,6 @@ public class DesktopApplication extends Application {
 	primaryStage.setTitle("Arcane");
 
 	this.rootLayout = FXUtil.rootLayout().getX();
-	rootLayout.setCenter(FXUtil.characterEditView(idl, testCharacter()).getX());
 	
 	Scene scene = new Scene(rootLayout);
 	primaryStage.setScene(scene);
@@ -130,8 +136,14 @@ public class DesktopApplication extends Application {
 	this.idl = idl;
     }
 
+    private User testUser() {
+	User user = new User("Samuel", "Beausoleil", DateUtil.parse("19/01/1996"), "samuel.beausoleil@hotmail.com");
+	user.addAsConfirmed(testCharacter1());
+	user.addAsPending(testCharacter2());
+	return user;
+    }
     
-    private PlayerCharacter testCharacter() {
+    private PlayerCharacter testCharacter1() {
 	PlayerCharacter pc = new PlayerCharacter("Milo");
 	pc.setLawAlignment(LawAlignment.LAWFUL);
 	pc.setMoralALignment(MoralAlignment.NEUTRAL);
@@ -149,5 +161,28 @@ public class DesktopApplication extends Application {
 	
 	pc.getGods().add(idl.getGods().get("Terra"));
 	return pc;
+    }
+    
+    private PlayerCharacter testCharacter2() {
+	PlayerCharacter pc = new PlayerCharacter("Aela Stormborn");
+	pc.setLawAlignment(LawAlignment.CHAOTIC);
+	pc.setMoralALignment(MoralAlignment.EVIL);
+	pc.setXp(55);
+	
+	pc.getCharacterTypes().add(idl.getCharacterTypes().get("Guerrier", Classification.CLASS));
+	pc.getCharacterTypes().add(idl.getCharacterTypes().get("Barbare", Classification.RACE));
+	
+	Library<String, Ability> lib = idl.getAbilityLibraries().get(Initializer.ABILITY_LIBRARY);
+	pc.getAbilities().add(lib.get("Arme courte"));
+	pc.getAbilities().add(lib.get("Armures"));
+	pc.getAbilities().add(lib.get("Esquive"));
+	
+	pc.getSpecialAbilities().add(lib.get("Alchimie 1"));
+	
+	return pc;
+    }
+    
+    public static DesktopApplication get() {
+	return app;
     }
 }

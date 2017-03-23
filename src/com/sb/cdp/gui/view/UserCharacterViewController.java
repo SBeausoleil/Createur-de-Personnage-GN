@@ -1,8 +1,8 @@
 package com.sb.cdp.gui.view;
 
-import javax.swing.ButtonModel;
-
+import com.sb.cdp.DesktopApplication;
 import com.sb.cdp.PlayerCharacter;
+import com.sb.cdp.gui.FXUtil;
 import com.sb.util.ConfirmationModel;
 
 import javafx.fxml.FXML;
@@ -41,12 +41,28 @@ public class UserCharacterViewController implements Updateable {
 
 	characterName.setText(userCharacter.getActive().getName());
 
-	if (userCharacter.getPending() == null && pane.getChildren().contains(submitted)) {
-	    pane.getChildren().remove(submitted);
-	    confirmed.setText("Modifier");
-	} else if (userCharacter.getPending() != null && !pane.getChildren().contains(submitted)) {
-	    pane.getChildren().add(submitted); // Add the submitted before the delete button
-	    confirmed.setText("Confirmé");
-	}
+	confirmed.setDisable(userCharacter.getConfirmed() == null);
+	submitted.setDisable(userCharacter.getPending() == null);
+    }
+
+    /**
+     * Returns the bar.
+     * 
+     * @return the bar
+     */
+    public ButtonBar getBar() {
+	return bar;
+    }
+
+    @FXML
+    private void modifyConfirmed() {
+	DesktopApplication.get().getRootLayout().setCenter(
+		FXUtil.characterEditView(DesktopApplication.get().getIdl(), userCharacter.getConfirmed()).getX());
+    }
+
+    @FXML
+    private void modifyPending() {
+	DesktopApplication.get().getRootLayout().setCenter(
+		FXUtil.characterEditView(DesktopApplication.get().getIdl(), userCharacter.getPending()).getX());
     }
 }

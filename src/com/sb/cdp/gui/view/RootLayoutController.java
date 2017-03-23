@@ -1,14 +1,22 @@
 package com.sb.cdp.gui.view;
 
+import com.sb.cdp.DesktopApplication;
+import com.sb.cdp.RPG;
+import com.sb.cdp.User;
+import com.sb.cdp.gui.FXUtil;
+import com.sb.util.Pair;
+
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TitledPane;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.VBox;
 
 public class RootLayoutController {
     @FXML
     private Button myCharacters;
     @FXML
-    private TitledPane rpg;
+    private TitledPane rpgSection;
     @FXML
     private Button abilities;
     @FXML
@@ -22,13 +30,16 @@ public class RootLayoutController {
     @FXML
     private Button exit;
 
+    @FXML
+    private BorderPane layout;
+    
     public RootLayoutController() {}
 
     @FXML
     private void initialize() {
 	// Setting the buttons' width to Double.MAX_VALUE makes them take all the space available in their VBox cell.
 	myCharacters.setPrefWidth(Double.MAX_VALUE);
-	rpg.setPrefWidth(Double.MAX_VALUE);
+	rpgSection.setPrefWidth(Double.MAX_VALUE);
 	abilities.setPrefWidth(Double.MAX_VALUE);
 	magic.setPrefWidth(Double.MAX_VALUE);
 	domains.setPrefWidth(Double.MAX_VALUE);
@@ -39,7 +50,9 @@ public class RootLayoutController {
     
     @FXML
     private void handleCharacters() {
-	// TODO
+	DesktopApplication app = DesktopApplication.get();
+	Pair<VBox, UserViewController> pair = FXUtil.userView(app.getUser());
+	layout.setCenter(pair.getX());
     }
     
     @FXML

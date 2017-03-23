@@ -3,6 +3,7 @@ package com.sb.cdp;
 import java.time.LocalDate;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
 
 import com.sb.util.ConfirmationModel;
 
@@ -21,6 +22,8 @@ public class User implements LibraryPermissionHolder {
 	this.lastName = lastName;
 	this.birthday = birthday;
 	this.email = email;
+	
+	characters = new TreeMap<>();
     }
 
     /**

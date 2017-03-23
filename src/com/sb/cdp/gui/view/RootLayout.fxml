@@ -9,7 +9,7 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.sb.cdp.gui.view.RootLayoutController">
+<BorderPane fx:id="layout" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.sb.cdp.gui.view.RootLayoutController">
    <left>
       <VBox alignment="TOP_CENTER" prefHeight="600.0" prefWidth="110.0" style="-fx-background-color: #bbbbff;" BorderPane.alignment="CENTER">
          <effect>
@@ -25,7 +25,7 @@
                </VBox.margin>
             </ImageView>
             <Button fx:id="myCharacters" mnemonicParsing="false" onAction="#handleCharacters" text="Mes Personnages" />
-            <TitledPane fx:id="rpg" alignment="CENTER" contentDisplay="CENTER" graphicTextGap="0.0" text="GN" textAlignment="CENTER">
+            <TitledPane fx:id="rpgSection" alignment="CENTER" contentDisplay="CENTER" graphicTextGap="0.0" text="GN" textAlignment="CENTER">
                <content>
                   <VBox alignment="TOP_CENTER" fillWidth="true" style="-fx-background-color: #bbbbff;">
                      <children>
