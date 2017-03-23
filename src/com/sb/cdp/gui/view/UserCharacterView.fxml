@@ -8,7 +8,7 @@
 <AnchorPane fx:id="pane" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.sb.cdp.gui.view.UserCharacterViewController">
    <children>
       <Label fx:id="characterName" layoutX="196.0" layoutY="66.0" text="CHARACTER NAME" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="5.0" />
-      <ButtonBar layoutX="289.0" layoutY="4.0" minWidth="400.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <ButtonBar fx:id="bar" layoutX="289.0" layoutY="4.0" minWidth="400.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <buttons>
             <Button fx:id="confirmed" mnemonicParsing="false" text="Confirmé" />
             <Button fx:id="submitted" mnemonicParsing="false" text="Soumis" />

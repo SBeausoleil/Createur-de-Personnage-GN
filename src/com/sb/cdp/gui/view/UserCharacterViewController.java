@@ -1,10 +1,13 @@
 package com.sb.cdp.gui.view;
 
+import javax.swing.ButtonModel;
+
 import com.sb.cdp.PlayerCharacter;
 import com.sb.util.ConfirmationModel;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonBar;
 import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
 
@@ -18,6 +21,8 @@ public class UserCharacterViewController implements Updateable {
     private Button confirmed;
     @FXML
     private Button submitted;
+    @FXML
+    private ButtonBar bar;
 
     private ConfirmationModel<PlayerCharacter> userCharacter;
 
@@ -36,9 +41,12 @@ public class UserCharacterViewController implements Updateable {
 
 	characterName.setText(userCharacter.getActive().getName());
 
-	if (userCharacter.getPending() == null && pane.getChildren().contains(submitted))
+	if (userCharacter.getPending() == null && pane.getChildren().contains(submitted)) {
 	    pane.getChildren().remove(submitted);
-	else if (userCharacter.getPending() != null && !pane.getChildren().contains(submitted))
+	    confirmed.setText("Modifier");
+	} else if (userCharacter.getPending() != null && !pane.getChildren().contains(submitted)) {
 	    pane.getChildren().add(submitted); // Add the submitted before the delete button
+	    confirmed.setText("Confirmé");
+	}
     }
 }
