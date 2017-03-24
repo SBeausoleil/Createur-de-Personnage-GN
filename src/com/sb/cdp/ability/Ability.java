@@ -4,6 +4,12 @@ import java.util.Arrays;
 
 import com.sb.cdp.PlayerCharacter;
 
+/**
+ * An ability owned by a PlayerCharacter.
+ * 
+ * @author Samuel Beausoleil
+ *
+ */
 public class Ability {
     private String name;
     private int cost;

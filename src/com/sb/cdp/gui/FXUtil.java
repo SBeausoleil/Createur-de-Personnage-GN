@@ -23,6 +23,12 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 
+/**
+ * A helper class aiding the loading of views and their controller.
+ * 
+ * @author Samuel Beausoleil
+ *
+ */
 public final class FXUtil {
     private FXUtil() {}
 
