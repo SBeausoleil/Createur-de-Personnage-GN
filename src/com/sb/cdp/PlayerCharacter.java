@@ -12,7 +12,7 @@ import com.sb.cdp.ability.Ability;
 import com.sb.cdp.magic.God;
 import com.sb.cdp.magic.Magic;
 
-public class PlayerCharacter implements LibraryPermissionHolder {
+public class PlayerCharacter implements LibraryPermissionHolder, Cloneable {
     public static final String ENDURANCE = "Endurance";
     public static final String MANA = "Mana";
     public static final String KARMA = "Karma";
@@ -35,21 +35,23 @@ public class PlayerCharacter implements LibraryPermissionHolder {
     private Set<Magic> spells;
 
     private Set<Library> allowedLibraries;
+    private String note;
 
     public PlayerCharacter(String name) {
 	this.name = name;
-	
+
 	characterTypes = new LinkedHashSet<>();
 	gods = new LinkedHashSet<>();
 	abilities = new LinkedList<>();
 	specialAbilities = new LinkedList<>();
-	
+
 	stats = new HashMap<>();
 	stats.put(ENDURANCE, baseEndurance);
 	stats.put(MANA, baseMana);
 	stats.put(KARMA, baseKarma);
-	
+
 	allowedLibraries = new HashSet<>();
+	note = "";
     }
 
     /**
@@ -336,5 +338,53 @@ public class PlayerCharacter implements LibraryPermissionHolder {
     @Override
     public void allow(Library allowedLibrary) {
 	allowedLibraries.add(allowedLibrary);
+    }
+
+    /**
+     * Returns the note.
+     * 
+     * @return the note
+     */
+    public String getNote() {
+	return note;
+    }
+
+    /**
+     * Sets the value of note to that of the parameter.
+     * 
+     * @param note
+     *            the note to set
+     */
+    public void setNote(String note) {
+	this.note = note;
+    }
+
+    @Override
+    public PlayerCharacter clone() {
+	PlayerCharacter clone = new PlayerCharacter(null);
+	clone(clone);
+	return clone;
+    }
+
+    /**
+     * Copies this PlayerCharacter's properties to the specified PlayerCharacter.
+     * This is a shallow clone in which the lists are cloned but not their content (content is shared across instances).
+     * @param clone
+     */
+    public void clone(PlayerCharacter clone) {
+	clone.name = name;
+	clone.characterTypes.addAll(characterTypes);
+	clone.lawAlignment = lawAlignment;
+	clone.moralALignment = moralALignment;
+	clone.xp = xp;
+	clone.nAbilityPoints = nAbilityPoints;
+	clone.stats.putAll(stats);
+	clone.gods.addAll(gods);
+	clone.background = background;
+	clone.abilities.addAll(abilities);
+	clone.specialAbilities.addAll(specialAbilities);
+	clone.spells.addAll(spells);
+	clone.allowedLibraries.addAll(allowedLibraries);
+	clone.note = note;
     }
 }
