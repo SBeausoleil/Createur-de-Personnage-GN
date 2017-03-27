@@ -1,6 +1,7 @@
 package com.sb.cdp.gui;
 
 import java.io.IOException;
+import java.util.Collection;
 
 import com.sb.cdp.DesktopApplication;
 import com.sb.cdp.Library;
@@ -11,6 +12,7 @@ import com.sb.cdp.ability.Ability;
 import com.sb.cdp.gui.view.AbilityLibraryViewController;
 import com.sb.cdp.gui.view.AbilityViewController;
 import com.sb.cdp.gui.view.CharacterEditViewController;
+import com.sb.cdp.gui.view.ExtendedAbilityLibraryViewController;
 import com.sb.cdp.gui.view.RootLayoutController;
 import com.sb.cdp.gui.view.UserCharacterViewController;
 import com.sb.cdp.gui.view.UserEditViewController;
@@ -127,6 +129,20 @@ public final class FXUtil {
 	    AbilityViewController controller = loader.getController();
 	    controller.setAbility(ability);
 	    pair.setY(controller);
+	    return pair;
+	} catch (IOException e) {
+	    throw new RuntimeException(e);
+	}
+    }
+    
+    public static Pair<AnchorPane, ExtendedAbilityLibraryViewController> extendedAbilityLibraryViewController(Collection<Library<String, Ability>> collection) {
+	try {
+	    Pair<AnchorPane, ExtendedAbilityLibraryViewController> pair = new Pair<>();
+	    FXMLLoader loader = new FXMLLoader();
+	    loader.setLocation(DesktopApplication.class.getResource("gui/view/ExtendedAbilityLibraryView.fxml"));
+	    pair.setX(loader.load());
+	    pair.setY(loader.getController());
+	    pair.getY().setLibraries(collection);
 	    return pair;
 	} catch (IOException e) {
 	    throw new RuntimeException(e);
