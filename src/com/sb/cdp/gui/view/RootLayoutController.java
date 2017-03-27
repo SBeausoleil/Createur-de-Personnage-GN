@@ -1,14 +1,13 @@
 package com.sb.cdp.gui.view;
 
 import com.sb.cdp.DesktopApplication;
-import com.sb.cdp.RPG;
-import com.sb.cdp.User;
 import com.sb.cdp.gui.FXUtil;
 import com.sb.util.Pair;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TitledPane;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 
@@ -32,7 +31,7 @@ public class RootLayoutController {
 
     @FXML
     private BorderPane layout;
-    
+
     public RootLayoutController() {}
 
     @FXML
@@ -47,24 +46,25 @@ public class RootLayoutController {
 	save.setPrefWidth(Double.MAX_VALUE);
 	exit.setPrefWidth(Double.MAX_VALUE);
     }
-    
+
     @FXML
     private void handleCharacters() {
-	DesktopApplication app = DesktopApplication.get();
-	Pair<VBox, UserViewController> pair = FXUtil.userView(app.getUser());
+	Pair<VBox, UserViewController> pair = FXUtil.userView(DesktopApplication.get().getUser());
 	layout.setCenter(pair.getX());
     }
-    
+
     @FXML
     private void handleAbilities() {
-	// TODO
+	Pair<AnchorPane, ExtendedAbilityLibraryViewController> pair = FXUtil.extendedAbilityLibraryViewController(
+		DesktopApplication.get().getRpg().getAbilityLibraries().values());
+	layout.setCenter(pair.getX());
     }
-    
+
     @FXML
     private void handleMagic() {
 	// TODO
     }
-    
+
     @FXML
     private void handleDomains() {
 	// TODO
@@ -74,7 +74,7 @@ public class RootLayoutController {
     private void handleGods() {
 	// TODO
     }
-        
+
     @FXML
     private void handleSave() {
 	// TODO

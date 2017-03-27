@@ -46,11 +46,11 @@ public class CharacterEditViewController implements Updateable {
     @FXML
     private TextField name;
     @FXML
-    private ChoiceBox firstRaceChoice;
+    private ChoiceBox<CharacterType> firstRaceChoice;
     /**
      * Accomodates all the race choice boxes.
      */
-    private LinkedList<ChoiceBox> races;
+    private LinkedList<ChoiceBox<CharacterType>> races;
     @FXML
     private Button addRace;
     @FXML
@@ -58,11 +58,11 @@ public class CharacterEditViewController implements Updateable {
     @FXML
     private FlowPane racePane;
     @FXML
-    private ChoiceBox firstClassChoice;
+    private ChoiceBox<CharacterType> firstClassChoice;
     /**
      * Accomodates all the class choice boxes.
      */
-    private LinkedList<ChoiceBox> classes;
+    private LinkedList<ChoiceBox<CharacterType>> classes;
     @FXML
     private Button addClass;
     @FXML
@@ -70,9 +70,9 @@ public class CharacterEditViewController implements Updateable {
     @FXML
     private FlowPane classPane;
     @FXML
-    private ChoiceBox lawAlignment;
+    private ChoiceBox<LawAlignment> lawAlignment;
     @FXML
-    private ChoiceBox moralAlignment;
+    private ChoiceBox<MoralAlignment> moralAlignment;
     @FXML
     private TextField xp;
     @FXML
@@ -114,11 +114,19 @@ public class CharacterEditViewController implements Updateable {
     @FXML
     private ListView magicList;
 
+    // NOTES TAB //
+    @FXML
+    private TextArea notes;
+
     // DATA OBJECTS //
     /**
      * The Player Character center to this view.
      */
     private PlayerCharacter pc;
+    /**
+     * Modifications made to the UI will be applied to the tmp character.
+     */
+    private PlayerCharacter tmp;
     /**
      * The RPG used to populate the choice boxes.
      */
@@ -137,7 +145,7 @@ public class CharacterEditViewController implements Updateable {
 	classes.add(firstClassChoice);
 	gods = new LinkedList<>();
 	gods.add(firstGodChoice);
-	
+
 	lawAlignment.setItems(FXCollections.observableArrayList(LawAlignment.values()));
 	moralAlignment.setItems(FXCollections.observableArrayList(MoralAlignment.values()));
     }
@@ -233,88 +241,88 @@ public class CharacterEditViewController implements Updateable {
     }
 
     public void setPlayerCharacter(PlayerCharacter pc) {
+	if (pc == null)
+	    throw new IllegalArgumentException("pc may not be null");
 	this.pc = pc;
+	this.tmp = this.pc.clone();
 	initializePlayerCharacterInfo();
     }
 
     private void initializePlayerCharacterInfo() {
-	// TODO
-	if (pc != null) {
-	    name.setText(pc.getName());
+	name.setText(tmp.getName());
 
-	    { // set the race(s) and class(es)
-		int nRace = 0;
-		int nClass = 0;
-		for (CharacterType type : pc.getCharacterTypes()) {
-		    switch (type.getClassification()) {
-		    case RACE:
-			if (nRace != 0)
-			    addRaceChoice();
-			races.getLast().setValue(type);
-			nRace++;
-			break;
-		    case CLASS:
-			if (nClass != 0)
-			    addClassChoice();
-			classes.getLast().setValue(type);
-			nClass++;
-			break;
-		    }
+	{ // set the race(s) and class(es)
+	    int nRace = 0;
+	    int nClass = 0;
+	    for (CharacterType type : tmp.getCharacterTypes()) {
+		switch (type.getClassification()) {
+		case RACE:
+		    if (nRace != 0)
+			addRaceChoice();
+		    races.getLast().setValue(type);
+		    nRace++;
+		    break;
+		case CLASS:
+		    if (nClass != 0)
+			addClassChoice();
+		    classes.getLast().setValue(type);
+		    nClass++;
+		    break;
 		}
 	    }
-	    // Set the alignment
-	    lawAlignment.setValue(pc.getLawAlignment());
-	    moralAlignment.setValue(pc.getMoralALignment());
-
-	    // XP
-	    xp.setText(Integer.toString(pc.getXp()));
-
-	    // Stats
-	    properties.setCellValueFactory(
-		    new Callback<TableColumn.CellDataFeatures<Map.Entry<String, Integer>, String>, SimpleStringProperty>() {
-
-			@Override
-			public SimpleStringProperty call(CellDataFeatures<Entry<String, Integer>, String> cell) {
-			    return new SimpleStringProperty(cell.getValue().getKey());
-			}
-
-		    });
-	    values.setCellValueFactory(
-		    new Callback<TableColumn.CellDataFeatures<Map.Entry<String, Integer>, String>, SimpleStringProperty>() {
-
-			@Override
-			public SimpleStringProperty call(CellDataFeatures<Entry<String, Integer>, String> cell) {
-			    return new SimpleStringProperty(cell.getValue().getValue().toString());
-			}
-
-		    });
-	    statsTable.setItems(FXCollections.observableArrayList(pc.getStats().entrySet()));
-
-	    // Abilities
-	    Library<String, Ability> abilities = new Library<>("Abilités", Ability.class);
-	    Library<String, Ability> specialAbilities = new Library<>("Abilités spéciales", Ability.class);
-
-	    for (Ability ability : pc.getAbilities())
-		abilities.put(ability.getName(), ability);
-	    for (Ability ability : pc.getSpecialAbilities())
-		specialAbilities.put(ability.getName(), ability);
-
-	    abilitiesBox.getChildren().add(FXUtil.abilityLibraryView(abilities).getX());
-	    abilitiesBox.getChildren().add(FXUtil.abilityLibraryView(specialAbilities).getX());
-
-	    // Magic
-	    int nGods = 0;
-	    for (God god : pc.getGods()) {
-		if (nGods != 0)
-		    addGodChoice();
-		gods.getLast().setValue(god);
-		nGods++;
-	    }
-
-	} else {
-	    name.setText("");
-	    // TODO
 	}
+	// Set the alignment
+	lawAlignment.setValue(tmp.getLawAlignment());
+	moralAlignment.setValue(tmp.getMoralALignment());
+
+	// XP
+	xp.setText(Integer.toString(tmp.getXp()));
+
+	// Stats
+	properties.setCellValueFactory(
+		new Callback<TableColumn.CellDataFeatures<Map.Entry<String, Integer>, String>, SimpleStringProperty>() {
+
+		    @Override
+		    public SimpleStringProperty call(CellDataFeatures<Entry<String, Integer>, String> cell) {
+			return new SimpleStringProperty(cell.getValue().getKey());
+		    }
+
+		});
+	values.setCellValueFactory(
+		new Callback<TableColumn.CellDataFeatures<Map.Entry<String, Integer>, String>, SimpleStringProperty>() {
+
+		    @Override
+		    public SimpleStringProperty call(CellDataFeatures<Entry<String, Integer>, String> cell) {
+			return new SimpleStringProperty(cell.getValue().getValue().toString());
+		    }
+
+		});
+	statsTable.setItems(FXCollections.observableArrayList(tmp.getStats().entrySet()));
+
+	// Abilities
+	Library<String, Ability> abilities = new Library<>("Abilités", Ability.class);
+	Library<String, Ability> specialAbilities = new Library<>("Abilités spéciales", Ability.class);
+
+	for (Ability ability : tmp.getAbilities())
+	    abilities.put(ability.getName(), ability);
+	for (Ability ability : tmp.getSpecialAbilities())
+	    specialAbilities.put(ability.getName(), ability);
+
+	abilitiesBox.getChildren().add(FXUtil.abilityLibraryView(abilities).getX());
+	abilitiesBox.getChildren().add(FXUtil.abilityLibraryView(specialAbilities).getX());
+
+	// Magic
+	int nGods = 0;
+	for (God god : tmp.getGods()) {
+	    if (nGods != 0)
+		addGodChoice();
+	    gods.getLast().setValue(god);
+	    nGods++;
+	}
+
+	// Notes
+	notes.setText(tmp.getNote());
+
     }
 
     public PlayerCharacter getPlayerCharacter() {
@@ -325,5 +333,37 @@ public class CharacterEditViewController implements Updateable {
     public void update() {
 	initializeOptions();
 	initializePlayerCharacterInfo();
+    }
+
+    /**
+     * Applies UI info to the pc.
+     * Checks first for validity of entered data.
+     */
+    @FXML
+    private void confirm() {
+	try {
+	    tmp.setName(name.getText());
+	    tmp.getCharacterTypes().clear();
+	    for (ChoiceBox<CharacterType> ct : classes)
+		tmp.getCharacterTypes().add(ct.getValue());
+	    for (ChoiceBox<CharacterType> ct : races)
+		tmp.getCharacterTypes().add(ct.getValue());
+	    tmp.setLawAlignment(lawAlignment.getValue());
+	    tmp.setMoralALignment(moralAlignment.getValue());
+	    tmp.setXp(Integer.parseInt(xp.getText()));
+	    tmp.setnAbilityPoints(Integer.parseInt(abilityPoints.getText()));
+	    // Ability tabs reflects in real time on the tmp.
+	    // Magic tab
+	    tmp.getGods().clear();
+	    for (ChoiceBox<God> god : gods)
+		tmp.getGods().add(god.getValue());
+	    // Rest of magic tab is reflected in real time on the tmp.
+	    // Notes tab
+	    tmp.setNote(notes.getText());
+	    
+	    tmp.clone(pc);
+	} catch (Throwable e) {
+	    
+	}
     }
 }

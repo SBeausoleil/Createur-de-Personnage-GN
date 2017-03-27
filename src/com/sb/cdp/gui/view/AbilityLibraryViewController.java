@@ -3,6 +3,7 @@ package com.sb.cdp.gui.view;
 import com.sb.cdp.Library;
 import com.sb.cdp.ability.Ability;
 import com.sb.cdp.gui.FXUtil;
+import com.sb.util.Pair;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -19,6 +20,8 @@ public class AbilityLibraryViewController {
 
     private Library<?, Ability> abilities;
 
+    private Pair<AnchorPane, AbilityViewController>[] views;
+    
     public AbilityLibraryViewController() {}
 
     @FXML
@@ -46,9 +49,30 @@ public class AbilityLibraryViewController {
     }
 
     private void showAbilities() {
-	ObservableList<AnchorPane> views = FXCollections.observableArrayList();
-	for (Ability ability : abilities.values())
-	    views.add(FXUtil.abilityView(ability).getX());
-	list.setItems(views);
+	this.views = new Pair[abilities.values().size()];
+	ObservableList<AnchorPane> viewsList = FXCollections.observableArrayList();
+	int nViews = 0;
+	for (Ability ability : abilities.values()) {
+	    Pair<AnchorPane, AbilityViewController> pair = FXUtil.abilityView(ability);
+	    viewsList.add(pair.getX());
+	    this.views[nViews++] = pair;
+	}
+	list.setItems(viewsList);
+    }
+
+    /**
+     * Returns the views.
+     * @return the views
+     */
+    public Pair<AnchorPane, AbilityViewController>[] getViews() {
+        return views;
+    }
+
+    /**
+     * Returns the list.
+     * @return the list
+     */
+    public ListView<AnchorPane> getList() {
+        return list;
     }
 }
