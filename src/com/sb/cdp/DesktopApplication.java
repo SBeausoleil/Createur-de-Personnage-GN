@@ -17,30 +17,30 @@ import javafx.stage.Stage;
 public class DesktopApplication extends Application {
 
     private static DesktopApplication app;
-    
+
     private Stage primaryStage;
     private BorderPane rootLayout;
 
     private User user;
-    private RPG idl;
+    private RPG rpg;
 
     // Called by the superclass
     public DesktopApplication() {
 	app = this;
-	
-	idl = null;
+
+	rpg = null;
 	try {
-	    idl = Initializer.initialize();
+	    rpg = Initializer.initialize();
 	} catch (FileNotFoundException e) {
 	    System.err.println("One of the files needed for the initialization of the RPG has not been found.");
 	    e.printStackTrace();
 	} catch (IOException e) {
 	    e.printStackTrace();
 	}
-	if (idl == null)
+	if (rpg == null)
 	    System.exit(1);
 	user = testUser();
-	
+
     }
 
     // Called by the superclass Application after the constructor
@@ -50,7 +50,7 @@ public class DesktopApplication extends Application {
 	primaryStage.setTitle("Arcane");
 
 	this.rootLayout = FXUtil.rootLayout().getX();
-	
+
 	Scene scene = new Scene(rootLayout);
 	primaryStage.setScene(scene);
 	primaryStage.show();
@@ -118,22 +118,22 @@ public class DesktopApplication extends Application {
     }
 
     /**
-     * Returns the idl.
+     * Returns the rpg.
      * 
-     * @return the idl
+     * @return the rpg
      */
-    public RPG getIdl() {
-	return idl;
+    public RPG getRpg() {
+	return rpg;
     }
 
     /**
-     * Sets the value of idl to that of the parameter.
+     * Sets the value of rpg to that of the parameter.
      * 
-     * @param idl
-     *            the idl to set
+     * @param rpg
+     *            the rpg to set
      */
-    public void setIdl(RPG idl) {
-	this.idl = idl;
+    public void setRpg(RPG idl) {
+	this.rpg = idl;
     }
 
     private User testUser() {
@@ -142,46 +142,46 @@ public class DesktopApplication extends Application {
 	user.addAsPending(testCharacter2());
 	return user;
     }
-    
+
     private PlayerCharacter testCharacter1() {
 	PlayerCharacter pc = new PlayerCharacter("Milo");
 	pc.setLawAlignment(LawAlignment.LAWFUL);
 	pc.setMoralALignment(MoralAlignment.NEUTRAL);
 	pc.setXp(13);
-	
-	pc.getCharacterTypes().add(idl.getCharacterTypes().get("Aventurier", Classification.CLASS));
-	pc.getCharacterTypes().add(idl.getCharacterTypes().get("Guerrier", Classification.CLASS));
-	pc.getCharacterTypes().add(idl.getCharacterTypes().get("Elf", Classification.RACE));
-	pc.getCharacterTypes().add(idl.getCharacterTypes().get("Humain", Classification.RACE));
-	
-	Library<String, Ability> lib = idl.getAbilityLibraries().get(Initializer.ABILITY_LIBRARY);
+
+	pc.getCharacterTypes().add(rpg.getCharacterTypes().get("Aventurier", Classification.CLASS));
+	pc.getCharacterTypes().add(rpg.getCharacterTypes().get("Guerrier", Classification.CLASS));
+	pc.getCharacterTypes().add(rpg.getCharacterTypes().get("Elf", Classification.RACE));
+	pc.getCharacterTypes().add(rpg.getCharacterTypes().get("Humain", Classification.RACE));
+
+	Library<String, Ability> lib = rpg.getAbilityLibraries().get(Initializer.ABILITY_LIBRARY);
 	pc.getAbilities().add(lib.get("Arme courte"));
 	pc.getAbilities().add(lib.get("Armures"));
 	pc.getAbilities().add(lib.get("Esquive"));
-	
-	pc.getGods().add(idl.getGods().get("Terra"));
+
+	pc.getGods().add(rpg.getGods().get("Terra"));
 	return pc;
     }
-    
+
     private PlayerCharacter testCharacter2() {
 	PlayerCharacter pc = new PlayerCharacter("Aela Stormborn");
 	pc.setLawAlignment(LawAlignment.CHAOTIC);
 	pc.setMoralALignment(MoralAlignment.EVIL);
 	pc.setXp(55);
-	
-	pc.getCharacterTypes().add(idl.getCharacterTypes().get("Guerrier", Classification.CLASS));
-	pc.getCharacterTypes().add(idl.getCharacterTypes().get("Barbare", Classification.RACE));
-	
-	Library<String, Ability> lib = idl.getAbilityLibraries().get(Initializer.ABILITY_LIBRARY);
+
+	pc.getCharacterTypes().add(rpg.getCharacterTypes().get("Guerrier", Classification.CLASS));
+	pc.getCharacterTypes().add(rpg.getCharacterTypes().get("Barbare", Classification.RACE));
+
+	Library<String, Ability> lib = rpg.getAbilityLibraries().get(Initializer.ABILITY_LIBRARY);
 	pc.getAbilities().add(lib.get("Arme courte"));
 	pc.getAbilities().add(lib.get("Armures"));
 	pc.getAbilities().add(lib.get("Esquive"));
-	
+
 	pc.getSpecialAbilities().add(lib.get("Alchimie 1"));
-	
+
 	return pc;
     }
-    
+
     public static DesktopApplication get() {
 	return app;
     }
