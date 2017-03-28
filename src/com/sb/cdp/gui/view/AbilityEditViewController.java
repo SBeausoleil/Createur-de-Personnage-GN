@@ -13,7 +13,7 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 
-public class AbilityEditViewController {
+public class AbilityEditViewController implements Controller {
 
     @FXML
     private TextField name;
@@ -120,21 +120,7 @@ public class AbilityEditViewController {
      */
     public void setAbility(Ability ability) {
 	this.ability = ability;
-	showAbility();
-    }
-
-    private void showAbility() {
-	if (ability != null) {
-	    name.setText(ability.getName());
-	    cost.setText(Integer.toString(ability.getCost()));
-	    maximalTimesTaken.setText(Integer.toString(ability.getMaxTimesTaken()));
-	    description.setText(ability.getDescription());
-	} else {
-	    name.setText("");
-	    cost.setText("1");
-	    maximalTimesTaken.setText("1");
-	    description.setText("");
-	}
+	update();
     }
 
     /**
@@ -174,5 +160,20 @@ public class AbilityEditViewController {
     public void setAllAbilities(Collection<Map<String, Ability>> allAbilities) {
 	this.allAbilities = allAbilities;
 	delete.setVisible(allAbilities != null);
+    }
+
+    @Override
+    public void update() {
+	if (ability != null) {
+	    name.setText(ability.getName());
+	    cost.setText(Integer.toString(ability.getCost()));
+	    maximalTimesTaken.setText(Integer.toString(ability.getMaxTimesTaken()));
+	    description.setText(ability.getDescription());
+	} else {
+	    name.setText("");
+	    cost.setText("1");
+	    maximalTimesTaken.setText("1");
+	    description.setText("");
+	}
     }
 }

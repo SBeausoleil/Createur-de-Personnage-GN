@@ -11,7 +11,7 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Text;
 
-public class AbilityViewController {
+public class AbilityViewController implements Controller {
     @FXML
     private Label name;
     @FXML
@@ -36,7 +36,8 @@ public class AbilityViewController {
 	description.wrappingWidthProperty().bind(anchorPane.widthProperty());
     }
 
-    private void showAbility() {
+    @Override
+    public void update() {
 	name.setText(ability.getName());
 	cost.setText(Integer.toString(ability.getCost()));
 	classRaceRequirements.setText(
@@ -62,6 +63,6 @@ public class AbilityViewController {
      */
     public void setAbility(Ability ability) {
 	this.ability = ability;
-	showAbility();
+	update();
     }
 }

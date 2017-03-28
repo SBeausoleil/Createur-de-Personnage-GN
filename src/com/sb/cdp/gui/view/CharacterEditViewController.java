@@ -33,7 +33,7 @@ import javafx.scene.layout.VBox;
 import javafx.util.Callback;
 
 // TESTME
-public class CharacterEditViewController implements Updateable {
+public class CharacterEditViewController implements Controller {
 
     // BUTTONS MENU //
     @FXML
@@ -363,7 +363,10 @@ public class CharacterEditViewController implements Updateable {
 	    // Notes tab
 	    tmp.setNote(notes.getText());
 
-	    tmp.clone(pc);
+	    System.out.println("tmp: " + tmp);
+	    System.out.println("pre-clone pc: " + pc);
+	    tmp.clone(pc); // FIXME properties are not transfered to the pc
+	    System.out.println("post-clone pc: " + pc);
 	    // Go back
 	    DesktopApplication.get().getRootContext().precedent();
 	} catch (Throwable e) {

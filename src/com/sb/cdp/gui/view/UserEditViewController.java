@@ -8,7 +8,7 @@ import com.sb.util.DateUtil;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
 
-public class UserEditViewController {
+public class UserEditViewController implements Controller {
     
     @FXML
     private TextField firstNameField;
@@ -32,10 +32,11 @@ public class UserEditViewController {
 
     public void setUser(User user) {
 	this.user = user;
-	showUser();
+	update();
     }
 
-    private void showUser() {
+    @Override
+    public void update() {
 	if (user != null) {
 	    firstNameField.setText(user.getFirstName());
 	    lastNameField.setText(user.getLastName());

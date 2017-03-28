@@ -12,7 +12,7 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.TitledPane;
 import javafx.scene.layout.AnchorPane;
 
-public class AbilityLibraryViewController {
+public class AbilityLibraryViewController implements Controller {
     @FXML
     private TitledPane titledPane;
     @FXML
@@ -45,10 +45,11 @@ public class AbilityLibraryViewController {
     public void setAbilities(Library<?, Ability> abilities) {
 	this.abilities = abilities;
 	titledPane.setText(abilities.getName());
-	showAbilities();
+	update();
     }
 
-    private void showAbilities() {
+    @Override
+    public void update() {
 	this.views = new Pair[abilities.values().size()];
 	ObservableList<AnchorPane> viewsList = FXCollections.observableArrayList();
 	int nViews = 0;

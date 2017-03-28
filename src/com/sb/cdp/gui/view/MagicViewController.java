@@ -7,7 +7,7 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Text;
 
-public class MagicViewController {
+public class MagicViewController implements Controller {
 
     @FXML
     private Label name;
@@ -43,22 +43,26 @@ public class MagicViewController {
 
     /**
      * Returns the magic.
+     * 
      * @return the magic
      */
     public Magic getMagic() {
-        return magic;
+	return magic;
     }
 
     /**
      * Sets the value of magic to that of the parameter.
-     * @param magic the magic to set
+     * 
+     * @param magic
+     *            the magic to set
      */
     public void setMagic(Magic magic) {
-        this.magic = magic;
-        showMagic();
+	this.magic = magic;
+	update();
     }
-    
-    private void showMagic() {
+
+    @Override
+    public void update() {
 	name.setText(magic.getName());
 	magicType.setText(magic.getDomain() != null ? magic.getDomain().getMagicType() : "");
 	domain.setText(magic.getDomain() != null ? magic.getDomain().getName() : "");

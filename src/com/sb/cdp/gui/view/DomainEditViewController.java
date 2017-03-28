@@ -7,7 +7,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 
-public class DomainEditViewController {
+public class DomainEditViewController implements Controller {
     @FXML
     private TextField name;
     @FXML
@@ -50,10 +50,11 @@ public class DomainEditViewController {
      */
     public void setDomain(Domain domain) {
 	this.domain = domain;
-	showDomain();
+	update();
     }
 
-    private void showDomain() {
+    @Override
+    public void update() {
 	if (domain != null) {
 	    name.setText(domain.getName());
 	    magicType.setText(domain.getMagicType());

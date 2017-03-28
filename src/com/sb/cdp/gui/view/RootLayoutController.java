@@ -3,16 +3,13 @@ package com.sb.cdp.gui.view;
 import com.sb.cdp.DesktopApplication;
 import com.sb.cdp.gui.Context;
 import com.sb.cdp.gui.FXUtil;
-import com.sb.util.Pair;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TitledPane;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.VBox;
 
-public class RootLayoutController {
+public class RootLayoutController implements Controller {
     @FXML
     private Button myCharacters;
     @FXML
@@ -34,7 +31,7 @@ public class RootLayoutController {
     private BorderPane layout;
 
     private Context context;
-    
+
     public RootLayoutController() {}
 
     @FXML
@@ -48,7 +45,7 @@ public class RootLayoutController {
 	gods.setPrefWidth(Double.MAX_VALUE);
 	save.setPrefWidth(Double.MAX_VALUE);
 	exit.setPrefWidth(Double.MAX_VALUE);
-	
+
 	// Create the context
 	context = new Context(layout::setCenter);
     }
@@ -56,16 +53,14 @@ public class RootLayoutController {
     @FXML
     private void handleCharacters() {
 	context.clear();
-	Pair<VBox, UserViewController> pair = FXUtil.userView(DesktopApplication.get().getUser());
-	context.enter(pair.getX());
+	context.enter(FXUtil.userView(DesktopApplication.get().getUser()));
     }
 
     @FXML
     private void handleAbilities() {
 	context.clear();
-	Pair<AnchorPane, ExtendedAbilityLibraryViewController> pair = FXUtil.extendedAbilityLibraryViewController(
-		DesktopApplication.get().getRpg().getAbilityLibraries().values());
-	context.enter(pair.getX());
+	context.enter(FXUtil.extendedAbilityLibraryViewController(
+		DesktopApplication.get().getRpg().getAbilityLibraries().values()));
     }
 
     @FXML
@@ -95,9 +90,13 @@ public class RootLayoutController {
 
     /**
      * Returns the context.
+     * 
      * @return the context
      */
     public Context getContext() {
-        return context;
+	return context;
     }
+
+    @Override
+    public void update() {}
 }

@@ -11,7 +11,7 @@ import javafx.scene.control.ButtonBar;
 import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
 
-public class UserCharacterViewController implements Updateable {
+public class UserCharacterViewController implements Controller {
 
     @FXML
     private AnchorPane pane;
@@ -57,12 +57,12 @@ public class UserCharacterViewController implements Updateable {
     @FXML
     private void modifyConfirmed() {
 	DesktopApplication.get().getRootContext().enter(
-		FXUtil.characterEditView(DesktopApplication.get().getRpg(), userCharacter.getConfirmed()).getX());
+		FXUtil.characterEditView(DesktopApplication.get().getRpg(), userCharacter.getConfirmed()));
     }
 
     @FXML
     private void modifyPending() {
 	DesktopApplication.get().getRootContext().enter(
-		FXUtil.characterEditView(DesktopApplication.get().getRpg(), userCharacter.getPending()).getX());
+		FXUtil.characterEditView(DesktopApplication.get().getRpg(), userCharacter.getPending()));
     }
 }

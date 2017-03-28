@@ -7,7 +7,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 
-public class MagicEditViewController {
+public class MagicEditViewController implements Controller {
     @FXML
     private TextField name;
     @FXML
@@ -60,10 +60,11 @@ public class MagicEditViewController {
      */
     public void setMagic(Magic magic) {
 	this.magic = magic;
-	showMagic();
+	update();
     }
 
-    private void showMagic() {
+    @Override
+    public void update() {
 	if (magic != null) {
 	    name.setText(magic.getName());
 	    level.setText(Integer.toString(magic.getLevel()));

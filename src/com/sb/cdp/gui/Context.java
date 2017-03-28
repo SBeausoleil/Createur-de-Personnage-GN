@@ -2,39 +2,48 @@ package com.sb.cdp.gui;
 
 import java.util.Stack;
 
+import com.sb.cdp.gui.view.Controller;
+import com.sb.util.Pair;
+
 import javafx.scene.Node;
 
 public class Context {
 
     private ContextSetter contextSetter;
 
-    private Node current;
-    private Stack<Node> precedents;
+    private Pair<? extends Node, ? extends Controller> current;
+    private Stack<Pair<? extends Node, ? extends Controller>> precedents;
 
     public Context(ContextSetter contextSetter) {
 	this.contextSetter = contextSetter;
 	precedents = new Stack<>();
     }
 
-    public void enter(Node next) {
+    public void enter(Pair<? extends Node, ? extends Controller> next) {
 	precedents.push(current);
 	current = next;
-	contextSetter.set(next);
+	contextSetter.set(next.getX());
     }
 
     public void precedent() {
-	if (!precedents.isEmpty()) {
-	    current = precedents.pop();
-	    contextSetter.set(current);
-	}
+	precedent(false);
     }
 
+    public void precedent(boolean update) {
+	if (!precedents.isEmpty()) {
+	    current = precedents.pop();
+	    if (update)
+		current.getY().update();
+	    contextSetter.set(current.getX());
+	}
+    }
+    
     public void clear() {
 	precedents.clear();
     }
 
     @FunctionalInterface
     public static interface ContextSetter {
-	public void set(Node node);
+	public <N extends Node> void set(N node);
     }
 }

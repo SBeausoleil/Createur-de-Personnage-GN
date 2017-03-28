@@ -14,7 +14,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 
-public class ExtendedAbilityLibraryViewController implements Updateable {
+public class ExtendedAbilityLibraryViewController implements Controller {
     @FXML
     private TextField searchField;
     @FXML
