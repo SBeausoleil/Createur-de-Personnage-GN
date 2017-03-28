@@ -322,7 +322,6 @@ public class CharacterEditViewController implements Updateable {
 
 	// Notes
 	notes.setText(tmp.getNote());
-
     }
 
     public PlayerCharacter getPlayerCharacter() {

@@ -18,10 +18,19 @@ public class DesktopApplication extends Application {
 
     private static DesktopApplication app;
 
+    public static DesktopApplication get() {
+	return app;
+    }
+
+    public static void main(String[] args) {
+	launch(args);
+    }
+
     private Stage primaryStage;
     private BorderPane rootLayout;
 
     private User user;
+
     private RPG rpg;
 
     // Called by the superclass
@@ -43,23 +52,6 @@ public class DesktopApplication extends Application {
 
     }
 
-    // Called by the superclass Application after the constructor
-    @Override
-    public void start(Stage primaryStage) throws Exception {
-	this.primaryStage = primaryStage;
-	primaryStage.setTitle("Arcane");
-
-	this.rootLayout = FXUtil.rootLayout().getX();
-
-	Scene scene = new Scene(rootLayout);
-	primaryStage.setScene(scene);
-	primaryStage.show();
-    }
-
-    public static void main(String[] args) {
-	launch(args);
-    }
-
     /**
      * Returns the primaryStage.
      * 
@@ -67,6 +59,33 @@ public class DesktopApplication extends Application {
      */
     public Stage getPrimaryStage() {
 	return primaryStage;
+    }
+
+    /**
+     * Returns the rootLayout.
+     * 
+     * @return the rootLayout
+     */
+    public BorderPane getRootLayout() {
+	return rootLayout;
+    }
+
+    /**
+     * Returns the rpg.
+     * 
+     * @return the rpg
+     */
+    public RPG getRpg() {
+	return rpg;
+    }
+
+    /**
+     * Returns the user.
+     * 
+     * @return the user
+     */
+    public User getUser() {
+	return user;
     }
 
     /**
@@ -80,15 +99,6 @@ public class DesktopApplication extends Application {
     }
 
     /**
-     * Returns the rootLayout.
-     * 
-     * @return the rootLayout
-     */
-    public BorderPane getRootLayout() {
-	return rootLayout;
-    }
-
-    /**
      * Sets the value of rootLayout to that of the parameter.
      * 
      * @param rootLayout
@@ -96,34 +106,6 @@ public class DesktopApplication extends Application {
      */
     public void setRootLayout(BorderPane rootLayout) {
 	this.rootLayout = rootLayout;
-    }
-
-    /**
-     * Returns the user.
-     * 
-     * @return the user
-     */
-    public User getUser() {
-	return user;
-    }
-
-    /**
-     * Sets the value of user to that of the parameter.
-     * 
-     * @param user
-     *            the user to set
-     */
-    public void setUser(User user) {
-	this.user = user;
-    }
-
-    /**
-     * Returns the rpg.
-     * 
-     * @return the rpg
-     */
-    public RPG getRpg() {
-	return rpg;
     }
 
     /**
@@ -136,11 +118,27 @@ public class DesktopApplication extends Application {
 	this.rpg = idl;
     }
 
-    private User testUser() {
-	User user = new User("Samuel", "Beausoleil", DateUtil.parse("19/01/1996"), "samuel.beausoleil@hotmail.com");
-	user.addAsConfirmed(testCharacter1());
-	user.addAsPending(testCharacter2());
-	return user;
+    /**
+     * Sets the value of user to that of the parameter.
+     * 
+     * @param user
+     *            the user to set
+     */
+    public void setUser(User user) {
+	this.user = user;
+    }
+
+    // Called by the superclass Application after the constructor
+    @Override
+    public void start(Stage primaryStage) throws Exception {
+	this.primaryStage = primaryStage;
+	primaryStage.setTitle("Arcane");
+
+	this.rootLayout = FXUtil.rootLayout().getX();
+
+	Scene scene = new Scene(rootLayout);
+	primaryStage.setScene(scene);
+	primaryStage.show();
     }
 
     private PlayerCharacter testCharacter1() {
@@ -178,11 +176,16 @@ public class DesktopApplication extends Application {
 	pc.getAbilities().add(lib.get("Esquive"));
 
 	pc.getSpecialAbilities().add(lib.get("Alchimie 1"));
+	pc.getSpecialAbilities().add(lib.get("Alchimie 2"));
+	pc.getSpecialAbilities().add(lib.get("Alchimie 3"));
 
 	return pc;
     }
 
-    public static DesktopApplication get() {
-	return app;
+    private User testUser() {
+	User user = new User("Samuel", "Beausoleil", DateUtil.parse("19/01/1996"), "samuel.beausoleil@hotmail.com");
+	user.addAsConfirmed(testCharacter1());
+	user.addAsPending(testCharacter2());
+	return user;
     }
 }

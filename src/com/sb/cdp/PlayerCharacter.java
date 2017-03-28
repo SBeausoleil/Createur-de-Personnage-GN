@@ -44,6 +44,7 @@ public class PlayerCharacter implements LibraryPermissionHolder, Cloneable {
 	gods = new LinkedHashSet<>();
 	abilities = new LinkedList<>();
 	specialAbilities = new LinkedList<>();
+	spells = new LinkedHashSet<>();
 
 	stats = new HashMap<>();
 	stats.put(ENDURANCE, baseEndurance);
