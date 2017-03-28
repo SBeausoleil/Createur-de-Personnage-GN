@@ -368,7 +368,7 @@ public class CharacterEditViewController implements Controller {
 	    tmp.clone(pc); // FIXME properties are not transfered to the pc
 	    System.out.println("post-clone pc: " + pc);
 	    // Go back
-	    DesktopApplication.get().getRootContext().precedent();
+	    DesktopApplication.get().getRootContext().precedent(true);
 	} catch (Throwable e) {
 	    e.printStackTrace();
 	}
