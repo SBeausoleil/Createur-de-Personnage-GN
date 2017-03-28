@@ -67,8 +67,9 @@ public class DesktopApplication extends Application {
 
     /**
      * Returns the rootLayout.
-     * 
+     * To set views, use {@link #getRootContext()} instead.
      * @return the rootLayout
+     * @see #getRootContext()
      */
     public BorderPane getRootLayout() {
 	return rootLayout;
