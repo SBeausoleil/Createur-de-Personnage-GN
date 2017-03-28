@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import com.sb.cdp.CharacterType;
+import com.sb.cdp.DesktopApplication;
 import com.sb.cdp.CharacterType.Classification;
 import com.sb.cdp.LawAlignment;
 import com.sb.cdp.Library;
@@ -277,6 +278,7 @@ public class CharacterEditViewController implements Updateable {
 
 	// XP
 	xp.setText(Integer.toString(tmp.getXp()));
+	abilityPoints.setText(Integer.toString(tmp.getnAbilityPoints()));
 
 	// Stats
 	properties.setCellValueFactory(
@@ -340,6 +342,7 @@ public class CharacterEditViewController implements Updateable {
      */
     @FXML
     private void confirm() {
+	System.out.println("confirm()");
 	try {
 	    tmp.setName(name.getText());
 	    tmp.getCharacterTypes().clear();
@@ -359,10 +362,12 @@ public class CharacterEditViewController implements Updateable {
 	    // Rest of magic tab is reflected in real time on the tmp.
 	    // Notes tab
 	    tmp.setNote(notes.getText());
-	    
+
 	    tmp.clone(pc);
+	    // Go back
+	    DesktopApplication.get().getRootContext().precedent();
 	} catch (Throwable e) {
-	    
+	    e.printStackTrace();
 	}
     }
 }

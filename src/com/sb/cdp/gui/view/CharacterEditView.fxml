@@ -212,7 +212,7 @@
       </TabPane>
       <ButtonBar layoutX="386.0" layoutY="346.0" prefWidth="200.0" AnchorPane.bottomAnchor="3.0" AnchorPane.rightAnchor="5.0">
         <buttons>
-          <Button fx:id="confirm" mnemonicParsing="false" text="Confirmer" />
+          <Button fx:id="confirm" mnemonicParsing="false" onAction="#confirm" text="Confirmer" />
             <Button fx:id="delete" mnemonicParsing="false" text="Suprimer" />
             <Button fx:id="cancel" mnemonicParsing="false" text="Annuller" />
         </buttons>

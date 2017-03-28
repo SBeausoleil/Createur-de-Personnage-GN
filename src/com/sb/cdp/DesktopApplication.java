@@ -5,9 +5,12 @@ import java.io.IOException;
 
 import com.sb.cdp.CharacterType.Classification;
 import com.sb.cdp.ability.Ability;
+import com.sb.cdp.gui.Context;
 import com.sb.cdp.gui.FXUtil;
+import com.sb.cdp.gui.view.RootLayoutController;
 import com.sb.cdp.idl.Initializer;
 import com.sb.util.DateUtil;
+import com.sb.util.Pair;
 
 import javafx.application.Application;
 import javafx.scene.Scene;
@@ -28,6 +31,7 @@ public class DesktopApplication extends Application {
 
     private Stage primaryStage;
     private BorderPane rootLayout;
+    private Context rootContext;
 
     private User user;
 
@@ -68,6 +72,10 @@ public class DesktopApplication extends Application {
      */
     public BorderPane getRootLayout() {
 	return rootLayout;
+    }
+
+    public Context getRootContext() {
+	return rootContext;
     }
 
     /**
@@ -134,7 +142,9 @@ public class DesktopApplication extends Application {
 	this.primaryStage = primaryStage;
 	primaryStage.setTitle("Arcane");
 
-	this.rootLayout = FXUtil.rootLayout().getX();
+	Pair<BorderPane, RootLayoutController> root = FXUtil.rootLayout();
+	this.rootLayout = root.getX();
+	this.rootContext = root.getY().getContext();
 
 	Scene scene = new Scene(rootLayout);
 	primaryStage.setScene(scene);

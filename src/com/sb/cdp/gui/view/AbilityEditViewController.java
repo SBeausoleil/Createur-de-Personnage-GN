@@ -51,7 +51,7 @@ public class AbilityEditViewController {
     @FXML
     private void handleConfirm() {
 	if (handleSave()) {
-	    // TODO exit edit context
+	    // TODO exit edit Context
 	}
     }
 

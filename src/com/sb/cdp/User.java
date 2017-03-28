@@ -18,7 +18,7 @@ public class User implements LibraryPermissionHolder {
     private Map<RPG, String> organisationNotes;
     private boolean allowRanking;
     private Map<RPG, Map<String, Float>> ranks;
-    
+
     private Map<String, ConfirmationModel<PlayerCharacter>> characters;
 
     private Set<Library> allowedLibraries;
@@ -28,7 +28,7 @@ public class User implements LibraryPermissionHolder {
 	this.lastName = lastName;
 	this.birthday = birthday;
 	this.email = email;
-	
+
 	characters = new TreeMap<>();
     }
 
@@ -107,7 +107,7 @@ public class User implements LibraryPermissionHolder {
     public void setEmail(String email) {
 	this.email = email;
     }
-    
+
     public Map<String, ConfirmationModel<PlayerCharacter>> getCharacters() {
 	return characters;
     }
@@ -159,17 +159,52 @@ public class User implements LibraryPermissionHolder {
 
     /**
      * Returns the organisationNotes.
+     * 
      * @return the organisationNotes
      */
-    public String getOrganisationNotes() {
-        return organisationNotes;
+    public String getOrganisationNotes(RPG rpg) {
+	return organisationNotes.get(rpg);
     }
 
     /**
      * Sets the value of organisationNotes to that of the parameter.
-     * @param organisationNotes the organisationNotes to set
+     * 
+     * @param organisationNotes
+     *            the organisationNotes to set
      */
-    public void setOrganisationNotes(String organisationNotes) {
-        this.organisationNotes = organisationNotes;
+    public void setOrganisationNotes(RPG rpg, String organisationNotes) {
+	this.organisationNotes.put(rpg, organisationNotes);
+    }
+
+    /**
+     * Returns the allowRanking.
+     * @return the allowRanking
+     */
+    public boolean isAllowRanking() {
+        return allowRanking;
+    }
+
+    /**
+     * Sets the value of allowRanking to that of the parameter.
+     * @param allowRanking the allowRanking to set
+     */
+    public void setAllowRanking(boolean allowRanking) {
+        this.allowRanking = allowRanking;
+    }
+
+    /**
+     * Returns the ranks.
+     * @return the ranks
+     */
+    public Map<RPG, Map<String, Float>> getRanks() {
+        return ranks;
+    }
+
+    /**
+     * Sets the value of ranks to that of the parameter.
+     * @param ranks the ranks to set
+     */
+    public void setRanks(Map<RPG, Map<String, Float>> ranks) {
+        this.ranks = ranks;
     }
 }

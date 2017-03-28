@@ -1,6 +1,7 @@
 package com.sb.cdp.gui.view;
 
 import com.sb.cdp.DesktopApplication;
+import com.sb.cdp.gui.Context;
 import com.sb.cdp.gui.FXUtil;
 import com.sb.util.Pair;
 
@@ -32,6 +33,8 @@ public class RootLayoutController {
     @FXML
     private BorderPane layout;
 
+    private Context context;
+    
     public RootLayoutController() {}
 
     @FXML
@@ -45,19 +48,24 @@ public class RootLayoutController {
 	gods.setPrefWidth(Double.MAX_VALUE);
 	save.setPrefWidth(Double.MAX_VALUE);
 	exit.setPrefWidth(Double.MAX_VALUE);
+	
+	// Create the context
+	context = new Context(layout::setCenter);
     }
 
     @FXML
     private void handleCharacters() {
+	context.clear();
 	Pair<VBox, UserViewController> pair = FXUtil.userView(DesktopApplication.get().getUser());
-	layout.setCenter(pair.getX());
+	context.enter(pair.getX());
     }
 
     @FXML
     private void handleAbilities() {
+	context.clear();
 	Pair<AnchorPane, ExtendedAbilityLibraryViewController> pair = FXUtil.extendedAbilityLibraryViewController(
 		DesktopApplication.get().getRpg().getAbilityLibraries().values());
-	layout.setCenter(pair.getX());
+	context.enter(pair.getX());
     }
 
     @FXML
@@ -82,7 +90,14 @@ public class RootLayoutController {
 
     @FXML
     private void handleExit() {
-	// TODO
 	System.exit(0);
+    }
+
+    /**
+     * Returns the context.
+     * @return the context
+     */
+    public Context getContext() {
+        return context;
     }
 }

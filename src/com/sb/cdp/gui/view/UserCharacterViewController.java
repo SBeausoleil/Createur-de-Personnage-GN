@@ -56,13 +56,13 @@ public class UserCharacterViewController implements Updateable {
 
     @FXML
     private void modifyConfirmed() {
-	DesktopApplication.get().getRootLayout().setCenter(
+	DesktopApplication.get().getRootContext().enter(
 		FXUtil.characterEditView(DesktopApplication.get().getRpg(), userCharacter.getConfirmed()).getX());
     }
 
     @FXML
     private void modifyPending() {
-	DesktopApplication.get().getRootLayout().setCenter(
+	DesktopApplication.get().getRootContext().enter(
 		FXUtil.characterEditView(DesktopApplication.get().getRpg(), userCharacter.getPending()).getX());
     }
 }
