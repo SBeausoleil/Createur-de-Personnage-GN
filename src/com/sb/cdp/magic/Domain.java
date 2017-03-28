@@ -12,11 +12,11 @@ public class Domain implements Comparable<Domain> {
     public Domain(String name, String magicType) {
 	this(name, magicType, "", new TreeSet<Magic>());
     }
-    
+
     public Domain(String name, String magicType, String description) {
 	this(name, magicType, description, new TreeSet<Magic>());
     }
-    
+
     public Domain(String name, String magicType, String description, Set<Magic> spells) {
 	this.name = name;
 	this.magicType = magicType;
@@ -64,34 +64,40 @@ public class Domain implements Comparable<Domain> {
 
     /**
      * Returns the description.
+     * 
      * @return the description
      */
     public String getDescription() {
-        return description;
+	return description;
     }
 
     /**
      * Sets the value of description to that of the parameter.
-     * @param description the description to set
+     * 
+     * @param description
+     *            the description to set
      */
     public void setDescription(String description) {
-        this.description = description;
+	this.description = description;
     }
 
     /**
      * Returns the type.
+     * 
      * @return the type
      */
     public String getMagicType() {
-        return magicType;
+	return magicType;
     }
 
     /**
      * Sets the value of type to that of the parameter.
-     * @param type the type to set
+     * 
+     * @param type
+     *            the type to set
      */
     public void setMagicType(String magicType) {
-        this.magicType = magicType;
+	this.magicType = magicType;
     }
 
     @Override
