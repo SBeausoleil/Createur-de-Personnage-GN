@@ -12,7 +12,13 @@ public class User implements LibraryPermissionHolder {
     private String lastName;
     private LocalDate birthday;
     private String email;
+    // Digested password will be accessed by reading it directly in the database. The access key for each password will be the encrypted email.
 
+    // DATA FIELDS FOR ORGANISATIONS
+    private Map<RPG, String> organisationNotes;
+    private boolean allowRanking;
+    private Map<RPG, Map<String, Float>> ranks;
+    
     private Map<String, ConfirmationModel<PlayerCharacter>> characters;
 
     private Set<Library> allowedLibraries;
@@ -149,5 +155,21 @@ public class User implements LibraryPermissionHolder {
     @Override
     public void allow(Library allowedLibrary) {
 	allowedLibraries.add(allowedLibrary);
+    }
+
+    /**
+     * Returns the organisationNotes.
+     * @return the organisationNotes
+     */
+    public String getOrganisationNotes() {
+        return organisationNotes;
+    }
+
+    /**
+     * Sets the value of organisationNotes to that of the parameter.
+     * @param organisationNotes the organisationNotes to set
+     */
+    public void setOrganisationNotes(String organisationNotes) {
+        this.organisationNotes = organisationNotes;
     }
 }
