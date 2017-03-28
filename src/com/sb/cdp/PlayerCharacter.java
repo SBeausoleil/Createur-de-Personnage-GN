@@ -363,7 +363,7 @@ public class PlayerCharacter implements LibraryPermissionHolder, Cloneable {
     @Override
     public PlayerCharacter clone() {
 	PlayerCharacter clone = new PlayerCharacter(null);
-	clone(clone);
+	copy(clone);
 	return clone;
     }
 
@@ -372,19 +372,26 @@ public class PlayerCharacter implements LibraryPermissionHolder, Cloneable {
      * This is a shallow clone in which the lists are cloned but not their content (content is shared across instances).
      * @param clone
      */
-    public void clone(PlayerCharacter clone) {
+    public void copy(PlayerCharacter clone) {
 	clone.name = name;
+	clone.characterTypes.clear();
 	clone.characterTypes.addAll(characterTypes);
 	clone.lawAlignment = lawAlignment;
 	clone.moralALignment = moralALignment;
 	clone.xp = xp;
 	clone.nAbilityPoints = nAbilityPoints;
+	clone.stats.clear();
 	clone.stats.putAll(stats);
+	clone.gods.clear();
 	clone.gods.addAll(gods);
 	clone.background = background;
+	clone.abilities.clear();
 	clone.abilities.addAll(abilities);
+	clone.specialAbilities.clear();
 	clone.specialAbilities.addAll(specialAbilities);
+	clone.spells.clear();
 	clone.spells.addAll(spells);
+	clone.allowedLibraries.clear();
 	clone.allowedLibraries.addAll(allowedLibraries);
 	clone.note = note;
     }
