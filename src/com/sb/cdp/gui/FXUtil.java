@@ -3,7 +3,6 @@ package com.sb.cdp.gui;
 import java.io.IOException;
 import java.util.Collection;
 
-import com.sb.cdp.DesktopApplication;
 import com.sb.cdp.Library;
 import com.sb.cdp.PlayerCharacter;
 import com.sb.cdp.RPG;
@@ -38,7 +37,7 @@ public final class FXUtil {
 	try {
 	    Pair<AnchorPane, UserEditViewController> pair = new Pair<>();
 	    FXMLLoader loader = new FXMLLoader();
-	    loader.setLocation(DesktopApplication.class.getResource("gui/view/UserEditView.fxml"));
+	    loader.setLocation(FXUtil.class.getResource("view/UserEditView.fxml"));
 	    pair.setX((AnchorPane) loader.load());
 	    pair.setY(loader.getController());
 	    return pair;
@@ -51,7 +50,7 @@ public final class FXUtil {
 	try {
 	    Pair<BorderPane, RootLayoutController> pair = new Pair<>();
 	    FXMLLoader loader = new FXMLLoader();
-	    loader.setLocation(DesktopApplication.class.getResource("gui/view/RootLayout.fxml"));
+	    loader.setLocation(FXUtil.class.getResource("view/RootLayout.fxml"));
 	    pair.setX((BorderPane) loader.load());
 	    pair.setY(loader.getController());
 	    return pair;
@@ -64,7 +63,7 @@ public final class FXUtil {
 	try {
 	    Pair<AnchorPane, AbilityLibraryViewController> pair = new Pair<>();
 	    FXMLLoader loader = new FXMLLoader();
-	    loader.setLocation(DesktopApplication.class.getResource("gui/view/AbilityLibraryView.fxml"));
+	    loader.setLocation(FXUtil.class.getResource("view/AbilityLibraryView.fxml"));
 	    pair.setX((AnchorPane) loader.load());
 	    pair.setY(loader.getController());
 	    pair.getY().setAbilities(library);
@@ -78,7 +77,7 @@ public final class FXUtil {
 	try {
 	    Pair<AnchorPane, CharacterEditViewController> pair = new Pair<>();
 	    FXMLLoader loader = new FXMLLoader();
-	    loader.setLocation(DesktopApplication.class.getResource("gui/view/CharacterEditView.fxml"));
+	    loader.setLocation(FXUtil.class.getResource("view/CharacterEditView.fxml"));
 	    pair.setX(loader.load());
 	    CharacterEditViewController controller = loader.getController();
 	    pair.setY(controller);
@@ -94,7 +93,7 @@ public final class FXUtil {
 	try {
 	    Pair<VBox, UserViewController> pair = new Pair<>();
 	    FXMLLoader loader = new FXMLLoader();
-	    loader.setLocation(DesktopApplication.class.getResource("gui/view/UserView.fxml"));
+	    loader.setLocation(FXUtil.class.getResource("view/UserView.fxml"));
 	    pair.setX(loader.load());
 	    pair.setY(loader.getController());
 	    pair.getY().setUser(user);
@@ -109,7 +108,7 @@ public final class FXUtil {
 	try {
 	    Pair<AnchorPane, UserCharacterViewController> pair = new Pair<>();
 	    FXMLLoader loader = new FXMLLoader();
-	    loader.setLocation(DesktopApplication.class.getResource("gui/view/UserCharacterView.fxml"));
+	    loader.setLocation(FXUtil.class.getResource("view/UserCharacterView.fxml"));
 	    pair.setX(loader.load());
 	    UserCharacterViewController controller = loader.getController();
 	    controller.setUserCharacter(cm);
@@ -124,7 +123,7 @@ public final class FXUtil {
 	try {
 	    Pair<AnchorPane, AbilityViewController> pair = new Pair<>();
 	    FXMLLoader loader = new FXMLLoader();
-	    loader.setLocation(DesktopApplication.class.getResource("gui/view/AbilityView.fxml"));
+	    loader.setLocation(FXUtil.class.getResource("view/AbilityView.fxml"));
 	    pair.setX(loader.load());
 	    AbilityViewController controller = loader.getController();
 	    controller.setAbility(ability);
@@ -139,7 +138,7 @@ public final class FXUtil {
 	try {
 	    Pair<AnchorPane, ExtendedAbilityLibraryViewController> pair = new Pair<>();
 	    FXMLLoader loader = new FXMLLoader();
-	    loader.setLocation(DesktopApplication.class.getResource("gui/view/ExtendedAbilityLibraryView.fxml"));
+	    loader.setLocation(FXUtil.class.getResource("view/ExtendedAbilityLibraryView.fxml"));
 	    pair.setX(loader.load());
 	    pair.setY(loader.getController());
 	    pair.getY().setLibraries(collection);
