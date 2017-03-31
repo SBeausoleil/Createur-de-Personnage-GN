@@ -1,5 +1,7 @@
 package com.sb.util;
 
+import java.util.function.Consumer;
+
 public class ConfirmationModel<E> {
 
     private E confirmed;
@@ -83,5 +85,17 @@ public class ConfirmationModel<E> {
 	if (pending != null)
 	    return pending;
 	return confirmed;
+    }
+
+    /**
+     * Does an action on all the models that are non-null.
+     * 
+     * @param action
+     */
+    public void onSets(Consumer<E> action) {
+	if (confirmed != null)
+	    action.accept(confirmed);
+	if (pending != null)
+	    action.accept(pending);
     }
 }

@@ -19,10 +19,17 @@ public class UserViewController implements Controller {
     @FXML
     private Label name;
     @FXML
+    private Button newCharacter; // TODO handler
+    @FXML
     private ListView<AnchorPane> characters;
 
     private User user;
 
+    @FXML
+    private void initialize() {
+	newCharacter.setPrefWidth(Double.MAX_VALUE);
+    }
+    
     @Override
     public void update() {
 	name.setText(user.getFirstName() + " " + user.getLastName());

@@ -5,23 +5,29 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import com.sb.cdp.CharacterType;
-import com.sb.cdp.DesktopApplication;
 import com.sb.cdp.CharacterType.Classification;
 import com.sb.cdp.LawAlignment;
 import com.sb.cdp.Library;
 import com.sb.cdp.MoralAlignment;
 import com.sb.cdp.PlayerCharacter;
 import com.sb.cdp.RPG;
+import com.sb.cdp.User;
 import com.sb.cdp.ability.Ability;
 import com.sb.cdp.gui.FXUtil;
 import com.sb.cdp.magic.God;
+import com.sb.util.Pair;
+import com.sb.util.Regexs;
 
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableColumn.CellDataFeatures;
@@ -32,17 +38,19 @@ import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.VBox;
 import javafx.util.Callback;
 
-// TESTME
 public class CharacterEditViewController implements Controller {
-
     // BUTTONS MENU //
     @FXML
-    private Button confirm;
+    private ButtonBar buttonBar;
+    @FXML
+    private Button submit;
+    @FXML
+    private Button draft;
     @FXML
     private Button delete;
+
     @FXML
     private Button cancel;
-
     // GENERAL TAB //
     @FXML
     private TextField name;
@@ -80,23 +88,23 @@ public class CharacterEditViewController implements Controller {
     private Button addXp;
     @FXML
     private TextField abilityPoints;
+
     @FXML
     private TextArea description;
-
     // ABILITIES TAB //
     @FXML
     private Button modifyAbilities;
+
     @FXML
     private VBox abilitiesBox;
-
     // STATS TAB //
     @FXML
     private TableView statsTable;
     @FXML
     private TableColumn properties;
+
     @FXML
     private TableColumn values;
-
     // MAGIC TAB //
     @FXML
     private ChoiceBox firstGodChoice;
@@ -112,28 +120,92 @@ public class CharacterEditViewController implements Controller {
     private FlowPane godPane;
     @FXML
     private Button modifyMagic;
+
     @FXML
     private ListView magicList;
 
     // NOTES TAB //
     @FXML
     private TextArea notes;
-
     // DATA OBJECTS //
     /**
      * The Player Character center to this view.
      */
     private PlayerCharacter pc;
+    private User user;
     /**
      * Modifications made to the UI will be applied to the tmp character.
      */
     private PlayerCharacter tmp;
+
     /**
      * The RPG used to populate the choice boxes.
      */
     private RPG rpg;
 
     public CharacterEditViewController() {}
+
+    @FXML
+    private void addClassChoice() {
+	ChoiceBox newChoice = new ChoiceBox<>();
+	setClassChoices(newChoice);
+	addToPane(newChoice, classPane);
+	classes.add(newChoice);
+    }
+
+    @FXML
+    private void addGodChoice() {
+	ChoiceBox newChoice = new ChoiceBox<>();
+	setGodChoices(newChoice);
+	addToPane(newChoice, godPane);
+	gods.add(newChoice);
+    }
+
+    @FXML
+    private void addRaceChoice() {
+	ChoiceBox newChoice = new ChoiceBox<>();
+	setRaceChoices(newChoice);
+	addToPane(newChoice, racePane);
+	races.add(newChoice);
+    }
+
+    private void addToPane(Node node, FlowPane pane) {
+	pane.getChildren().add(pane.getChildren().size() - 2, node); // -2 to account for the control buttons.
+    }
+
+    /**
+     * Applies UI info to the tmp.
+     */
+    private void applyToTmp() throws InvalidFieldException {
+	validateFields();
+
+	tmp.setName(name.getText());
+	tmp.getCharacterTypes().clear();
+	for (ChoiceBox<CharacterType> ct : classes)
+	    tmp.getCharacterTypes().add(ct.getValue());
+	for (ChoiceBox<CharacterType> ct : races)
+	    tmp.getCharacterTypes().add(ct.getValue());
+	tmp.setLawAlignment(lawAlignment.getValue());
+	tmp.setMoralALignment(moralAlignment.getValue());
+	tmp.setXp(Integer.parseInt(xp.getText()));
+	tmp.setnAbilityPoints(Integer.parseInt(abilityPoints.getText()));
+	// Ability tabs reflects in real time on the tmp.
+	// Magic tab
+	tmp.getGods().clear();
+	for (ChoiceBox<God> god : gods)
+	    tmp.getGods().add(god.getValue());
+	// Rest of magic tab is reflected in real time on the tmp.
+	// Notes tab
+	tmp.setNote(notes.getText());
+    }
+
+    public PlayerCharacter getPlayerCharacter() {
+	return pc;
+    }
+
+    public RPG getRpg() {
+	return rpg;
+    }
 
     @FXML
     private void initialize() {
@@ -149,72 +221,22 @@ public class CharacterEditViewController implements Controller {
 
 	lawAlignment.setItems(FXCollections.observableArrayList(LawAlignment.values()));
 	moralAlignment.setItems(FXCollections.observableArrayList(MoralAlignment.values()));
+
+	initializeButtonBar();
     }
 
-    public void setRpg(RPG rpg) {
-	this.rpg = rpg;
-	initializeOptions();
-    }
-
-    public RPG getRpg() {
-	return rpg;
-    }
-
-    @FXML
-    private void addRaceChoice() {
-	ChoiceBox newChoice = new ChoiceBox<>();
-	setRaceChoices(newChoice);
-	addToPane(newChoice, racePane);
-	races.add(newChoice);
-    }
-
-    @FXML
-    private void removeRaceChoice() {
-	if (!races.isEmpty()) {
-	    races.removeLast();
-	    removeFromPane(racePane);
+    private void initializeButtonBar() {
+	buttonBar.getButtons().clear();
+	if (user != null) {
+	    submit.setText("Soumettre");
+	    buttonBar.getButtons().add(submit);
+	    buttonBar.getButtons().add(draft);
+	    buttonBar.getButtons().add(delete);
+	} else {
+	    submit.setText("Confirmer");
+	    buttonBar.getButtons().add(submit);
 	}
-    }
-
-    @FXML
-    private void addClassChoice() {
-	ChoiceBox newChoice = new ChoiceBox<>();
-	setClassChoices(newChoice);
-	addToPane(newChoice, classPane);
-	classes.add(newChoice);
-    }
-
-    @FXML
-    private void removeClassChoice() {
-	if (!classes.isEmpty()) {
-	    classes.removeLast();
-	    removeFromPane(classPane);
-	}
-    }
-
-    @FXML
-    private void addGodChoice() {
-	ChoiceBox newChoice = new ChoiceBox<>();
-	setGodChoices(newChoice);
-	addToPane(newChoice, godPane);
-	gods.add(newChoice);
-    }
-
-    @FXML
-    private void removeGodChoice() {
-	if (!gods.isEmpty()) {
-	    gods.removeLast();
-	    removeFromPane(godPane);
-	}
-    }
-
-    private void addToPane(Node node, FlowPane pane) {
-	// Do not switch this line and the next. If you do, add "- 1" to "coll.size()" argument. This keeps the new ChoiceBox before the "+" and "-".
-	pane.getChildren().add(pane.getChildren().size() - 2, node);
-    }
-
-    private void removeFromPane(FlowPane pane) {
-	pane.getChildren().remove(pane.getChildren().size() - 3);
+	buttonBar.getButtons().add(cancel);
     }
 
     private void initializeOptions() {
@@ -227,26 +249,6 @@ public class CharacterEditViewController implements Controller {
 	    setClassChoices(cb);
 	for (ChoiceBox cb : gods)
 	    setGodChoices(cb);
-    }
-
-    private void setClassChoices(ChoiceBox choiceBox) {
-	choiceBox.setItems(FXCollections.observableArrayList(rpg.getCharacterTypes().get(Classification.CLASS)));
-    }
-
-    private void setRaceChoices(ChoiceBox choiceBox) {
-	choiceBox.setItems(FXCollections.observableArrayList(rpg.getCharacterTypes().get(Classification.RACE)));
-    }
-
-    private void setGodChoices(ChoiceBox choiceBox) {
-	choiceBox.setItems(FXCollections.observableArrayList(rpg.getGods().values()));
-    }
-
-    public void setPlayerCharacter(PlayerCharacter pc) {
-	if (pc == null)
-	    throw new IllegalArgumentException("pc may not be null");
-	this.pc = pc;
-	this.tmp = this.pc.clone();
-	initializePlayerCharacterInfo();
     }
 
     private void initializePlayerCharacterInfo() {
@@ -326,51 +328,150 @@ public class CharacterEditViewController implements Controller {
 	notes.setText(tmp.getNote());
     }
 
-    public PlayerCharacter getPlayerCharacter() {
-	return pc;
+    @FXML
+    private void removeClassChoice() {
+	if (!classes.isEmpty()) {
+	    classes.removeLast();
+	    removeFromPane(classPane);
+	}
+    }
+
+    private void removeFromPane(FlowPane pane) {
+	pane.getChildren().remove(pane.getChildren().size() - 3); // Account for the control buttons
+    }
+
+    @FXML
+    private void removeGodChoice() {
+	if (!gods.isEmpty()) {
+	    gods.removeLast();
+	    removeFromPane(godPane);
+	}
+    }
+
+    @FXML
+    private void removeRaceChoice() {
+	if (!races.isEmpty()) {
+	    races.removeLast();
+	    removeFromPane(racePane);
+	}
+    }
+
+    private void setClassChoices(ChoiceBox choiceBox) {
+	choiceBox.setItems(FXCollections.observableArrayList(rpg.getCharacterTypes().get(Classification.CLASS)));
+    }
+
+    private void setGodChoices(ChoiceBox choiceBox) {
+	choiceBox.setItems(FXCollections.observableArrayList(rpg.getGods().values()));
+    }
+
+    public void setPlayerCharacter(PlayerCharacter pc) {
+	if (pc == null)
+	    pc = new PlayerCharacter("");
+	this.pc = pc;
+	this.tmp = this.pc.clone();
+	initializePlayerCharacterInfo();
+    }
+
+    private void setRaceChoices(ChoiceBox choiceBox) {
+	choiceBox.setItems(FXCollections.observableArrayList(rpg.getCharacterTypes().get(Classification.RACE)));
+    }
+
+    public void setRpg(RPG rpg) {
+	this.rpg = rpg;
+	initializeOptions();
+    }
+
+    public void setUser(User user) {
+	this.user = user;
+	initializeButtonBar();
+    }
+
+    @FXML
+    public void submit() {
+	try {
+	    applyToTmp();
+	    if (user != null)
+		user.addAsPending(tmp);
+	    else
+		tmp.copy(pc);
+	} catch (InvalidFieldException e) {
+	    handleInvalidFieldException(e);
+	}
+    }
+    
+    @FXML
+    public void draft() {
+	try {
+	    applyToTmp();
+	    if (user != null)
+		user.addAsDraft(tmp);
+	} catch (InvalidFieldException e) {
+	    handleInvalidFieldException(e);
+	}
+    }
+
+    private void handleInvalidFieldException(InvalidFieldException e) {
+	// Alert the user
+	Alert alert = new Alert(AlertType.ERROR);
+	alert.setTitle(String.format("Champ%1$s invalide%1$s", e.getInvalidFields().size() > 1 ? "s" : ""));
+	alert.setHeaderText("Il y a "
+		+ (e.getInvalidFields().size() > 1 ? "des erreurs dans certains champs" : "une erreur dans un champ"));
+
+	StringBuilder sb = new StringBuilder();
+	Label alertLabel = new Label();
+	for (Pair<String, ?> msg : e.getInvalidFields()) {
+	    sb.append(msg.getX() + "\n");
+	}
+	alertLabel.setText(sb.toString());
+	alertLabel.setWrapText(true);
+	alert.getDialogPane().setContent(alertLabel);
+	
+	// Give a red glow to the invalid fields
     }
 
     @Override
     public void update() {
 	initializeOptions();
 	initializePlayerCharacterInfo();
+	initializeButtonBar();
     }
 
-    /**
-     * Applies UI info to the pc.
-     * Checks first for validity of entered data.
-     */
-    @FXML
-    private void confirm() {
-	System.out.println("confirm()");
-	try {
-	    tmp.setName(name.getText());
-	    tmp.getCharacterTypes().clear();
-	    for (ChoiceBox<CharacterType> ct : classes)
-		tmp.getCharacterTypes().add(ct.getValue());
-	    for (ChoiceBox<CharacterType> ct : races)
-		tmp.getCharacterTypes().add(ct.getValue());
-	    tmp.setLawAlignment(lawAlignment.getValue());
-	    tmp.setMoralALignment(moralAlignment.getValue());
-	    tmp.setXp(Integer.parseInt(xp.getText()));
-	    tmp.setnAbilityPoints(Integer.parseInt(abilityPoints.getText()));
-	    // Ability tabs reflects in real time on the tmp.
-	    // Magic tab
-	    tmp.getGods().clear();
-	    for (ChoiceBox<God> god : gods)
-		tmp.getGods().add(god.getValue());
-	    // Rest of magic tab is reflected in real time on the tmp.
-	    // Notes tab
-	    tmp.setNote(notes.getText());
+    private void validateFields() throws InvalidFieldException {
+	LinkedList<Pair<String, TextField>> invalidFields = new LinkedList<>();
+	if (name.getText().isEmpty())
+	    invalidFields.add(new Pair("Le nom ne peut pas être vide", name));
+	if (xp.getText().isEmpty())
+	    invalidFields.add(new Pair("Le champ xp ne peut pas être vide", xp));
+	else if (!Regexs.INTEGER.matcher(xp.getText()).find())
+	    invalidFields.add(new Pair("La quantité d'xp doit être un entier.", xp));
+	if (abilityPoints.getText().isEmpty())
+	    invalidFields.add(
+		    new Pair("Le champ Points d'abilités ne peut pas être vide", abilityPoints));
+	else if (!Regexs.INTEGER.matcher(abilityPoints.getText()).find())
+	    invalidFields.add(new Pair("La quantité de points d'abilités doit être un entier.", abilityPoints));
 
-	    System.out.println("tmp: " + tmp);
-	    System.out.println("pre-clone pc: " + pc);
-	    tmp.clone(pc); // FIXME properties are not transfered to the pc
-	    System.out.println("post-clone pc: " + pc);
-	    // Go back
-	    DesktopApplication.get().getRootContext().precedent(true);
-	} catch (Throwable e) {
-	    e.printStackTrace();
+	if (!invalidFields.isEmpty())
+	    throw new InvalidFieldException(invalidFields);
+    }
+
+    private static class InvalidFieldException extends Exception {
+	private static final long serialVersionUID = -3197261795827942830L;
+
+	private LinkedList<Pair<String, TextField>> invalidFields;
+
+	public InvalidFieldException(LinkedList<Pair<String, TextField>> invalidFields) {
+	    this.invalidFields = invalidFields;
+	}
+
+	/**
+	 * Returns the invalidFields.
+	 * getX(): Issue
+	 * getY(): Field
+	 * 
+	 * @return the invalidFields
+	 */
+	public LinkedList<Pair<String, TextField>> getInvalidFields() {
+	    return invalidFields;
 	}
     }
 }

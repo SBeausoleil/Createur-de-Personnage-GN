@@ -6,6 +6,7 @@ import java.util.Set;
 import java.util.TreeMap;
 
 import com.sb.util.ConfirmationModel;
+import com.sb.util.DraftModel;
 
 public class User implements LibraryPermissionHolder {
     private String firstName;
@@ -19,7 +20,7 @@ public class User implements LibraryPermissionHolder {
     private boolean allowRanking;
     private Map<RPG, Map<String, Float>> ranks;
 
-    private Map<String, ConfirmationModel<PlayerCharacter>> characters;
+    private Map<String, DraftModel<PlayerCharacter>> characters;
 
     private Set<Library> allowedLibraries;
 
@@ -108,27 +109,44 @@ public class User implements LibraryPermissionHolder {
 	this.email = email;
     }
 
-    public Map<String, ConfirmationModel<PlayerCharacter>> getCharacters() {
+    public Map<String, DraftModel<PlayerCharacter>> getCharacters() {
 	return characters;
     }
 
     public void addAsConfirmed(PlayerCharacter pc) {
-	ConfirmationModel<PlayerCharacter> cm = new ConfirmationModel<>(pc);
-	characters.put(pc.getName(), cm);
+	DraftModel<PlayerCharacter> dm = characters.get(pc.getName());
+	if (dm == null) {
+	    dm = new DraftModel<>();
+	    characters.put(pc.getName(), dm);
+	}
+	dm.setConfirmed(pc);
     }
 
     public void addAsPending(PlayerCharacter pc) {
-	ConfirmationModel<PlayerCharacter> cm = new ConfirmationModel<>();
-	cm.setPending(pc);
-	characters.put(pc.getName(), cm);
+	DraftModel<PlayerCharacter> dm = characters.get(pc.getName());
+	if (dm == null) {
+	    dm = new DraftModel<>();
+	    characters.put(pc.getName(), dm);
+	}
+	dm.setPending(pc);
+    }
+
+    public void addAsDraft(PlayerCharacter pc) {
+	DraftModel<PlayerCharacter> dm = characters.get(pc.getName());
+	if (dm == null) {
+	    dm = new DraftModel<>();
+	    characters.put(pc.getName(), dm);
+	}
+	dm.setDraft(pc);
     }
 
     public void allow(Library library, String characterName) {
-	allowedLibraries.add(library);
 	ConfirmationModel<PlayerCharacter> character = characters.get(characterName);
 	if (character != null) {
-	    character.getConfirmed().allow(library);
-	}
+	    character.onSets((c) -> c.allow(library));
+	    allowedLibraries.add(library);;
+	} else
+	    throw new IllegalArgumentException("This user has no character named \"" + characterName + "\"");
     }
 
     /*
@@ -178,33 +196,39 @@ public class User implements LibraryPermissionHolder {
 
     /**
      * Returns the allowRanking.
+     * 
      * @return the allowRanking
      */
     public boolean isAllowRanking() {
-        return allowRanking;
+	return allowRanking;
     }
 
     /**
      * Sets the value of allowRanking to that of the parameter.
-     * @param allowRanking the allowRanking to set
+     * 
+     * @param allowRanking
+     *            the allowRanking to set
      */
     public void setAllowRanking(boolean allowRanking) {
-        this.allowRanking = allowRanking;
+	this.allowRanking = allowRanking;
     }
 
     /**
      * Returns the ranks.
+     * 
      * @return the ranks
      */
     public Map<RPG, Map<String, Float>> getRanks() {
-        return ranks;
+	return ranks;
     }
 
     /**
      * Sets the value of ranks to that of the parameter.
-     * @param ranks the ranks to set
+     * 
+     * @param ranks
+     *            the ranks to set
      */
     public void setRanks(Map<RPG, Map<String, Float>> ranks) {
-        this.ranks = ranks;
+	this.ranks = ranks;
     }
 }
