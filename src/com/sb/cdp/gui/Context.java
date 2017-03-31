@@ -7,6 +7,11 @@ import com.sb.util.Pair;
 
 import javafx.scene.Node;
 
+/**
+ * A context manager for JavaFX. Allows a stack of preceding views to be remembered.
+ * 
+ * @author Samuel Beausoleil
+ */
 public class Context {
 
     private ContextSetter contextSetter;
@@ -25,19 +30,31 @@ public class Context {
 	contextSetter.set(next.getX());
     }
 
+    /**
+     * Changes the view to the precedent one.
+     */
     public void precedent() {
 	precedent(false);
     }
 
+    /**
+     * Changes the view to the precedent one and updates it.
+     * 
+     * @param update
+     *            if or not to update the precedent view before displaying it.
+     */
     public void precedent(boolean update) {
 	if (!precedents.isEmpty()) {
 	    current = precedents.pop();
-	    if (update)
+	    if (update && current.getY() != null) // Tolerate null controllers
 		current.getY().update();
 	    contextSetter.set(current.getX());
 	}
     }
-    
+
+    /**
+     * Clears the stack of precedent views.
+     */
     public void clear() {
 	precedents.clear();
     }
