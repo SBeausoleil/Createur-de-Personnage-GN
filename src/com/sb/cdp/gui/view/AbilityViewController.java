@@ -6,7 +6,6 @@ import com.sb.cdp.ability.Condition;
 import com.sb.util.ArrayUtil;
 
 import javafx.fxml.FXML;
-import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Text;

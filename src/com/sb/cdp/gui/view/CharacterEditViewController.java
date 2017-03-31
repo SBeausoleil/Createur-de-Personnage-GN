@@ -6,6 +6,7 @@ import java.util.Map.Entry;
 
 import com.sb.cdp.CharacterType;
 import com.sb.cdp.CharacterType.Classification;
+import com.sb.cdp.DesktopApplication;
 import com.sb.cdp.LawAlignment;
 import com.sb.cdp.Library;
 import com.sb.cdp.MoralAlignment;
@@ -46,8 +47,6 @@ public class CharacterEditViewController implements Controller {
     private Button submit;
     @FXML
     private Button draft;
-    @FXML
-    private Button delete;
 
     @FXML
     private Button cancel;
@@ -231,7 +230,6 @@ public class CharacterEditViewController implements Controller {
 	    submit.setText("Soumettre");
 	    buttonBar.getButtons().add(submit);
 	    buttonBar.getButtons().add(draft);
-	    buttonBar.getButtons().add(delete);
 	} else {
 	    submit.setText("Confirmer");
 	    buttonBar.getButtons().add(submit);
@@ -394,23 +392,31 @@ public class CharacterEditViewController implements Controller {
 		user.addAsPending(tmp);
 	    else
 		tmp.copy(pc);
+	    DesktopApplication.get().getRootContext().precedent(true);
 	} catch (InvalidFieldException e) {
 	    handleInvalidFieldException(e);
 	}
     }
-    
+
     @FXML
     public void draft() {
 	try {
 	    applyToTmp();
 	    if (user != null)
 		user.addAsDraft(tmp);
+	    DesktopApplication.get().getRootContext().precedent(true);
 	} catch (InvalidFieldException e) {
 	    handleInvalidFieldException(e);
 	}
     }
 
+    @FXML
+    public void cancel() {
+	DesktopApplication.get().getRootContext().precedent();
+    }
+
     private void handleInvalidFieldException(InvalidFieldException e) {
+	System.out.println("handleInvalidFieldException()");
 	// Alert the user
 	Alert alert = new Alert(AlertType.ERROR);
 	alert.setTitle(String.format("Champ%1$s invalide%1$s", e.getInvalidFields().size() > 1 ? "s" : ""));
@@ -425,8 +431,11 @@ public class CharacterEditViewController implements Controller {
 	alertLabel.setText(sb.toString());
 	alertLabel.setWrapText(true);
 	alert.getDialogPane().setContent(alertLabel);
-	
+	alert.show();
+
 	// Give a red glow to the invalid fields
+	for (Pair<?, TextField> field : e.getInvalidFields())
+	    field.getY().getStyleClass().add("error");
     }
 
     @Override
@@ -438,12 +447,14 @@ public class CharacterEditViewController implements Controller {
 
     private void validateFields() throws InvalidFieldException {
 	LinkedList<Pair<String, TextField>> invalidFields = new LinkedList<>();
+
 	if (name.getText().isEmpty())
 	    invalidFields.add(new Pair("Le nom ne peut pas être vide", name));
 	if (xp.getText().isEmpty())
 	    invalidFields.add(new Pair("Le champ xp ne peut pas être vide", xp));
 	else if (!Regexs.INTEGER.matcher(xp.getText()).find())
 	    invalidFields.add(new Pair("La quantité d'xp doit être un entier.", xp));
+
 	if (abilityPoints.getText().isEmpty())
 	    invalidFields.add(
 		    new Pair("Le champ Points d'abilités ne peut pas être vide", abilityPoints));

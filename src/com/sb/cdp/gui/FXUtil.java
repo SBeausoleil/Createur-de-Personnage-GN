@@ -16,7 +16,7 @@ import com.sb.cdp.gui.view.RootLayoutController;
 import com.sb.cdp.gui.view.UserCharacterViewController;
 import com.sb.cdp.gui.view.UserEditViewController;
 import com.sb.cdp.gui.view.UserViewController;
-import com.sb.util.ConfirmationModel;
+import com.sb.util.DraftModel;
 import com.sb.util.Pair;
 
 import javafx.fxml.FXMLLoader;
@@ -73,7 +73,7 @@ public final class FXUtil {
 	}
     }
 
-    public static Pair<AnchorPane, CharacterEditViewController> characterEditView(RPG rpg, PlayerCharacter pc) {
+    public static Pair<AnchorPane, CharacterEditViewController> characterEditView(RPG rpg, PlayerCharacter pc, User user) {
 	try {
 	    Pair<AnchorPane, CharacterEditViewController> pair = new Pair<>();
 	    FXMLLoader loader = new FXMLLoader();
@@ -83,6 +83,7 @@ public final class FXUtil {
 	    pair.setY(controller);
 	    controller.setRpg(rpg);
 	    controller.setPlayerCharacter(pc);
+	    controller.setUser(user);
 	    return pair;
 	} catch (IOException e) {
 	    throw new RuntimeException(e);
@@ -104,7 +105,7 @@ public final class FXUtil {
     }
 
     public static Pair<AnchorPane, UserCharacterViewController> userCharacterView(
-	    ConfirmationModel<PlayerCharacter> cm) {
+	    DraftModel<PlayerCharacter> cm, User user) {
 	try {
 	    Pair<AnchorPane, UserCharacterViewController> pair = new Pair<>();
 	    FXMLLoader loader = new FXMLLoader();
@@ -112,6 +113,7 @@ public final class FXUtil {
 	    pair.setX(loader.load());
 	    UserCharacterViewController controller = loader.getController();
 	    controller.setUserCharacter(cm);
+	    controller.setUser(user);
 	    pair.setY(controller);
 	    return pair;
 	} catch (IOException e) {

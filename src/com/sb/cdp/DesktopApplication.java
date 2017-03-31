@@ -148,6 +148,10 @@ public class DesktopApplication extends Application {
 	this.rootContext = root.getY().getContext();
 
 	Scene scene = new Scene(rootLayout);
+	
+	// Add CSS style sheets
+	scene.getStylesheets().add("com/sb/cdp/gui/view/css/Error.css");
+	
 	primaryStage.setScene(scene);
 	primaryStage.show();
     }
