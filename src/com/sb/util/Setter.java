@@ -9,6 +9,6 @@ package com.sb.util;
  * @param <T> The return type of the getter
  */
 @FunctionalInterface
-public interface Getter<E, T> {
-    public T get(E target);
+public interface Setter<E, T> {
+    public void set(E target, T obj);
 }

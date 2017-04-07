@@ -9,7 +9,7 @@
 <VBox prefHeight="400.0" prefWidth="600.0" spacing="2.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.sb.cdp.gui.view.UserViewController">
    <children>
       <Label fx:id="name" text="USER NAME" />
-      <Button fx:id="newCharacter" mnemonicParsing="false" text="Nouveau Personnage" />
+      <Button fx:id="newCharacter" mnemonicParsing="false" onAction="#newCharacter" text="Nouveau Personnage" />
       <ListView fx:id="characters" />
    </children>
    <padding>

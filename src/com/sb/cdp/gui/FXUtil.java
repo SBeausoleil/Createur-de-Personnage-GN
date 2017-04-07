@@ -2,6 +2,7 @@ package com.sb.cdp.gui;
 
 import java.io.IOException;
 import java.util.Collection;
+import java.util.List;
 
 import com.sb.cdp.Library;
 import com.sb.cdp.PlayerCharacter;
@@ -9,6 +10,8 @@ import com.sb.cdp.RPG;
 import com.sb.cdp.User;
 import com.sb.cdp.ability.Ability;
 import com.sb.cdp.gui.view.AbilityLibraryViewController;
+import com.sb.cdp.gui.view.AbilityListEditView;
+import com.sb.cdp.gui.view.AbilityListEditViewController;
 import com.sb.cdp.gui.view.AbilityViewController;
 import com.sb.cdp.gui.view.CharacterEditViewController;
 import com.sb.cdp.gui.view.ExtendedAbilityLibraryViewController;
@@ -17,7 +20,9 @@ import com.sb.cdp.gui.view.UserCharacterViewController;
 import com.sb.cdp.gui.view.UserEditViewController;
 import com.sb.cdp.gui.view.UserViewController;
 import com.sb.util.DraftModel;
+import com.sb.util.Getter;
 import com.sb.util.Pair;
+import com.sb.util.Setter;
 
 import javafx.fxml.FXMLLoader;
 import javafx.scene.layout.AnchorPane;
@@ -28,7 +33,6 @@ import javafx.scene.layout.VBox;
  * A helper class aiding the loading of views and their controller.
  * 
  * @author Samuel Beausoleil
- *
  */
 public final class FXUtil {
     private FXUtil() {}
@@ -73,7 +77,8 @@ public final class FXUtil {
 	}
     }
 
-    public static Pair<AnchorPane, CharacterEditViewController> characterEditView(RPG rpg, PlayerCharacter pc, User user) {
+    public static Pair<AnchorPane, CharacterEditViewController> characterEditView(RPG rpg, PlayerCharacter pc,
+	    User user) {
 	try {
 	    Pair<AnchorPane, CharacterEditViewController> pair = new Pair<>();
 	    FXMLLoader loader = new FXMLLoader();
@@ -135,8 +140,9 @@ public final class FXUtil {
 	    throw new RuntimeException(e);
 	}
     }
-    
-    public static Pair<AnchorPane, ExtendedAbilityLibraryViewController> extendedAbilityLibraryViewController(Collection<Library<String, Ability>> collection) {
+
+    public static Pair<AnchorPane, ExtendedAbilityLibraryViewController> extendedAbilityLibraryView(
+	    Collection<Library<String, Ability>> collection) {
 	try {
 	    Pair<AnchorPane, ExtendedAbilityLibraryViewController> pair = new Pair<>();
 	    FXMLLoader loader = new FXMLLoader();
@@ -148,5 +154,22 @@ public final class FXUtil {
 	} catch (IOException e) {
 	    throw new RuntimeException(e);
 	}
+    }
+
+    public static Pair<AbilityListEditView, AbilityListEditViewController> abilityListEditView(RPG rpg, User user,
+	    PlayerCharacter pc, String pcSectionTitle, Getter<PlayerCharacter, List<Ability>> getter,
+	    Setter<PlayerCharacter, List<Ability>> setter) {
+
+	AbilityListEditView view = new AbilityListEditView();
+	AbilityListEditViewController controller = new AbilityListEditViewController(view);
+
+	controller.extractPublicAbilities(rpg);
+	controller.setUser(user);
+	controller.setPcSectionTitle(pcSectionTitle);
+	controller.setGetter(getter);
+	controller.setSetter(setter);
+	controller.setPc(pc);
+
+	return new Pair<>(view, controller);
     }
 }

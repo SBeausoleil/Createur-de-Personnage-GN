@@ -69,7 +69,7 @@ public class Initializer {
 
     public static Map<String, Domain> readSpells(Map<String, Domain> domains)
 	    throws FileNotFoundException, IOException {
-	// Will be changed later to read from a Json document. However until that will not be done until the whole data structure of the application is set in stone.
+	// Will be changed later to read from a Json document. However until that will not be ready until the whole data structure of the application is set in stone.
 	domains = SpellParser.parseSpells(new File("IDL_Spells.txt"), domains);
 	return domains;
     }
@@ -110,7 +110,7 @@ public class Initializer {
     public static Library<String, Ability> readAbilities(CharacterTypePool ctPool)
 	    throws FileNotFoundException, IOException {
 	Library<String, Ability> lib = new Library<>(ABILITY_LIBRARY, Ability.class);
-	// Will be changed later to read from a Json document. However until that will not be done until the whole data structure of the application is set in stone.
+	// Will be changed later to read from a Json document. However until that will not be ready until the whole data structure of the application is set in stone.
 	AbilityParser.parseAbilities(new File("IDL_Inline_Abilities.txt"), lib.getData(), ctPool);
 	return lib;
     }

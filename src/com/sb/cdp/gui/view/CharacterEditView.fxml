@@ -143,7 +143,7 @@
                      <children>
                         <VBox fx:id="abilitiesBox" alignment="TOP_CENTER" layoutX="262.0" layoutY="39.0" prefHeight="200.0" prefWidth="100.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                            <children>
-                              <Button fx:id="modifyAbilities" mnemonicParsing="false" text="Modifier" />
+                              <Button fx:id="modifyAbilities" mnemonicParsing="false" onAction="#modifyAbilities" text="Modifier Abilités" />
                            </children>
                         </VBox>
                      </children></AnchorPane>
@@ -214,7 +214,7 @@
         <buttons>
           <Button fx:id="submit" mnemonicParsing="false" onAction="#submit" text="Soumettre" />
             <Button fx:id="draft" mnemonicParsing="false" onAction="#draft" text="Brouillon" />
-            <Button fx:id="cancel" mnemonicParsing="false" text="Annuller" />
+            <Button fx:id="cancel" mnemonicParsing="false" onAction="#cancel" text="Annuller" />
         </buttons>
       </ButtonBar>
    </children>

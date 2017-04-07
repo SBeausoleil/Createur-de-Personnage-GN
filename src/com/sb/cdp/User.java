@@ -1,6 +1,7 @@
 package com.sb.cdp;
 
 import java.time.LocalDate;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
@@ -17,11 +18,7 @@ public class User implements LibraryPermissionHolder {
 
     // DATA FIELDS FOR ORGANISATIONS
     private Map<RPG, String> organisationNotes;
-    private boolean allowRanking;
-    private Map<RPG, Map<String, Float>> ranks;
-
     private Map<String, DraftModel<PlayerCharacter>> characters;
-
     private Set<Library> allowedLibraries;
 
     public User(String firstName, String lastName, LocalDate birthday, String email) {
@@ -31,6 +28,7 @@ public class User implements LibraryPermissionHolder {
 	this.email = email;
 
 	characters = new TreeMap<>();
+	allowedLibraries = new HashSet<>();
     }
 
     /**
@@ -192,43 +190,5 @@ public class User implements LibraryPermissionHolder {
      */
     public void setOrganisationNotes(RPG rpg, String organisationNotes) {
 	this.organisationNotes.put(rpg, organisationNotes);
-    }
-
-    /**
-     * Returns the allowRanking.
-     * 
-     * @return the allowRanking
-     */
-    public boolean isAllowRanking() {
-	return allowRanking;
-    }
-
-    /**
-     * Sets the value of allowRanking to that of the parameter.
-     * 
-     * @param allowRanking
-     *            the allowRanking to set
-     */
-    public void setAllowRanking(boolean allowRanking) {
-	this.allowRanking = allowRanking;
-    }
-
-    /**
-     * Returns the ranks.
-     * 
-     * @return the ranks
-     */
-    public Map<RPG, Map<String, Float>> getRanks() {
-	return ranks;
-    }
-
-    /**
-     * Sets the value of ranks to that of the parameter.
-     * 
-     * @param ranks
-     *            the ranks to set
-     */
-    public void setRanks(Map<RPG, Map<String, Float>> ranks) {
-	this.ranks = ranks;
     }
 }

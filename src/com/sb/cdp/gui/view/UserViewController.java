@@ -1,5 +1,6 @@
 package com.sb.cdp.gui.view;
 
+import com.sb.cdp.DesktopApplication;
 import com.sb.cdp.PlayerCharacter;
 import com.sb.cdp.User;
 import com.sb.cdp.gui.FXUtil;
@@ -29,7 +30,7 @@ public class UserViewController implements Controller {
     private void initialize() {
 	newCharacter.setPrefWidth(Double.MAX_VALUE);
     }
-    
+
     @Override
     public void update() {
 	name.setText(user.getFirstName() + " " + user.getLastName());
@@ -47,6 +48,12 @@ public class UserViewController implements Controller {
 	    views.add(pair.getX());
 	}
 	characters.setItems(views);
+    }
+
+    @FXML
+    public void newCharacter() {
+	DesktopApplication.get().getRootContext().enter(
+		FXUtil.characterEditView(DesktopApplication.get().getRpg(), null, user));
     }
 
     /**

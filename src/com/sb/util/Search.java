@@ -128,7 +128,7 @@ public class Search {
 			    } catch (InterruptedException | BrokenBarrierException e) {
 				e.printStackTrace();
 			    }
-			    System.out.println("resetter: done");
+			    System.out.println("resetter: ready");
 			});
 		    try {
 			print("waiting for reset end...");
@@ -169,7 +169,7 @@ public class Search {
 				thread.displayed[thread.indexes.get(ability)] = false;
 			    }
 			}
-			System.out.println("remover: done");
+			System.out.println("remover: ready");
 		    });
 	    }
 	}
@@ -184,7 +184,7 @@ public class Search {
 
 	@Override
 	protected void finalize() {
-	    // TODO delete me when certain that finalization is always done correctly.
+	    // TODO delete me when certain that finalization is always ready correctly.
 	    System.out.println("SearchThread " + id + " finalized");
 	}
 

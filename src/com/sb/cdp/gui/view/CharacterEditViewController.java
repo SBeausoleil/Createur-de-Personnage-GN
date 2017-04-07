@@ -93,6 +93,7 @@ public class CharacterEditViewController implements Controller {
     // ABILITIES TAB //
     @FXML
     private Button modifyAbilities;
+    private Button modifySpecialAbilities;
 
     @FXML
     private VBox abilitiesBox;
@@ -188,6 +189,7 @@ public class CharacterEditViewController implements Controller {
 	tmp.setMoralALignment(moralAlignment.getValue());
 	tmp.setXp(Integer.parseInt(xp.getText()));
 	tmp.setnAbilityPoints(Integer.parseInt(abilityPoints.getText()));
+	tmp.setDescription(description.getText());
 	// Ability tabs reflects in real time on the tmp.
 	// Magic tab
 	tmp.getGods().clear();
@@ -220,6 +222,9 @@ public class CharacterEditViewController implements Controller {
 
 	lawAlignment.setItems(FXCollections.observableArrayList(LawAlignment.values()));
 	moralAlignment.setItems(FXCollections.observableArrayList(MoralAlignment.values()));
+
+	description.setWrapText(true);
+	notes.setWrapText(true);
 
 	initializeButtonBar();
     }
@@ -310,7 +315,11 @@ public class CharacterEditViewController implements Controller {
 	for (Ability ability : tmp.getSpecialAbilities())
 	    specialAbilities.put(ability.getName(), ability);
 
+	modifySpecialAbilities = new Button("Modifier Abilités Spcéciales");
+	modifySpecialAbilities.setOnAction((e) -> modifySpecialAbilities());
+
 	abilitiesBox.getChildren().add(FXUtil.abilityLibraryView(abilities).getX());
+	abilitiesBox.getChildren().add(modifySpecialAbilities);
 	abilitiesBox.getChildren().add(FXUtil.abilityLibraryView(specialAbilities).getX());
 
 	// Magic
@@ -415,13 +424,27 @@ public class CharacterEditViewController implements Controller {
 	DesktopApplication.get().getRootContext().precedent();
     }
 
+    @FXML
+    public void modifyAbilities() {
+	Pair<AbilityListEditView, AbilityListEditViewController> pair = FXUtil.abilityListEditView(rpg, user, tmp,
+		"Abilités", PlayerCharacter::getAbilities, PlayerCharacter::setAbilities);
+	DesktopApplication.get().getRootContext().enter(pair);
+    }
+
+    public void modifySpecialAbilities() {
+	Pair<AbilityListEditView, AbilityListEditViewController> pair = FXUtil.abilityListEditView(rpg, user, tmp,
+		"Abilités Spéciales", PlayerCharacter::getSpecialAbilities, PlayerCharacter::setSpecialAbilities);
+	DesktopApplication.get().getRootContext().enter(pair);
+    }
+
     private void handleInvalidFieldException(InvalidFieldException e) {
 	System.out.println("handleInvalidFieldException()");
 	// Alert the user
 	Alert alert = new Alert(AlertType.ERROR);
 	alert.setTitle(String.format("Champ%1$s invalide%1$s", e.getInvalidFields().size() > 1 ? "s" : ""));
 	alert.setHeaderText("Il y a "
-		+ (e.getInvalidFields().size() > 1 ? "des erreurs dans certains champs" : "une erreur dans un champ"));
+		+ (e.getInvalidFields().size() > 1 ? "des erreurs dans certains champs."
+			: "une erreur dans un champ."));
 
 	StringBuilder sb = new StringBuilder();
 	Label alertLabel = new Label();

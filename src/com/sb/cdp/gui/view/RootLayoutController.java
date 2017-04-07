@@ -59,7 +59,7 @@ public class RootLayoutController implements Controller {
     @FXML
     private void handleAbilities() {
 	context.clear();
-	context.enter(FXUtil.extendedAbilityLibraryViewController(
+	context.enter(FXUtil.extendedAbilityLibraryView(
 		DesktopApplication.get().getRpg().getAbilityLibraries().values()));
     }
 
