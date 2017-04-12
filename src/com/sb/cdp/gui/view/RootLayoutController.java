@@ -1,8 +1,14 @@
 package com.sb.cdp.gui.view;
 
+import java.util.ArrayList;
+import java.util.Collection;
+
 import com.sb.cdp.DesktopApplication;
+import com.sb.cdp.Library;
+import com.sb.cdp.ability.Ability;
 import com.sb.cdp.gui.Context;
 import com.sb.cdp.gui.FXUtil;
+import com.sb.util.Pair;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -59,8 +65,13 @@ public class RootLayoutController implements Controller {
     @FXML
     private void handleAbilities() {
 	context.clear();
-	context.enter(FXUtil.extendedAbilityLibraryView(
-		DesktopApplication.get().getRpg().getAbilityLibraries().values()));
+	
+	Collection<Library<String, Ability>> abilities = DesktopApplication.get().getRpg().getAbilityLibraries().values();
+	ArrayList<Pair<String,Collection<Ability>>> pairs = new ArrayList<>(abilities.size());
+	for (Library<String, Ability> lib : abilities)
+	    pairs.add(lib);
+	
+	context.enter(FXUtil.extendedAbilityLibraryView(pairs));
     }
 
     @FXML

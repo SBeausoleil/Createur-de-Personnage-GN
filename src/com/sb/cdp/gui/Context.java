@@ -3,7 +3,7 @@ package com.sb.cdp.gui;
 import java.util.Stack;
 
 import com.sb.cdp.gui.view.Controller;
-import com.sb.util.Pair;
+import com.sb.util.ConcretePair;
 
 import javafx.scene.Node;
 
@@ -16,15 +16,15 @@ public class Context {
 
     private ContextSetter contextSetter;
 
-    private Pair<? extends Node, ? extends Controller> current;
-    private Stack<Pair<? extends Node, ? extends Controller>> precedents;
+    private ConcretePair<? extends Node, ? extends Controller> current;
+    private Stack<ConcretePair<? extends Node, ? extends Controller>> precedents;
 
     public Context(ContextSetter contextSetter) {
 	this.contextSetter = contextSetter;
 	precedents = new Stack<>();
     }
 
-    public void enter(Pair<? extends Node, ? extends Controller> next) {
+    public void enter(ConcretePair<? extends Node, ? extends Controller> next) {
 	precedents.push(current);
 	current = next;
 	contextSetter.set(next.getX());

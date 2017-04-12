@@ -1,10 +1,12 @@
 package com.sb.cdp.gui.view;
 
+import java.util.Collection;
 import java.util.LinkedList;
 
 import com.sb.cdp.Library;
 import com.sb.cdp.ability.Ability;
 import com.sb.cdp.gui.FXUtil;
+import com.sb.util.ConcretePair;
 import com.sb.util.Pair;
 
 import javafx.scene.control.Button;
@@ -33,12 +35,11 @@ public class AbilityListEditView extends VBox {
 	horizontal = new HBox();
 	getChildren().add(horizontal);
 
-	Pair<AnchorPane, AbilityLibraryViewController> abilities = FXUtil.abilityLibraryView(new Library("", Ability.class));
+	ConcretePair<AnchorPane, AbilityLibraryViewController> abilities = FXUtil.abilityLibraryView(new Library("", String.class, Ability.class));
 	horizontal.getChildren().add(abilities.getX());
 
-	LinkedList<Library<String, Ability>> tmp = new LinkedList();
-	tmp.add(new Library("", Ability.class));
-	Pair<AnchorPane, ExtendedAbilityLibraryViewController> extended = FXUtil.extendedAbilityLibraryView(tmp);
+	LinkedList<Pair<String, Collection<Ability>>> abilityLibs = new LinkedList();
+	ConcretePair<AnchorPane, ExtendedAbilityLibraryViewController> extended = FXUtil.extendedAbilityLibraryView(abilityLibs);
 	horizontal.getChildren().add(extended.getX());
 	librariesController = extended.getY();
 

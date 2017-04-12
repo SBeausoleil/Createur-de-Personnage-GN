@@ -1,5 +1,6 @@
 package com.sb.cdp.gui.view;
 
+import java.util.Collection;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -10,6 +11,7 @@ import com.sb.cdp.RPG;
 import com.sb.cdp.User;
 import com.sb.cdp.ability.Ability;
 import com.sb.util.Getter;
+import com.sb.util.Pair;
 import com.sb.util.Setter;
 
 public class AbilityListEditViewController implements Controller {
@@ -18,19 +20,19 @@ public class AbilityListEditViewController implements Controller {
 
     private User user;
     private PlayerCharacter pc;
-    private LinkedHashSet<Library<String, Ability>> publicAbilities;
+    private LinkedHashSet<Pair<String, Collection<Ability>>> availableLibraries;
     private String pcSectionTitle;
     private Getter<PlayerCharacter, List<Ability>> getter;
     private Setter<PlayerCharacter, List<Ability>> setter;
 
     public AbilityListEditViewController(AbilityListEditView view) {
-	publicAbilities = new LinkedHashSet<>();
+	availableLibraries = new LinkedHashSet<>();
 	this.view = view;
 	pcSectionTitle = "Abilités";
     }
 
     private void initializeExtended() {
-	view.librariesController.setLibraries(publicAbilities);
+	view.librariesController.setLibraries(availableLibraries);
     }
 
     @Override
@@ -41,12 +43,12 @@ public class AbilityListEditViewController implements Controller {
 
     public void confirm() {
 	// TESTME
-	Library<?, Ability> abilities = view.abilitiesController.getAbilities();
+	Pair<String, Collection<Ability>> abilities = view.abilitiesController.getAbilities();
 	LinkedList<Ability> abilitiesList = new LinkedList<>();
-	abilitiesList.addAll(abilities.values());
+	abilitiesList.addAll(abilities.getY());
 	setter.set(pc, abilitiesList);
     }
-    
+
     /**
      * Returns the view.
      * 
@@ -83,10 +85,9 @@ public class AbilityListEditViewController implements Controller {
      */
     public void setUser(User user) {
 	this.user = user;
-	Library<String, Ability>[] allowedLibraries = (Library<String, Ability>[]) user.getAllowedLibrariesFor(
-		Ability.class);
-	for (Library<String, Ability> lib : allowedLibraries)
-	    publicAbilities.add(lib);
+	Pair<String, Collection<Ability>>[] allowedLibraries = user.getAllowedLibrariesFor(Ability.class);
+	for (Pair<String, Collection<Ability>> lib : allowedLibraries)
+	    availableLibraries.add(lib);
     }
 
     /**
@@ -106,14 +107,14 @@ public class AbilityListEditViewController implements Controller {
      */
     public void setPc(PlayerCharacter pc) {
 	this.pc = pc;
-	for (Library<String, Ability> lib : (Library<String, Ability>[]) pc.getAllowedLibrariesFor(Ability.class))
-	    publicAbilities.add(lib);
+	for (Pair<String, Collection<Ability>> lib : pc.getAllowedLibrariesFor(Ability.class))
+	    availableLibraries.add(lib);
 	initializeCharacter();
     }
 
     private void initializeCharacter() {
 	updateAvailablePoints();
-	Library<String, Ability> abilities = new Library<>(pcSectionTitle, Ability.class);
+	Library<String, Ability> abilities = new Library<>(pcSectionTitle, String.class, Ability.class);
 	for (Ability ability : getter.get(pc))
 	    abilities.put(ability.getName(), ability);
 	view.abilitiesController.setAbilities(abilities);
@@ -127,12 +128,12 @@ public class AbilityListEditViewController implements Controller {
     }
 
     /**
-     * Returns the publicAbilities.
+     * Returns the availableLibraries.
      * 
-     * @return the publicAbilities
+     * @return the availableLibraries
      */
-    public LinkedHashSet<Library<String, Ability>> getPublicAbilities() {
-	return publicAbilities;
+    public LinkedHashSet<Pair<String, Collection<Ability>>> getAvailableLibraries() {
+	return availableLibraries;
     }
 
     public void extractPublicAbilities(RPG rpg) {
@@ -142,38 +143,45 @@ public class AbilityListEditViewController implements Controller {
     public void extractPublicAbilities(Iterable<Library<String, Ability>> libs) {
 	for (Library<String, Ability> lib : libs)
 	    if (lib.isPublic())
-		publicAbilities.add(lib);
+		availableLibraries.add(lib);
     }
 
     /**
      * Sets the value of getter to that of the parameter.
-     * @param getter the getter to set
+     * 
+     * @param getter
+     *            the getter to set
      */
     public void setGetter(Getter<PlayerCharacter, List<Ability>> getter) {
-        this.getter = getter;
+	this.getter = getter;
     }
 
     /**
      * Sets the value of setter to that of the parameter.
-     * @param setter the setter to set
+     * 
+     * @param setter
+     *            the setter to set
      */
     public void setSetter(Setter<PlayerCharacter, List<Ability>> setter) {
-        this.setter = setter;
+	this.setter = setter;
     }
 
     /**
      * Returns the pcSectionTitle.
+     * 
      * @return the pcSectionTitle
      */
     public String getPcSectionTitle() {
-        return pcSectionTitle;
+	return pcSectionTitle;
     }
 
     /**
      * Sets the value of pcSectionTitle to that of the parameter.
-     * @param pcSectionTitle the pcSectionTitle to set
+     * 
+     * @param pcSectionTitle
+     *            the pcSectionTitle to set
      */
     public void setPcSectionTitle(String pcSectionTitle) {
-        this.pcSectionTitle = pcSectionTitle;
+	this.pcSectionTitle = pcSectionTitle;
     }
 }

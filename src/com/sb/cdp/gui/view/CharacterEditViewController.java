@@ -16,7 +16,7 @@ import com.sb.cdp.User;
 import com.sb.cdp.ability.Ability;
 import com.sb.cdp.gui.FXUtil;
 import com.sb.cdp.magic.God;
-import com.sb.util.Pair;
+import com.sb.util.ConcretePair;
 import com.sb.util.Regexs;
 
 import javafx.beans.property.SimpleStringProperty;
@@ -307,8 +307,8 @@ public class CharacterEditViewController implements Controller {
 	statsTable.setItems(FXCollections.observableArrayList(tmp.getStats().entrySet()));
 
 	// Abilities
-	Library<String, Ability> abilities = new Library<>("Abilités", Ability.class);
-	Library<String, Ability> specialAbilities = new Library<>("Abilités spéciales", Ability.class);
+	Library<String, Ability> abilities = new Library<>("Abilités", String.class, Ability.class);
+	Library<String, Ability> specialAbilities = new Library<>("Abilités spéciales", String.class, Ability.class);
 
 	for (Ability ability : tmp.getAbilities())
 	    abilities.put(ability.getName(), ability);
@@ -426,13 +426,13 @@ public class CharacterEditViewController implements Controller {
 
     @FXML
     public void modifyAbilities() {
-	Pair<AbilityListEditView, AbilityListEditViewController> pair = FXUtil.abilityListEditView(rpg, user, tmp,
+	ConcretePair<AbilityListEditView, AbilityListEditViewController> pair = FXUtil.abilityListEditView(rpg, user, tmp,
 		"Abilités", PlayerCharacter::getAbilities, PlayerCharacter::setAbilities);
 	DesktopApplication.get().getRootContext().enter(pair);
     }
 
     public void modifySpecialAbilities() {
-	Pair<AbilityListEditView, AbilityListEditViewController> pair = FXUtil.abilityListEditView(rpg, user, tmp,
+	ConcretePair<AbilityListEditView, AbilityListEditViewController> pair = FXUtil.abilityListEditView(rpg, user, tmp,
 		"Abilités Spéciales", PlayerCharacter::getSpecialAbilities, PlayerCharacter::setSpecialAbilities);
 	DesktopApplication.get().getRootContext().enter(pair);
     }
@@ -448,7 +448,7 @@ public class CharacterEditViewController implements Controller {
 
 	StringBuilder sb = new StringBuilder();
 	Label alertLabel = new Label();
-	for (Pair<String, ?> msg : e.getInvalidFields()) {
+	for (ConcretePair<String, ?> msg : e.getInvalidFields()) {
 	    sb.append(msg.getX() + "\n");
 	}
 	alertLabel.setText(sb.toString());
@@ -457,7 +457,7 @@ public class CharacterEditViewController implements Controller {
 	alert.show();
 
 	// Give a red glow to the invalid fields
-	for (Pair<?, TextField> field : e.getInvalidFields())
+	for (ConcretePair<?, TextField> field : e.getInvalidFields())
 	    field.getY().getStyleClass().add("error");
     }
 
@@ -469,20 +469,20 @@ public class CharacterEditViewController implements Controller {
     }
 
     private void validateFields() throws InvalidFieldException {
-	LinkedList<Pair<String, TextField>> invalidFields = new LinkedList<>();
+	LinkedList<ConcretePair<String, TextField>> invalidFields = new LinkedList<>();
 
 	if (name.getText().isEmpty())
-	    invalidFields.add(new Pair("Le nom ne peut pas être vide", name));
+	    invalidFields.add(new ConcretePair("Le nom ne peut pas être vide", name));
 	if (xp.getText().isEmpty())
-	    invalidFields.add(new Pair("Le champ xp ne peut pas être vide", xp));
+	    invalidFields.add(new ConcretePair("Le champ xp ne peut pas être vide", xp));
 	else if (!Regexs.INTEGER.matcher(xp.getText()).find())
-	    invalidFields.add(new Pair("La quantité d'xp doit être un entier.", xp));
+	    invalidFields.add(new ConcretePair("La quantité d'xp doit être un entier.", xp));
 
 	if (abilityPoints.getText().isEmpty())
 	    invalidFields.add(
-		    new Pair("Le champ Points d'abilités ne peut pas être vide", abilityPoints));
+		    new ConcretePair("Le champ Points d'abilités ne peut pas être vide", abilityPoints));
 	else if (!Regexs.INTEGER.matcher(abilityPoints.getText()).find())
-	    invalidFields.add(new Pair("La quantité de points d'abilités doit être un entier.", abilityPoints));
+	    invalidFields.add(new ConcretePair("La quantité de points d'abilités doit être un entier.", abilityPoints));
 
 	if (!invalidFields.isEmpty())
 	    throw new InvalidFieldException(invalidFields);
@@ -491,9 +491,9 @@ public class CharacterEditViewController implements Controller {
     private static class InvalidFieldException extends Exception {
 	private static final long serialVersionUID = -3197261795827942830L;
 
-	private LinkedList<Pair<String, TextField>> invalidFields;
+	private LinkedList<ConcretePair<String, TextField>> invalidFields;
 
-	public InvalidFieldException(LinkedList<Pair<String, TextField>> invalidFields) {
+	public InvalidFieldException(LinkedList<ConcretePair<String, TextField>> invalidFields) {
 	    this.invalidFields = invalidFields;
 	}
 
@@ -504,7 +504,7 @@ public class CharacterEditViewController implements Controller {
 	 * 
 	 * @return the invalidFields
 	 */
-	public LinkedList<Pair<String, TextField>> getInvalidFields() {
+	public LinkedList<ConcretePair<String, TextField>> getInvalidFields() {
 	    return invalidFields;
 	}
     }

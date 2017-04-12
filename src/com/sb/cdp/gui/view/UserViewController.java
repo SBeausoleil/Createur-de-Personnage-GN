@@ -5,7 +5,7 @@ import com.sb.cdp.PlayerCharacter;
 import com.sb.cdp.User;
 import com.sb.cdp.gui.FXUtil;
 import com.sb.util.DraftModel;
-import com.sb.util.Pair;
+import com.sb.util.ConcretePair;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -38,7 +38,7 @@ public class UserViewController implements Controller {
 	characters.getItems().clear();
 	ObservableList<AnchorPane> views = FXCollections.observableArrayList();
 	for (DraftModel<PlayerCharacter> cm : user.getCharacters().values()) {
-	    Pair<AnchorPane, UserCharacterViewController> pair = FXUtil.userCharacterView(cm, user);
+	    ConcretePair<AnchorPane, UserCharacterViewController> pair = FXUtil.userCharacterView(cm, user);
 	    Button delete = new Button("Supprimer");
 	    delete.setOnAction((e) -> {
 		user.getCharacters().remove(cm.getActive().getName());

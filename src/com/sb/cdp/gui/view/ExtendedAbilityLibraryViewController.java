@@ -3,9 +3,9 @@ package com.sb.cdp.gui.view;
 import java.util.Collection;
 import java.util.LinkedList;
 
-import com.sb.cdp.Library;
 import com.sb.cdp.ability.Ability;
 import com.sb.cdp.gui.FXUtil;
+import com.sb.util.ConcretePair;
 import com.sb.util.Pair;
 import com.sb.util.Search;
 
@@ -20,7 +20,7 @@ public class ExtendedAbilityLibraryViewController implements Controller {
     @FXML
     private VBox layout;
 
-    private Collection<Library<String, Ability>> libraries;
+    private Collection<Pair<String, Collection<Ability>>> libraries;
 
     private Search searcher;
 
@@ -42,10 +42,10 @@ public class ExtendedAbilityLibraryViewController implements Controller {
 
 	    LinkedList<AbilityLibraryViewController> libs = new LinkedList<>();
 	    // Add AbilityLibraryView for each libraries
-	    for (Library<?, Ability> lib : libraries) {
-		Pair<AnchorPane, AbilityLibraryViewController> pair = FXUtil.abilityLibraryView(lib);
-		layout.getChildren().add(pair.getX());
-		libs.add(pair.getY());
+	    for (Pair<String, Collection<Ability>> lib : libraries) {
+		ConcretePair<AnchorPane, AbilityLibraryViewController> viewPair = FXUtil.abilityLibraryView(lib);
+		layout.getChildren().add(viewPair.getX());
+		libs.add(viewPair.getY());
 	    }
 
 	    searcher = new Search(libs);
@@ -57,7 +57,7 @@ public class ExtendedAbilityLibraryViewController implements Controller {
      * 
      * @return the libraries
      */
-    public Collection<Library<String, Ability>> getLibraries() {
+    public Collection<Pair<String, Collection<Ability>>> getLibraries() {
 	return libraries;
     }
 
@@ -67,7 +67,7 @@ public class ExtendedAbilityLibraryViewController implements Controller {
      * @param collection
      *            the libraries to set
      */
-    public void setLibraries(Collection<Library<String, Ability>> collection) {
+    public void setLibraries(Collection<Pair<String, Collection<Ability>>> collection) {
 	this.libraries = collection;
 	update();
     }

@@ -19,7 +19,7 @@ public class Initializer {
 
     public static final String PRAYER = "Prière";
     public static final String SPELL = "Sort";
-    
+
     public static final String ABILITY_LIBRARY = "Générale";
 
     public static RPG initialize() throws FileNotFoundException, IOException {
@@ -109,7 +109,7 @@ public class Initializer {
 
     public static Library<String, Ability> readAbilities(CharacterTypePool ctPool)
 	    throws FileNotFoundException, IOException {
-	Library<String, Ability> lib = new Library<>(ABILITY_LIBRARY, Ability.class);
+	Library<String, Ability> lib = new Library<>(ABILITY_LIBRARY, String.class, Ability.class);
 	// Will be changed later to read from a Json document. However until that will not be ready until the whole data structure of the application is set in stone.
 	AbilityParser.parseAbilities(new File("IDL_Inline_Abilities.txt"), lib.getData(), ctPool);
 	return lib;

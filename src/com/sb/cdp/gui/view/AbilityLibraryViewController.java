@@ -1,8 +1,10 @@
 package com.sb.cdp.gui.view;
 
-import com.sb.cdp.Library;
+import java.util.Collection;
+
 import com.sb.cdp.ability.Ability;
 import com.sb.cdp.gui.FXUtil;
+import com.sb.util.ConcretePair;
 import com.sb.util.Pair;
 
 import javafx.collections.FXCollections;
@@ -18,9 +20,9 @@ public class AbilityLibraryViewController implements Controller {
     @FXML
     private ListView<AnchorPane> list;
 
-    private Library<?, Ability> abilities;
+    private Pair<String, Collection<Ability>> abilities;
 
-    private Pair<AnchorPane, AbilityViewController>[] views;
+    private ConcretePair<AnchorPane, AbilityViewController>[] views;
     
     public AbilityLibraryViewController() {}
 
@@ -32,7 +34,7 @@ public class AbilityLibraryViewController implements Controller {
      * 
      * @return the abilities
      */
-    public Library<?, Ability> getAbilities() {
+    public Pair<String, Collection<Ability>> getAbilities() {
 	return abilities;
     }
 
@@ -42,19 +44,19 @@ public class AbilityLibraryViewController implements Controller {
      * @param abilities
      *            the abilities to set
      */
-    public void setAbilities(Library<?, Ability> abilities) {
+    public void setAbilities(Pair<String, Collection<Ability>> abilities) {
 	this.abilities = abilities;
-	titledPane.setText(abilities.getName());
+	titledPane.setText(abilities.getX());
 	update();
     }
 
     @Override
     public void update() {
-	this.views = new Pair[abilities.values().size()];
+	this.views = new ConcretePair[abilities.getY().size()];
 	ObservableList<AnchorPane> viewsList = FXCollections.observableArrayList();
 	int nViews = 0;
-	for (Ability ability : abilities.values()) {
-	    Pair<AnchorPane, AbilityViewController> pair = FXUtil.abilityView(ability);
+	for (Ability ability : abilities.getY()) {
+	    ConcretePair<AnchorPane, AbilityViewController> pair = FXUtil.abilityView(ability);
 	    viewsList.add(pair.getX());
 	    this.views[nViews++] = pair;
 	}

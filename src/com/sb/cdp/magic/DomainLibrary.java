@@ -10,7 +10,7 @@ public class DomainLibrary extends Library<String, Domain> {
     private String magicType;
 
     public DomainLibrary(String name, String magicType) {
-	super(name, Domain.class);
+	super(name, String.class, Domain.class);
 	this.magicType = magicType;
     }
 

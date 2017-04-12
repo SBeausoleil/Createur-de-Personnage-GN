@@ -12,24 +12,29 @@ import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
-public class Library<K, V> implements Map<K, V>, Comparable<Library> {
+import com.sb.util.Pair;
+
+public class Library<K, V> implements Map<K, V>, Comparable<Library>, Pair<String, Collection<V>> {
 
     // TODO add some form of version control to allow merging of libraries and updating etc...
 
     private String name;
     private TreeMap<K, V> data;
     private boolean isPublic;
-    private Class<V> valueType;
-    
-    public Library(String name, Class<V> valueType) {
+    private final Class<K> KEY_TYPE;
+    private final Class<V> VALUE_TYPE;
+
+    public Library(String name, Class<K> keyType, Class<V> valueType) {
 	this.name = name;
-	this.valueType = valueType;
+	this.KEY_TYPE = keyType;
+	this.VALUE_TYPE = valueType;
 	data = new TreeMap<>();
     }
 
-    public Library(String name, Class<V> valueType, boolean isPublic) {
+    public Library(String name, Class<K> keyType, Class<V> valueType, boolean isPublic) {
 	this.name = name;
-	this.valueType = valueType;
+	this.KEY_TYPE = keyType;
+	this.VALUE_TYPE = valueType;
 	this.isPublic = isPublic;
 	data = new TreeMap<>();
     }
@@ -71,7 +76,6 @@ public class Library<K, V> implements Map<K, V>, Comparable<Library> {
     public void setData(TreeMap<K, V> data) {
 	this.data = data;
     }
-    
 
     /**
      * @return
@@ -102,19 +106,16 @@ public class Library<K, V> implements Map<K, V>, Comparable<Library> {
     }
 
     /**
-     * Returns the valueType.
-     * @return the valueType
+     * Returns the VALUE_TYPE.
+     * 
+     * @return the VALUE_TYPE
      */
     public Class<V> getValueType() {
-        return valueType;
+	return VALUE_TYPE;
     }
 
-    /**
-     * Sets the value of valueType to that of the parameter.
-     * @param valueType the valueType to set
-     */
-    public void setValueType(Class<V> valueType) {
-        this.valueType = valueType;
+    public Class<K> getKeyType() {
+	return KEY_TYPE;
     }
 
     @Override
@@ -122,7 +123,7 @@ public class Library<K, V> implements Map<K, V>, Comparable<Library> {
 	int comparison = name.compareTo(lib.name);
 	if (comparison != 0)
 	    return comparison;
-	comparison = valueType.getName().compareTo(lib.getValueType().getName());
+	comparison = VALUE_TYPE.getName().compareTo(lib.getValueType().getName());
 	if (comparison != 0)
 	    return comparison;
 	return Integer.compare(data.size(), lib.data.size());
@@ -603,5 +604,23 @@ public class Library<K, V> implements Map<K, V>, Comparable<Library> {
 	return data.tailMap(fromKey);
     }
 
+    @Override
+    public String getX() {
+	return name;
+    }
 
+    @Override
+    public void setX(String x) {
+	this.name = x;
+    }
+
+    @Override
+    public Collection<V> getY() {
+	return data.values();
+    }
+
+    @Override
+    public void setY(Collection<V> y) {
+	throw new UnsupportedOperationException();
+    }
 }

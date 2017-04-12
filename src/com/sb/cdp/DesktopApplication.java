@@ -10,7 +10,7 @@ import com.sb.cdp.gui.FXUtil;
 import com.sb.cdp.gui.view.RootLayoutController;
 import com.sb.cdp.idl.Initializer;
 import com.sb.util.DateUtil;
-import com.sb.util.Pair;
+import com.sb.util.ConcretePair;
 
 import javafx.application.Application;
 import javafx.scene.Scene;
@@ -143,7 +143,7 @@ public class DesktopApplication extends Application {
 	this.primaryStage = primaryStage;
 	primaryStage.setTitle("Arcane");
 
-	Pair<BorderPane, RootLayoutController> root = FXUtil.rootLayout();
+	ConcretePair<BorderPane, RootLayoutController> root = FXUtil.rootLayout();
 	this.rootLayout = root.getX();
 	this.rootContext = root.getY().getContext();
 

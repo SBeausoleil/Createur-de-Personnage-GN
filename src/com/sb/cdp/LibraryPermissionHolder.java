@@ -1,7 +1,10 @@
 package com.sb.cdp;
 
+import java.util.Collection;
 import java.util.LinkedList;
 import java.util.Set;
+
+import com.sb.util.Pair;
 
 public interface LibraryPermissionHolder {
 
@@ -11,11 +14,19 @@ public interface LibraryPermissionHolder {
 
     public void allow(Library allowedLibrary);
 
-    default <E> Library<? extends Object, E>[] getAllowedLibrariesFor(Class<E> valueType) {
-	LinkedList<Library<? extends Object, E>> list = new LinkedList<>();
+    default <V> Pair<String, Collection<V>>[] getAllowedLibrariesFor(Class<V> valueType) {
+	LinkedList<Pair<String, Collection<V>>> list = new LinkedList<>();
 	for (Library lib : getAllowedLibraries())
 	    if (lib.getValueType() == valueType)
 		list.add(lib);
-	return (Library<? extends Object, E>[]) list.toArray();
+	return list.toArray(new Pair[list.size()]);
+    }
+
+    default <K, V> Library<K, V>[] getAllowedLibrariesFor(Class<K> keyType, Class<V> valueType) {
+	LinkedList<Library<K, V>> list = new LinkedList<>();
+	for (Library lib : getAllowedLibraries())
+	    if (lib.getKeyType() == keyType && lib.getValueType() == valueType)
+		list.add(lib);
+	return list.toArray(new Library[list.size()]);
     }
 }

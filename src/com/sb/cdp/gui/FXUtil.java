@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
 
-import com.sb.cdp.Library;
 import com.sb.cdp.PlayerCharacter;
 import com.sb.cdp.RPG;
 import com.sb.cdp.User;
@@ -19,6 +18,7 @@ import com.sb.cdp.gui.view.RootLayoutController;
 import com.sb.cdp.gui.view.UserCharacterViewController;
 import com.sb.cdp.gui.view.UserEditViewController;
 import com.sb.cdp.gui.view.UserViewController;
+import com.sb.util.ConcretePair;
 import com.sb.util.DraftModel;
 import com.sb.util.Getter;
 import com.sb.util.Pair;
@@ -37,9 +37,9 @@ import javafx.scene.layout.VBox;
 public final class FXUtil {
     private FXUtil() {}
 
-    public static Pair<AnchorPane, UserEditViewController> userEditView(User user) {
+    public static ConcretePair<AnchorPane, UserEditViewController> userEditView(User user) {
 	try {
-	    Pair<AnchorPane, UserEditViewController> pair = new Pair<>();
+	    ConcretePair<AnchorPane, UserEditViewController> pair = new ConcretePair<>();
 	    FXMLLoader loader = new FXMLLoader();
 	    loader.setLocation(FXUtil.class.getResource("view/UserEditView.fxml"));
 	    pair.setX((AnchorPane) loader.load());
@@ -50,9 +50,9 @@ public final class FXUtil {
 	}
     }
 
-    public static Pair<BorderPane, RootLayoutController> rootLayout() {
+    public static ConcretePair<BorderPane, RootLayoutController> rootLayout() {
 	try {
-	    Pair<BorderPane, RootLayoutController> pair = new Pair<>();
+	    ConcretePair<BorderPane, RootLayoutController> pair = new ConcretePair<>();
 	    FXMLLoader loader = new FXMLLoader();
 	    loader.setLocation(FXUtil.class.getResource("view/RootLayout.fxml"));
 	    pair.setX((BorderPane) loader.load());
@@ -63,9 +63,9 @@ public final class FXUtil {
 	}
     }
 
-    public static Pair<AnchorPane, AbilityLibraryViewController> abilityLibraryView(Library<?, Ability> library) {
+    public static ConcretePair<AnchorPane, AbilityLibraryViewController> abilityLibraryView(Pair<String, Collection<Ability>> library) {
 	try {
-	    Pair<AnchorPane, AbilityLibraryViewController> pair = new Pair<>();
+	    ConcretePair<AnchorPane, AbilityLibraryViewController> pair = new ConcretePair<>();
 	    FXMLLoader loader = new FXMLLoader();
 	    loader.setLocation(FXUtil.class.getResource("view/AbilityLibraryView.fxml"));
 	    pair.setX((AnchorPane) loader.load());
@@ -77,10 +77,10 @@ public final class FXUtil {
 	}
     }
 
-    public static Pair<AnchorPane, CharacterEditViewController> characterEditView(RPG rpg, PlayerCharacter pc,
+    public static ConcretePair<AnchorPane, CharacterEditViewController> characterEditView(RPG rpg, PlayerCharacter pc,
 	    User user) {
 	try {
-	    Pair<AnchorPane, CharacterEditViewController> pair = new Pair<>();
+	    ConcretePair<AnchorPane, CharacterEditViewController> pair = new ConcretePair<>();
 	    FXMLLoader loader = new FXMLLoader();
 	    loader.setLocation(FXUtil.class.getResource("view/CharacterEditView.fxml"));
 	    pair.setX(loader.load());
@@ -95,9 +95,9 @@ public final class FXUtil {
 	}
     }
 
-    public static Pair<VBox, UserViewController> userView(User user) {
+    public static ConcretePair<VBox, UserViewController> userView(User user) {
 	try {
-	    Pair<VBox, UserViewController> pair = new Pair<>();
+	    ConcretePair<VBox, UserViewController> pair = new ConcretePair<>();
 	    FXMLLoader loader = new FXMLLoader();
 	    loader.setLocation(FXUtil.class.getResource("view/UserView.fxml"));
 	    pair.setX(loader.load());
@@ -109,10 +109,10 @@ public final class FXUtil {
 	}
     }
 
-    public static Pair<AnchorPane, UserCharacterViewController> userCharacterView(
+    public static ConcretePair<AnchorPane, UserCharacterViewController> userCharacterView(
 	    DraftModel<PlayerCharacter> cm, User user) {
 	try {
-	    Pair<AnchorPane, UserCharacterViewController> pair = new Pair<>();
+	    ConcretePair<AnchorPane, UserCharacterViewController> pair = new ConcretePair<>();
 	    FXMLLoader loader = new FXMLLoader();
 	    loader.setLocation(FXUtil.class.getResource("view/UserCharacterView.fxml"));
 	    pair.setX(loader.load());
@@ -126,9 +126,9 @@ public final class FXUtil {
 	}
     }
 
-    public static Pair<AnchorPane, AbilityViewController> abilityView(Ability ability) {
+    public static ConcretePair<AnchorPane, AbilityViewController> abilityView(Ability ability) {
 	try {
-	    Pair<AnchorPane, AbilityViewController> pair = new Pair<>();
+	    ConcretePair<AnchorPane, AbilityViewController> pair = new ConcretePair<>();
 	    FXMLLoader loader = new FXMLLoader();
 	    loader.setLocation(FXUtil.class.getResource("view/AbilityView.fxml"));
 	    pair.setX(loader.load());
@@ -141,22 +141,22 @@ public final class FXUtil {
 	}
     }
 
-    public static Pair<AnchorPane, ExtendedAbilityLibraryViewController> extendedAbilityLibraryView(
-	    Collection<Library<String, Ability>> collection) {
+    public static ConcretePair<AnchorPane, ExtendedAbilityLibraryViewController> extendedAbilityLibraryView(
+	    Collection<Pair<String, Collection<Ability>>> abilities) {
 	try {
-	    Pair<AnchorPane, ExtendedAbilityLibraryViewController> pair = new Pair<>();
+	    ConcretePair<AnchorPane, ExtendedAbilityLibraryViewController> pair = new ConcretePair<>();
 	    FXMLLoader loader = new FXMLLoader();
 	    loader.setLocation(FXUtil.class.getResource("view/ExtendedAbilityLibraryView.fxml"));
 	    pair.setX(loader.load());
 	    pair.setY(loader.getController());
-	    pair.getY().setLibraries(collection);
+	    pair.getY().setLibraries(abilities);
 	    return pair;
 	} catch (IOException e) {
 	    throw new RuntimeException(e);
 	}
     }
 
-    public static Pair<AbilityListEditView, AbilityListEditViewController> abilityListEditView(RPG rpg, User user,
+    public static ConcretePair<AbilityListEditView, AbilityListEditViewController> abilityListEditView(RPG rpg, User user,
 	    PlayerCharacter pc, String pcSectionTitle, Getter<PlayerCharacter, List<Ability>> getter,
 	    Setter<PlayerCharacter, List<Ability>> setter) {
 
@@ -170,6 +170,6 @@ public final class FXUtil {
 	controller.setSetter(setter);
 	controller.setPc(pc);
 
-	return new Pair<>(view, controller);
+	return new ConcretePair<>(view, controller);
     }
 }
