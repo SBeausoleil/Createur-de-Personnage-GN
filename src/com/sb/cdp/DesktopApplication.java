@@ -53,7 +53,6 @@ public class DesktopApplication extends Application {
 	if (rpg == null)
 	    System.exit(1);
 	user = testUser();
-
     }
 
     /**
@@ -161,6 +160,7 @@ public class DesktopApplication extends Application {
 	pc.setLawAlignment(LawAlignment.LAWFUL);
 	pc.setMoralALignment(MoralAlignment.NEUTRAL);
 	pc.setXp(13);
+	pc.setnAbilityPoints(11);
 
 	pc.getCharacterTypes().add(rpg.getCharacterTypes().get("Aventurier", Classification.CLASS));
 	pc.getCharacterTypes().add(rpg.getCharacterTypes().get("Guerrier", Classification.CLASS));
@@ -181,6 +181,7 @@ public class DesktopApplication extends Application {
 	pc.setLawAlignment(LawAlignment.CHAOTIC);
 	pc.setMoralALignment(MoralAlignment.EVIL);
 	pc.setXp(55);
+	pc.setnAbilityPoints(15);
 
 	pc.getCharacterTypes().add(rpg.getCharacterTypes().get("Guerrier", Classification.CLASS));
 	pc.getCharacterTypes().add(rpg.getCharacterTypes().get("Barbare", Classification.RACE));

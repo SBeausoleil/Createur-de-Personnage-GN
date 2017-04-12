@@ -111,7 +111,8 @@ public class Initializer {
 	    throws FileNotFoundException, IOException {
 	Library<String, Ability> lib = new Library<>(ABILITY_LIBRARY, String.class, Ability.class);
 	// Will be changed later to read from a Json document. However until that will not be ready until the whole data structure of the application is set in stone.
-	AbilityParser.parseAbilities(new File("IDL_Inline_Abilities.txt"), lib.getData(), ctPool);
+	AbilityParser.parseAbilities(new File("IDL_Inline_Abilities.txt"), lib, ctPool);
+	lib.setPublic(true);
 	return lib;
     }
 

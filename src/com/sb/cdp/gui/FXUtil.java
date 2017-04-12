@@ -35,34 +35,7 @@ import javafx.scene.layout.VBox;
  * @author Samuel Beausoleil
  */
 public final class FXUtil {
-    private FXUtil() {}
-
-    public static ConcretePair<AnchorPane, UserEditViewController> userEditView(User user) {
-	try {
-	    ConcretePair<AnchorPane, UserEditViewController> pair = new ConcretePair<>();
-	    FXMLLoader loader = new FXMLLoader();
-	    loader.setLocation(FXUtil.class.getResource("view/UserEditView.fxml"));
-	    pair.setX((AnchorPane) loader.load());
-	    pair.setY(loader.getController());
-	    return pair;
-	} catch (IOException e) {
-	    throw new RuntimeException(e);
-	}
-    }
-
-    public static ConcretePair<BorderPane, RootLayoutController> rootLayout() {
-	try {
-	    ConcretePair<BorderPane, RootLayoutController> pair = new ConcretePair<>();
-	    FXMLLoader loader = new FXMLLoader();
-	    loader.setLocation(FXUtil.class.getResource("view/RootLayout.fxml"));
-	    pair.setX((BorderPane) loader.load());
-	    pair.setY(loader.getController());
-	    return pair;
-	} catch (IOException e) {
-	    throw new RuntimeException(e);
-	}
-    }
-
+    
     public static ConcretePair<AnchorPane, AbilityLibraryViewController> abilityLibraryView(Pair<String, Collection<Ability>> library) {
 	try {
 	    ConcretePair<AnchorPane, AbilityLibraryViewController> pair = new ConcretePair<>();
@@ -71,6 +44,38 @@ public final class FXUtil {
 	    pair.setX((AnchorPane) loader.load());
 	    pair.setY(loader.getController());
 	    pair.getY().setAbilities(library);
+	    return pair;
+	} catch (IOException e) {
+	    throw new RuntimeException(e);
+	}
+    }
+
+    public static ConcretePair<AbilityListEditView, AbilityListEditViewController> abilityListEditView(RPG rpg, User user,
+	    PlayerCharacter pc, String pcSectionTitle, Getter<PlayerCharacter, List<Ability>> getter,
+	    Setter<PlayerCharacter, List<Ability>> setter) {
+
+	AbilityListEditView view = new AbilityListEditView();
+	AbilityListEditViewController controller = new AbilityListEditViewController(view);
+
+	controller.extractPublicAbilities(rpg);
+	controller.setUser(user);
+	controller.setPcSectionTitle(pcSectionTitle);
+	controller.setGetter(getter);
+	controller.setSetter(setter);
+	controller.setPc(pc);
+
+	return new ConcretePair<>(view, controller);
+    }
+
+    public static ConcretePair<AnchorPane, AbilityViewController> abilityView(Ability ability) {
+	try {
+	    ConcretePair<AnchorPane, AbilityViewController> pair = new ConcretePair<>();
+	    FXMLLoader loader = new FXMLLoader();
+	    loader.setLocation(FXUtil.class.getResource("view/AbilityView.fxml"));
+	    pair.setX(loader.load());
+	    AbilityViewController controller = loader.getController();
+	    controller.setAbility(ability);
+	    pair.setY(controller);
 	    return pair;
 	} catch (IOException e) {
 	    throw new RuntimeException(e);
@@ -95,14 +100,28 @@ public final class FXUtil {
 	}
     }
 
-    public static ConcretePair<VBox, UserViewController> userView(User user) {
+    public static ConcretePair<AnchorPane, ExtendedAbilityLibraryViewController> extendedAbilityLibraryView(
+	    Collection<Pair<String, Collection<Ability>>> abilities) {
 	try {
-	    ConcretePair<VBox, UserViewController> pair = new ConcretePair<>();
+	    ConcretePair<AnchorPane, ExtendedAbilityLibraryViewController> pair = new ConcretePair<>();
 	    FXMLLoader loader = new FXMLLoader();
-	    loader.setLocation(FXUtil.class.getResource("view/UserView.fxml"));
+	    loader.setLocation(FXUtil.class.getResource("view/ExtendedAbilityLibraryView.fxml"));
 	    pair.setX(loader.load());
 	    pair.setY(loader.getController());
-	    pair.getY().setUser(user);
+	    pair.getY().setLibraries(abilities);
+	    return pair;
+	} catch (IOException e) {
+	    throw new RuntimeException(e);
+	}
+    }
+
+    public static ConcretePair<BorderPane, RootLayoutController> rootLayout() {
+	try {
+	    ConcretePair<BorderPane, RootLayoutController> pair = new ConcretePair<>();
+	    FXMLLoader loader = new FXMLLoader();
+	    loader.setLocation(FXUtil.class.getResource("view/RootLayout.fxml"));
+	    pair.setX((BorderPane) loader.load());
+	    pair.setY(loader.getController());
 	    return pair;
 	} catch (IOException e) {
 	    throw new RuntimeException(e);
@@ -126,50 +145,32 @@ public final class FXUtil {
 	}
     }
 
-    public static ConcretePair<AnchorPane, AbilityViewController> abilityView(Ability ability) {
+    public static ConcretePair<AnchorPane, UserEditViewController> userEditView(User user) {
 	try {
-	    ConcretePair<AnchorPane, AbilityViewController> pair = new ConcretePair<>();
+	    ConcretePair<AnchorPane, UserEditViewController> pair = new ConcretePair<>();
 	    FXMLLoader loader = new FXMLLoader();
-	    loader.setLocation(FXUtil.class.getResource("view/AbilityView.fxml"));
-	    pair.setX(loader.load());
-	    AbilityViewController controller = loader.getController();
-	    controller.setAbility(ability);
-	    pair.setY(controller);
+	    loader.setLocation(FXUtil.class.getResource("view/UserEditView.fxml"));
+	    pair.setX((AnchorPane) loader.load());
+	    pair.setY(loader.getController());
 	    return pair;
 	} catch (IOException e) {
 	    throw new RuntimeException(e);
 	}
     }
 
-    public static ConcretePair<AnchorPane, ExtendedAbilityLibraryViewController> extendedAbilityLibraryView(
-	    Collection<Pair<String, Collection<Ability>>> abilities) {
+    public static ConcretePair<VBox, UserViewController> userView(User user) {
 	try {
-	    ConcretePair<AnchorPane, ExtendedAbilityLibraryViewController> pair = new ConcretePair<>();
+	    ConcretePair<VBox, UserViewController> pair = new ConcretePair<>();
 	    FXMLLoader loader = new FXMLLoader();
-	    loader.setLocation(FXUtil.class.getResource("view/ExtendedAbilityLibraryView.fxml"));
+	    loader.setLocation(FXUtil.class.getResource("view/UserView.fxml"));
 	    pair.setX(loader.load());
 	    pair.setY(loader.getController());
-	    pair.getY().setLibraries(abilities);
+	    pair.getY().setUser(user);
 	    return pair;
 	} catch (IOException e) {
 	    throw new RuntimeException(e);
 	}
     }
 
-    public static ConcretePair<AbilityListEditView, AbilityListEditViewController> abilityListEditView(RPG rpg, User user,
-	    PlayerCharacter pc, String pcSectionTitle, Getter<PlayerCharacter, List<Ability>> getter,
-	    Setter<PlayerCharacter, List<Ability>> setter) {
-
-	AbilityListEditView view = new AbilityListEditView();
-	AbilityListEditViewController controller = new AbilityListEditViewController(view);
-
-	controller.extractPublicAbilities(rpg);
-	controller.setUser(user);
-	controller.setPcSectionTitle(pcSectionTitle);
-	controller.setGetter(getter);
-	controller.setSetter(setter);
-	controller.setPc(pc);
-
-	return new ConcretePair<>(view, controller);
-    }
+    private FXUtil() {}
 }

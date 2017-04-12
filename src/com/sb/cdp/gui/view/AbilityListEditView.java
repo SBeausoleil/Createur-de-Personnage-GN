@@ -37,6 +37,7 @@ public class AbilityListEditView extends VBox {
 
 	ConcretePair<AnchorPane, AbilityLibraryViewController> abilities = FXUtil.abilityLibraryView(new Library("", String.class, Ability.class));
 	horizontal.getChildren().add(abilities.getX());
+	abilitiesController = abilities.getY();
 
 	LinkedList<Pair<String, Collection<Ability>>> abilityLibs = new LinkedList();
 	ConcretePair<AnchorPane, ExtendedAbilityLibraryViewController> extended = FXUtil.extendedAbilityLibraryView(abilityLibs);

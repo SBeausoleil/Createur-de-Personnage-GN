@@ -5,6 +5,7 @@ import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
 
+import com.sb.cdp.DesktopApplication;
 import com.sb.cdp.Library;
 import com.sb.cdp.PlayerCharacter;
 import com.sb.cdp.RPG;
@@ -29,6 +30,11 @@ public class AbilityListEditViewController implements Controller {
 	availableLibraries = new LinkedHashSet<>();
 	this.view = view;
 	pcSectionTitle = "Abilités";
+	initialize();
+    }
+
+    private void initialize() {
+	view.cancel.setOnAction((e) -> DesktopApplication.get().getRootContext().precedent(false));
     }
 
     private void initializeExtended() {
@@ -144,6 +150,7 @@ public class AbilityListEditViewController implements Controller {
 	for (Library<String, Ability> lib : libs)
 	    if (lib.isPublic())
 		availableLibraries.add(lib);
+	initializeExtended();
     }
 
     /**

@@ -200,12 +200,53 @@ public class CharacterEditViewController implements Controller {
 	tmp.setNote(notes.getText());
     }
 
+    @FXML
+    public void cancel() {
+	DesktopApplication.get().getRootContext().precedent();
+    }
+
+    @FXML
+    public void draft() {
+	try {
+	    applyToTmp();
+	    if (user != null)
+		user.addAsDraft(tmp);
+	    DesktopApplication.get().getRootContext().precedent(true);
+	} catch (InvalidFieldException e) {
+	    handleInvalidFieldException(e);
+	}
+    }
+
     public PlayerCharacter getPlayerCharacter() {
 	return pc;
     }
 
     public RPG getRpg() {
 	return rpg;
+    }
+
+    private void handleInvalidFieldException(InvalidFieldException e) {
+	System.out.println("handleInvalidFieldException()");
+	// Alert the user
+	Alert alert = new Alert(AlertType.ERROR);
+	alert.setTitle(String.format("Champ%1$s invalide%1$s", e.getInvalidFields().size() > 1 ? "s" : ""));
+	alert.setHeaderText("Il y a "
+		+ (e.getInvalidFields().size() > 1 ? "des erreurs dans certains champs."
+			: "une erreur dans un champ."));
+
+	StringBuilder sb = new StringBuilder();
+	Label alertLabel = new Label();
+	for (ConcretePair<String, ?> msg : e.getInvalidFields()) {
+	    sb.append(msg.getX() + "\n");
+	}
+	alertLabel.setText(sb.toString());
+	alertLabel.setWrapText(true);
+	alert.getDialogPane().setContent(alertLabel);
+	alert.show();
+
+	// Give a red glow to the invalid fields
+	for (ConcretePair<?, TextField> field : e.getInvalidFields())
+	    field.getY().getStyleClass().add("error");
     }
 
     @FXML
@@ -316,6 +357,7 @@ public class CharacterEditViewController implements Controller {
 	    specialAbilities.put(ability.getName(), ability);
 
 	modifySpecialAbilities = new Button("Modifier Abilités Spcéciales");
+	modifySpecialAbilities.setPrefWidth(Double.MAX_VALUE);
 	modifySpecialAbilities.setOnAction((e) -> modifySpecialAbilities());
 
 	abilitiesBox.getChildren().add(FXUtil.abilityLibraryView(abilities).getX());
@@ -333,6 +375,19 @@ public class CharacterEditViewController implements Controller {
 
 	// Notes
 	notes.setText(tmp.getNote());
+    }
+
+    @FXML
+    public void modifyAbilities() {
+	ConcretePair<AbilityListEditView, AbilityListEditViewController> pair = FXUtil.abilityListEditView(rpg, user, tmp,
+		"Abilités", PlayerCharacter::getAbilities, PlayerCharacter::setAbilities);
+	DesktopApplication.get().getRootContext().enter(pair);
+    }
+
+    public void modifySpecialAbilities() {
+	ConcretePair<AbilityListEditView, AbilityListEditViewController> pair = FXUtil.abilityListEditView(rpg, user, tmp,
+		"Abilités Spéciales", PlayerCharacter::getSpecialAbilities, PlayerCharacter::setSpecialAbilities);
+	DesktopApplication.get().getRootContext().enter(pair);
     }
 
     @FXML
@@ -405,60 +460,6 @@ public class CharacterEditViewController implements Controller {
 	} catch (InvalidFieldException e) {
 	    handleInvalidFieldException(e);
 	}
-    }
-
-    @FXML
-    public void draft() {
-	try {
-	    applyToTmp();
-	    if (user != null)
-		user.addAsDraft(tmp);
-	    DesktopApplication.get().getRootContext().precedent(true);
-	} catch (InvalidFieldException e) {
-	    handleInvalidFieldException(e);
-	}
-    }
-
-    @FXML
-    public void cancel() {
-	DesktopApplication.get().getRootContext().precedent();
-    }
-
-    @FXML
-    public void modifyAbilities() {
-	ConcretePair<AbilityListEditView, AbilityListEditViewController> pair = FXUtil.abilityListEditView(rpg, user, tmp,
-		"Abilités", PlayerCharacter::getAbilities, PlayerCharacter::setAbilities);
-	DesktopApplication.get().getRootContext().enter(pair);
-    }
-
-    public void modifySpecialAbilities() {
-	ConcretePair<AbilityListEditView, AbilityListEditViewController> pair = FXUtil.abilityListEditView(rpg, user, tmp,
-		"Abilités Spéciales", PlayerCharacter::getSpecialAbilities, PlayerCharacter::setSpecialAbilities);
-	DesktopApplication.get().getRootContext().enter(pair);
-    }
-
-    private void handleInvalidFieldException(InvalidFieldException e) {
-	System.out.println("handleInvalidFieldException()");
-	// Alert the user
-	Alert alert = new Alert(AlertType.ERROR);
-	alert.setTitle(String.format("Champ%1$s invalide%1$s", e.getInvalidFields().size() > 1 ? "s" : ""));
-	alert.setHeaderText("Il y a "
-		+ (e.getInvalidFields().size() > 1 ? "des erreurs dans certains champs."
-			: "une erreur dans un champ."));
-
-	StringBuilder sb = new StringBuilder();
-	Label alertLabel = new Label();
-	for (ConcretePair<String, ?> msg : e.getInvalidFields()) {
-	    sb.append(msg.getX() + "\n");
-	}
-	alertLabel.setText(sb.toString());
-	alertLabel.setWrapText(true);
-	alert.getDialogPane().setContent(alertLabel);
-	alert.show();
-
-	// Give a red glow to the invalid fields
-	for (ConcretePair<?, TextField> field : e.getInvalidFields())
-	    field.getY().getStyleClass().add("error");
     }
 
     @Override

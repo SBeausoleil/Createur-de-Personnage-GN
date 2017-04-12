@@ -16,7 +16,11 @@ import javafx.application.Platform;
 import javafx.scene.layout.AnchorPane;
 
 public class Search {
+    public static boolean debug = false;
+
     private int idGiver = 0;
+    private boolean die = false;
+    private boolean resetWhenFinalizing = false;
 
     // Search parameters
     private String oldSearch;
@@ -49,7 +53,6 @@ public class Search {
 	    threads[i].setDaemon(true);
 	    threads[i++].start();
 	}
-
     }
 
     private void initializeToRemove(Collection<AbilityLibraryViewController> libs) {
@@ -59,7 +62,8 @@ public class Search {
     }
 
     public void search(String search) {
-	System.out.println("search(" + search + ")");
+	if (debug)
+	    System.out.println("search(" + search + ")");
 
 	interruptSearch = true;
 	oldSearch = this.search;
@@ -71,10 +75,21 @@ public class Search {
 
     @Override
     protected void finalize() {
-	System.out.println("search finalize()");
-	for (int i = 0; i < threads.length; i++)
+	die = true;
+	for (int i = 0; i < threads.length; i++) {
 	    threads[i].interrupt(); // Wake the thread
+	}
+	if (resetWhenFinalizing)
+	    threads[0].resetViews();
 	threads = null; // Free their reference
+    }
+
+    /**
+     * Stops all searching threads and resets the views.
+     */
+    public synchronized void stop(boolean reset) {
+	resetWhenFinalizing = reset;
+	finalize();
     }
 
     private class SearchThread extends Thread {
@@ -102,9 +117,9 @@ public class Search {
 
 	@Override
 	public void run() {
-	    while (true) {
+	    die: while (!die) {
 		try {
-		    print("waiting to start...");
+		    debugPrint("waiting to start...");
 		    startLatch.countDown();
 		    startLatch.await(); // Tripped by the event thread
 		    if (id == 0) {
@@ -112,34 +127,43 @@ public class Search {
 			startLatch.reset();
 		    }
 		} catch (InterruptedException e) {
-		    throw new RuntimeException(e);
+		    if (!die)
+			throw new RuntimeException(e);
 		}
+
+		if (die)
+		    break die;
 
 		// Wait for the reset
 		if (reset) {
 		    if (id == 0)
 			Platform.runLater(() -> {
-			    System.out.println("resetter: starting");
+			    debugPrint("resetter: starting");
 			    for (SearchThread thread : threads)
 				thread.resetViews();
 			    try {
-				System.out.println("resetter: hitting barrier");
+				debugPrint("resetter: hitting barrier");
 				resetBarrier.await();
 			    } catch (InterruptedException | BrokenBarrierException e) {
 				e.printStackTrace();
 			    }
-			    System.out.println("resetter: ready");
+			    debugPrint("resetter: ready");
 			});
 		    try {
-			print("waiting for reset end...");
+			debugPrint("waiting for reset end...");
 			resetBarrier.await();
 		    } catch (InterruptedException | BrokenBarrierException e) {
 			throw new RuntimeException(e);
 		    }
 		}
 
-		print("searching");
+		if (die)
+		    break die;
+
+		debugPrint("searching");
 		for (Pair<AnchorPane, AbilityViewController> ability : libraryController.getViews()) {
+		    if (die)
+			break die;
 		    if (displayed[indexes.get(ability)] && !ability.getY().getAbility().getName().contains(search))
 			toRemove.get(libraryController).add(ability);
 
@@ -147,30 +171,37 @@ public class Search {
 			break;
 		}
 
+		if (die)
+		    break die;
+
 		try {
-		    print("waiting for other searchers to finish");
+		    debugPrint("waiting for other searchers to finish");
 		    endBarrier.await();
 		} catch (InterruptedException | BrokenBarrierException e) {
 		    throw new RuntimeException(e);
 		}
 
-		if (id == 0)
+		if (die)
+		    break die;
+
+		if (id == 0) {
 		    // Create a runnable which will remove all the marked views
 		    Platform.runLater(() -> {
-			System.out.println("remover: starting");
+			debugPrint("remover: starting");
 			for (SearchThread thread : threads) {
 			    LinkedList<Pair<AnchorPane, AbilityViewController>> list = toRemove.get(
 				    thread.libraryController);
-			    System.out.print("Removal list for thread " + thread.id + " is ");
-			    System.out.println(list.isEmpty() ? "empty" : "not empty");
+			    debugPrint("Removal list for thread " + thread.id + " is "
+				    + (list.isEmpty() ? "empty" : "not empty"));
 			    while (!list.isEmpty()) {
 				Pair<AnchorPane, AbilityViewController> ability = list.removeLast(); // Remove from the end of the list in hope of reducing number of elements to move in the UI
 				thread.libraryController.getList().getItems().remove(ability.getX());
 				thread.displayed[thread.indexes.get(ability)] = false;
 			    }
 			}
-			System.out.println("remover: ready");
+			debugPrint("remover: ready");
 		    });
+		}
 	    }
 	}
 
@@ -188,8 +219,9 @@ public class Search {
 	    System.out.println("SearchThread " + id + " finalized");
 	}
 
-	private void print(String msg) {
-	    System.out.println("SearchThread " + id + ": " + msg);
+	private void debugPrint(String msg) {
+	    if (debug)
+		System.out.println("SearchThread " + id + ": " + msg);
 	}
     }
 }

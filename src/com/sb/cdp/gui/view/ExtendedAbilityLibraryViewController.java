@@ -37,6 +37,9 @@ public class ExtendedAbilityLibraryViewController implements Controller {
 	while (layout.getChildren().size() > 1)
 	    layout.getChildren().remove(1);
 
+	if (searcher != null)
+	    searcher.stop(false);
+
 	if (libraries != null) {
 	    // Get the total number of abilityLibraryViews that will be stored (this is an optimization to avoid resizing the abilityLibraryViews arraylist and taking more memory than needed)
 
@@ -48,7 +51,8 @@ public class ExtendedAbilityLibraryViewController implements Controller {
 		libs.add(viewPair.getY());
 	    }
 
-	    searcher = new Search(libs);
+	    if (libs.size() > 0)
+		searcher = new Search(libs);
 	}
     }
 
@@ -74,6 +78,8 @@ public class ExtendedAbilityLibraryViewController implements Controller {
 
     @Override
     protected void finalize() {
+	System.out.println("finalizing " + ExtendedAbilityLibraryViewController.class.getName());
+	searcher.stop(false);
 	searcher = null;
     }
 }
