@@ -11,38 +11,32 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Text;
 
 public class AbilityViewController implements Controller {
-    @FXML
-    private Label name;
-    @FXML
-    private Label cost;
-    @FXML
-    private Label classRaceRequirements;
-    @FXML
-    private Label otherRequirements;
-    @FXML
-    private Text description;
-
-    @FXML
-    private AnchorPane anchorPane;
+    private AbilityView view;
 
     private Ability ability;
 
     public AbilityViewController() {}
 
+    public AbilityViewController(AbilityView view) {
+	setView(view);
+    }
+
     @FXML
     private void initialize() {
 	// Wrap the description text
-	description.wrappingWidthProperty().bind(anchorPane.widthProperty());
+	view.description.wrappingWidthProperty().bind(view.widthProperty());
     }
 
     @Override
     public void update() {
-	name.setText(ability.getName());
-	cost.setText(Integer.toString(ability.getCost()));
-	classRaceRequirements.setText(
-		AbilityUtil.characterTypeConditionsToString(ability.getCharacterTypeConditions()));
-	otherRequirements.setText(ArrayUtil.join(ability.getPrerequisites(), Condition::describe, ", "));
-	description.setText(ability.getDescription());
+	if (ability != null) {
+	    view.name.setText(ability.getName());
+	    view.cost.setText(Integer.toString(ability.getCost()));
+	    view.classRaceRequirements.setText(
+		    AbilityUtil.characterTypeConditionsToString(ability.getCharacterTypeConditions()));
+	    view.otherRequirements.setText(ArrayUtil.join(ability.getPrerequisites(), Condition::describe, ", "));
+	    view.description.setText(ability.getDescription());
+	}
     }
 
     /**
@@ -62,6 +56,17 @@ public class AbilityViewController implements Controller {
      */
     public void setAbility(Ability ability) {
 	this.ability = ability;
+	update();
+    }
+
+    /**
+     * Sets the value of view to that of the parameter.
+     * 
+     * @param view
+     *            the view to set
+     */
+    public void setView(AbilityView view) {
+	this.view = view;
 	update();
     }
 }

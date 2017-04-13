@@ -72,6 +72,12 @@ public class RootLayoutController implements Controller {
 	    pairs.add(lib);
 	
 	context.enter(FXUtil.extendedAbilityLibraryView(pairs));
+	
+	FXUtil.extendedAbilityLibraryObserver.printReport();
+	System.out.println();
+	FXUtil.abilityLibraryObserver.printReport();
+	System.out.println();
+	FXUtil.abilityObserver.printReport();
     }
 
     @FXML
