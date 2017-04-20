@@ -19,13 +19,13 @@ import com.sb.cdp.gui.view.RootLayoutController;
 import com.sb.cdp.gui.view.UserCharacterViewController;
 import com.sb.cdp.gui.view.UserEditViewController;
 import com.sb.cdp.gui.view.UserViewController;
-import com.sb.cdp.performance.MasterObserver;
-import com.sb.cdp.performance.MilliStopWatch;
 import com.sb.util.ConcretePair;
 import com.sb.util.DraftModel;
 import com.sb.util.Getter;
 import com.sb.util.Pair;
 import com.sb.util.Setter;
+import com.sb.util.performance.MasterObserver;
+import com.sb.util.performance.MilliStopWatch;
 
 import javafx.fxml.FXMLLoader;
 import javafx.scene.layout.AnchorPane;
@@ -89,15 +89,16 @@ public final class FXUtil {
 
     public static MasterObserver<MilliStopWatch> abilityObserver = new MasterObserver("abilityView");
 
-    public static ConcretePair<AnchorPane, AbilityViewController> abilityView(Ability ability) {
+    public static ConcretePair<AbilityView, AbilityViewController> abilityView(Ability ability) {
 	MilliStopWatch stopWatch = new MilliStopWatch();
 	stopWatch.start();
 	
-	ConcretePair<AnchorPane, AbilityViewController> pair = new ConcretePair<>();
+	ConcretePair<AbilityView, AbilityViewController> pair = new ConcretePair<>();
 	AbilityView view = new AbilityView();
 	AbilityViewController controller = new AbilityViewController(view);
 	controller.setAbility(ability);
 	pair.setX(view);
+	pair.setY(controller);
 
 	stopWatch.stop();
 	abilityObserver.addObserver(stopWatch);

@@ -15,6 +15,7 @@ import com.sb.cdp.RPG;
 import com.sb.cdp.User;
 import com.sb.cdp.ability.Ability;
 import com.sb.cdp.gui.FXUtil;
+import com.sb.cdp.gui.InvalidFieldException;
 import com.sb.cdp.magic.God;
 import com.sb.util.ConcretePair;
 import com.sb.util.Regexs;
@@ -35,6 +36,7 @@ import javafx.scene.control.TableColumn.CellDataFeatures;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.VBox;
 import javafx.util.Callback;
@@ -86,6 +88,8 @@ public class CharacterEditViewController implements Controller {
     @FXML
     private Button addXp;
     @FXML
+    private Label level;
+    @FXML
     private TextField abilityPoints;
 
     @FXML
@@ -94,6 +98,8 @@ public class CharacterEditViewController implements Controller {
     @FXML
     private Button modifyAbilities;
     private Button modifySpecialAbilities;
+    private ConcretePair<AnchorPane, AbilityLibraryViewController> normalAbilities;
+    private ConcretePair<AnchorPane, AbilityLibraryViewController> specialAbilities;
 
     @FXML
     private VBox abilitiesBox;
@@ -205,6 +211,9 @@ public class CharacterEditViewController implements Controller {
 	DesktopApplication.get().getRootContext().precedent();
     }
 
+    /**
+     * Saves the data as a draft character.
+     */
     @FXML
     public void draft() {
 	try {
@@ -249,6 +258,9 @@ public class CharacterEditViewController implements Controller {
 	    field.getY().getStyleClass().add("error");
     }
 
+    /**
+     * Initializes GUI elements
+     */
     @FXML
     private void initialize() {
 	modifyAbilities.setPrefWidth(Double.MAX_VALUE);
@@ -266,6 +278,16 @@ public class CharacterEditViewController implements Controller {
 
 	description.setWrapText(true);
 	notes.setWrapText(true);
+
+	modifySpecialAbilities = new Button("Modifier Abilités Spcéciales");
+	modifySpecialAbilities.setPrefWidth(Double.MAX_VALUE);
+	modifySpecialAbilities.setOnAction((e) -> modifySpecialAbilities());
+
+	normalAbilities = FXUtil.abilityLibraryView(null);
+	specialAbilities = FXUtil.abilityLibraryView(null);
+	abilitiesBox.getChildren().add(normalAbilities.getX());
+	abilitiesBox.getChildren().add(modifySpecialAbilities);
+	abilitiesBox.getChildren().add(specialAbilities.getX());
 
 	initializeButtonBar();
     }
@@ -324,7 +346,10 @@ public class CharacterEditViewController implements Controller {
 
 	// XP
 	xp.setText(Integer.toString(tmp.getXp()));
+	// TODO add listener to change on xp to set level label
+	addXp.setText("+" + rpg.getParameters().getXpPerEvent());
 	abilityPoints.setText(Integer.toString(tmp.getnAbilityPoints()));
+	level.setText(Integer.toString(tmp.getLevel()));
 
 	// Stats
 	properties.setCellValueFactory(
@@ -350,20 +375,13 @@ public class CharacterEditViewController implements Controller {
 	// Abilities
 	Library<String, Ability> abilities = new Library<>("Abilités", String.class, Ability.class);
 	Library<String, Ability> specialAbilities = new Library<>("Abilités spéciales", String.class, Ability.class);
-
 	for (Ability ability : tmp.getAbilities())
 	    abilities.put(ability.getName(), ability);
 	for (Ability ability : tmp.getSpecialAbilities())
 	    specialAbilities.put(ability.getName(), ability);
-
-	modifySpecialAbilities = new Button("Modifier Abilités Spcéciales");
-	modifySpecialAbilities.setPrefWidth(Double.MAX_VALUE);
-	modifySpecialAbilities.setOnAction((e) -> modifySpecialAbilities());
-
-	abilitiesBox.getChildren().add(FXUtil.abilityLibraryView(abilities).getX());
-	abilitiesBox.getChildren().add(modifySpecialAbilities);
-	abilitiesBox.getChildren().add(FXUtil.abilityLibraryView(specialAbilities).getX());
-
+	this.normalAbilities.getY().setAbilities(abilities);
+	this.specialAbilities.getY().setAbilities(specialAbilities);
+	
 	// Magic
 	int nGods = 0;
 	for (God god : tmp.getGods()) {
@@ -379,13 +397,15 @@ public class CharacterEditViewController implements Controller {
 
     @FXML
     public void modifyAbilities() {
-	ConcretePair<AbilityListEditView, AbilityListEditViewController> pair = FXUtil.abilityListEditView(rpg, user, tmp,
+	ConcretePair<AbilityListEditView, AbilityListEditViewController> pair = FXUtil.abilityListEditView(rpg, user,
+		tmp,
 		"Abilités", PlayerCharacter::getAbilities, PlayerCharacter::setAbilities);
 	DesktopApplication.get().getRootContext().enter(pair);
     }
 
     public void modifySpecialAbilities() {
-	ConcretePair<AbilityListEditView, AbilityListEditViewController> pair = FXUtil.abilityListEditView(rpg, user, tmp,
+	ConcretePair<AbilityListEditView, AbilityListEditViewController> pair = FXUtil.abilityListEditView(rpg, user,
+		tmp,
 		"Abilités Spéciales", PlayerCharacter::getSpecialAbilities, PlayerCharacter::setSpecialAbilities);
 	DesktopApplication.get().getRootContext().enter(pair);
     }
@@ -487,26 +507,5 @@ public class CharacterEditViewController implements Controller {
 
 	if (!invalidFields.isEmpty())
 	    throw new InvalidFieldException(invalidFields);
-    }
-
-    private static class InvalidFieldException extends Exception {
-	private static final long serialVersionUID = -3197261795827942830L;
-
-	private LinkedList<ConcretePair<String, TextField>> invalidFields;
-
-	public InvalidFieldException(LinkedList<ConcretePair<String, TextField>> invalidFields) {
-	    this.invalidFields = invalidFields;
-	}
-
-	/**
-	 * Returns the invalidFields.
-	 * getX(): Issue
-	 * getY(): Field
-	 * 
-	 * @return the invalidFields
-	 */
-	public LinkedList<ConcretePair<String, TextField>> getInvalidFields() {
-	    return invalidFields;
-	}
     }
 }

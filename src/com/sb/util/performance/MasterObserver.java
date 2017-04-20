@@ -1,4 +1,4 @@
-package com.sb.cdp.performance;
+package com.sb.util.performance;
 
 import java.util.LinkedList;
 
@@ -71,7 +71,7 @@ public class MasterObserver<Observer extends PerformanceObserver> {
 	    totalTime += current;
 	    if (current > maxTime)
 		maxTime = current;
-	    else if (current < minTime)
+	    if (current < minTime)
 		minTime = current;
 	}
 
@@ -79,7 +79,7 @@ public class MasterObserver<Observer extends PerformanceObserver> {
 	System.out.println("Total time: " + totalTime + timeScale);
 	System.out.println("Max: " + maxTime + timeScale);
 	System.out.println("Min: " + minTime + timeScale);
-	System.out.println("Avg: " + (totalTime / observers.size()) + timeScale);
+	System.out.println("Avg: " + ((double) totalTime / observers.size()) + timeScale);
     }
 
 }

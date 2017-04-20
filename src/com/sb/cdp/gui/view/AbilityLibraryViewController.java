@@ -12,22 +12,24 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TitledPane;
-import javafx.scene.layout.AnchorPane;
 
 public class AbilityLibraryViewController implements Controller {
     @FXML
     private TitledPane titledPane;
     @FXML
-    private ListView<AnchorPane> list;
+    private ListView<AbilityView> list;
+    private ObservableList<AbilityView> items;
 
     private Pair<String, Collection<Ability>> abilities;
 
-    private ConcretePair<AnchorPane, AbilityViewController>[] views;
-    
+    private ConcretePair<AbilityView, AbilityViewController>[] views;
+
     public AbilityLibraryViewController() {}
 
     @FXML
-    private void initialize() {}
+    private void initialize() {
+	list.setPrefWidth(Double.MAX_VALUE); // TESTME
+    }
 
     /**
      * Returns the abilities.
@@ -46,36 +48,47 @@ public class AbilityLibraryViewController implements Controller {
      */
     public void setAbilities(Pair<String, Collection<Ability>> abilities) {
 	this.abilities = abilities;
-	titledPane.setText(abilities.getX());
+	if (abilities != null)
+	    titledPane.setText(abilities.getX());
 	update();
     }
 
     @Override
     public void update() {
-	this.views = new ConcretePair[abilities.getY().size()];
-	ObservableList<AnchorPane> viewsList = FXCollections.observableArrayList();
-	int nViews = 0;
-	for (Ability ability : abilities.getY()) {
-	    ConcretePair<AnchorPane, AbilityViewController> pair = FXUtil.abilityView(ability);
-	    viewsList.add(pair.getX());
-	    this.views[nViews++] = pair;
+	if (abilities != null) {
+	    this.views = new ConcretePair[abilities.getY().size()];
+	    items = FXCollections.observableArrayList();
+	    int nViews = 0;
+	    ConcretePair<AbilityView, AbilityViewController> pair;
+	    for (Ability ability : abilities.getY()) {
+		pair = FXUtil.abilityView(ability);
+		items.add(pair.getX());
+		this.views[nViews++] = pair;
+	    }
+	    list.setItems(items);
+	} else {
+	    titledPane.setText("");
+	    if (items != null)
+		items.clear();
+	    views = null;
 	}
-	list.setItems(viewsList);
     }
 
     /**
      * Returns the views.
+     * 
      * @return the views
      */
-    public Pair<AnchorPane, AbilityViewController>[] getViews() {
-        return views;
+    public Pair<AbilityView, AbilityViewController>[] getViews() {
+	return views;
     }
 
     /**
      * Returns the list.
+     * 
      * @return the list
      */
-    public ListView<AnchorPane> getList() {
-        return list;
+    public ListView<AbilityView> getList() {
+	return list;
     }
 }

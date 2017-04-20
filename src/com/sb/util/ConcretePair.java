@@ -61,4 +61,12 @@ public class ConcretePair<X, Y> implements Pair<X, Y> {
 	this.y = y;
     }
 
+    /* (non-Javadoc)
+     * @see java.lang.Object#toString()
+     */
+    @Override
+    public String toString() {
+	return "ConcretePair [x=" + x + ", y=" + y + "]";
+    }
+
 }

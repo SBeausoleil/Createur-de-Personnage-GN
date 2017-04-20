@@ -6,9 +6,6 @@ import com.sb.cdp.ability.Condition;
 import com.sb.util.ArrayUtil;
 
 import javafx.fxml.FXML;
-import javafx.scene.control.Label;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.text.Text;
 
 public class AbilityViewController implements Controller {
     private AbilityView view;
@@ -22,10 +19,7 @@ public class AbilityViewController implements Controller {
     }
 
     @FXML
-    private void initialize() {
-	// Wrap the description text
-	view.description.wrappingWidthProperty().bind(view.widthProperty());
-    }
+    private void initialize() {}
 
     @Override
     public void update() {

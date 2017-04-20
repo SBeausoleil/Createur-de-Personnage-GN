@@ -3,7 +3,9 @@ package com.sb.cdp.idl;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.Collection;
 import java.util.Map;
+import java.util.Set;
 import java.util.TreeMap;
 
 import com.sb.cdp.CharacterType;
@@ -14,6 +16,7 @@ import com.sb.cdp.ability.Ability;
 import com.sb.cdp.magic.Domain;
 import com.sb.cdp.magic.DomainLibrary;
 import com.sb.cdp.magic.God;
+import com.thoughtworks.xstream.XStream;
 
 public class Initializer {
 
@@ -24,15 +27,27 @@ public class Initializer {
 
     public static RPG initialize() throws FileNotFoundException, IOException {
 	RPG idl = new RPG("Île Des Légendes"); // IDL: Ile Des Legendes
+	idl.getParameters().setAbilityPointsPerLevel(1);
+	idl.getParameters().setStartingAbilityPoints(10);
+	idl.getParameters().setXpPerEvent(5);
+	idl.getParameters().setXpPerLevel(10);
+	
 	idl.setCharacterTypes(characterType());
-	Library<String, Ability> abilities = readAbilities(idl.getCharacterTypes());
-	idl.getAbilityLibraries().put(abilities.getName(), abilities);
+		//Library<String, Ability> abilities = readAbilities(idl.getCharacterTypes());
+		//idl.getAbilityLibraries().put(abilities.getName(), abilities);
+	idl.setAbilityLibraries(readXMLAbilities());
 	idl.setGods(gods());
-	DomainLibrary spellDomains = spellDomains();
-	readSpells(spellDomains);
-	idl.registerDomainLibrary(spellDomains);
-	DomainLibrary prayerDomains = prayerDomains(idl.getGods().values());
-	idl.registerDomainLibrary(prayerDomains);
+	//DomainLibrary spellDomains = spellDomains();
+	//readSpells(spellDomains);
+	//idl.registerDomainLibrary(spellDomains);
+	//DomainLibrary prayerDomains = prayerDomains(idl.getGods().values());
+	//idl.registerDomainLibrary(prayerDomains);
+	Collection<Set<DomainLibrary>> domains = readXMLDomainLibraries().values();
+	for (Set<DomainLibrary> set : domains) {
+	    for (DomainLibrary lib : set) {
+		idl.registerDomainLibrary(lib);
+	    }
+	}
 	return idl;
     }
 
@@ -116,6 +131,16 @@ public class Initializer {
 	return lib;
     }
 
+    public static Map<String, Library<String, Ability>> readXMLAbilities() {
+	XStream xml = new XStream();
+	return (Map<String, Library<String, Ability>>) xml.fromXML(new File("IDL_Abilities.xml"));
+    }
+    
+    public static Map<String, Set<DomainLibrary>> readXMLDomainLibraries() {
+	XStream xml = new XStream();
+	return (Map<String, Set<DomainLibrary>>) xml.fromXML(new File("IDL_Spells.xml"));
+    }
+    
     public static Map<String, God> gods() {
 	Map<String, God> gods = new TreeMap<>();
 

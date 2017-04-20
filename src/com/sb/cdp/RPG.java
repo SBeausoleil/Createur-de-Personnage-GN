@@ -1,5 +1,6 @@
 package com.sb.cdp;
 
+import java.io.Serializable;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
@@ -9,7 +10,8 @@ import com.sb.cdp.ability.Ability;
 import com.sb.cdp.magic.DomainLibrary;
 import com.sb.cdp.magic.God;
 
-public class RPG {
+public class RPG implements Serializable {
+    private static final long serialVersionUID = -1582657998207199401L;
 
     private String name;
 
@@ -22,20 +24,28 @@ public class RPG {
     /**
      * A map of all the registered Magic libraries.
      * Map key: the magic type of the DomainLibrary.
+     * Map value: the libraries linked to this magic type
      */
     private Map<String, Set<DomainLibrary>> domainLibraries;
     private Map<String, User> users;
     private Map<String, God> gods;
+    
+    private final RPGParameters PARAMETERS;
 
     public RPG(String name) {
+	this(name, new RPGParameters());
+    }
+
+    public RPG(String name, RPGParameters parameters) {
 	this.name = name;
+	this.PARAMETERS = parameters;
 	characterTypes = new CharacterTypePool();
 	abilityLibraries = new TreeMap<>();
 	domainLibraries = new TreeMap<>();
 	users = new TreeMap<>();
 	gods = new TreeMap<>();
     }
-
+    
     /**
      * Returns the name.
      * 
@@ -149,5 +159,13 @@ public class RPG {
 	    domainLibraries.put(dl.getMagicType(), registeredLibraries);
 	}
 	registeredLibraries.add(dl);
+    }
+
+    /**
+     * Returns the parameters.
+     * @return the parameters.
+     */
+    public RPGParameters getParameters() {
+        return PARAMETERS;
     }
 }

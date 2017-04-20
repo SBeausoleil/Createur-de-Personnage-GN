@@ -10,10 +10,10 @@ import java.util.concurrent.BrokenBarrierException;
 import java.util.concurrent.CyclicBarrier;
 
 import com.sb.cdp.gui.view.AbilityLibraryViewController;
+import com.sb.cdp.gui.view.AbilityView;
 import com.sb.cdp.gui.view.AbilityViewController;
 
 import javafx.application.Platform;
-import javafx.scene.layout.AnchorPane;
 
 public class Search {
     public static boolean debug = false;
@@ -31,7 +31,7 @@ public class Search {
      * Map of all that is to be removed. Coalesced to build a runnable when removing for the JavaFX
      * thread.
      */
-    private Map<AbilityLibraryViewController, LinkedList<Pair<AnchorPane, AbilityViewController>>> toRemove;
+    private Map<AbilityLibraryViewController, LinkedList<Pair<AbilityView, AbilityViewController>>> toRemove;
 
     private SearchThread[] threads;
     private volatile boolean interruptSearch;
@@ -101,7 +101,7 @@ public class Search {
 	 * Stores the display index of each AbilityView pane.
 	 */
 	// Use LinkedHashMap to avoid IndexOutOfBoundsException when resetView()
-	private LinkedHashMap<Pair<AnchorPane, AbilityViewController>, Integer> indexes;
+	private LinkedHashMap<Pair<AbilityView, AbilityViewController>, Integer> indexes;
 	private boolean[] displayed;
 
 	SearchThread(AbilityLibraryViewController libraryController) {
@@ -161,11 +161,12 @@ public class Search {
 		    break die;
 
 		debugPrint("searching");
-		for (Pair<AnchorPane, AbilityViewController> ability : libraryController.getViews()) {
+		for (Pair<AbilityView, AbilityViewController> abilityView : libraryController.getViews()) {
 		    if (die)
 			break die;
-		    if (displayed[indexes.get(ability)] && !ability.getY().getAbility().getName().contains(search))
-			toRemove.get(libraryController).add(ability);
+		    
+		    if (displayed[indexes.get(abilityView)] && !abilityView.getY().getAbility().getName().contains(search))
+			toRemove.get(libraryController).add(abilityView);
 
 		    if (interruptSearch)
 			break;
@@ -189,12 +190,12 @@ public class Search {
 		    Platform.runLater(() -> {
 			debugPrint("remover: starting");
 			for (SearchThread thread : threads) {
-			    LinkedList<Pair<AnchorPane, AbilityViewController>> list = toRemove.get(
+			    LinkedList<Pair<AbilityView, AbilityViewController>> list = toRemove.get(
 				    thread.libraryController);
 			    debugPrint("Removal list for thread " + thread.id + " is "
 				    + (list.isEmpty() ? "empty" : "not empty"));
 			    while (!list.isEmpty()) {
-				Pair<AnchorPane, AbilityViewController> ability = list.removeLast(); // Remove from the end of the list in hope of reducing number of elements to move in the UI
+				Pair<AbilityView, AbilityViewController> ability = list.removeLast(); // Remove from the end of the list in hope of reducing number of elements to move in the UI
 				thread.libraryController.getList().getItems().remove(ability.getX());
 				thread.displayed[thread.indexes.get(ability)] = false;
 			    }
@@ -206,7 +207,7 @@ public class Search {
 	}
 
 	public void resetViews() {
-	    for (Map.Entry<Pair<AnchorPane, AbilityViewController>, Integer> entry : indexes.entrySet())
+	    for (Map.Entry<Pair<AbilityView, AbilityViewController>, Integer> entry : indexes.entrySet())
 		if (!displayed[entry.getValue()]) {
 		    libraryController.getList().getItems().add(entry.getValue(), entry.getKey().getX());
 		    displayed[entry.getValue()] = true;

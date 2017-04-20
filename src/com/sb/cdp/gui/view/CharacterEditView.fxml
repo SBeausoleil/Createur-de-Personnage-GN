@@ -102,7 +102,7 @@
                                        </children>
                                     </FlowPane>
                                     <Label text="XP" GridPane.rowIndex="4" />
-                                    <FlowPane GridPane.columnIndex="1" GridPane.rowIndex="4">
+                                    <FlowPane hgap="5.0" GridPane.columnIndex="1" GridPane.rowIndex="4">
                                        <GridPane.margin>
                                           <Insets top="3.0" />
                                        </GridPane.margin>
@@ -114,9 +114,11 @@
                                           </TextField>
                                           <Button fx:id="addXp" mnemonicParsing="false" text="+5">
                                              <FlowPane.margin>
-                                                <Insets left="5.0" />
+                                                <Insets />
                                              </FlowPane.margin>
                                           </Button>
+                                          <Label text="Niveau:" />
+                                          <Label fx:id="level" text="LEVEL" />
                                        </children>
                                     </FlowPane>
                                     <Label text="Points d'abilité" GridPane.rowIndex="5" />

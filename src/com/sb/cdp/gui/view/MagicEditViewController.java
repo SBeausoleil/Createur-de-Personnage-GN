@@ -85,4 +85,9 @@ public class MagicEditViewController implements Controller {
 	    magicType.setText("");
 	}
     }
+
+    @FXML
+    public void confirm() {
+	magic.setName(name.getText());
+    }
 }

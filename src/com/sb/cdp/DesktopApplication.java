@@ -37,7 +37,7 @@ public class DesktopApplication extends Application {
 
     private RPG rpg;
 
-    // Called by the superclass
+    // Called via reflection by launch()
     public DesktopApplication() {
 	app = this;
 
@@ -46,9 +46,12 @@ public class DesktopApplication extends Application {
 	    rpg = Initializer.initialize();
 	} catch (FileNotFoundException e) {
 	    System.err.println("One of the files needed for the initialization of the RPG has not been found.");
-	    e.printStackTrace();
+	    e.getMessage();
+	    System.exit(1);
 	} catch (IOException e) {
 	    e.printStackTrace();
+	    System.exit(1);
+	    throw new RuntimeException(e);
 	}
 	if (rpg == null)
 	    System.exit(1);

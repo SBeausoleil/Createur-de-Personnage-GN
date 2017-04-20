@@ -89,7 +89,8 @@ public class AbilityParser {
 
     private static void parseRawAbilities(String line, Set<RawAbility> rawAbilities) {
 	Matcher match = RAW_PARSING_PATTERN.matcher(line);
-	match.find();
+	if (!match.find())
+	    throw new RuntimeException("Error when parsing a raw ability: match failed! \n Line: \"" + line +"\"");
 	String[] captures = new String[match.groupCount() + 1]; // +1 because group[0] is not included in groupCount()
 
 	for (int i = 0; i < captures.length; i++) {
