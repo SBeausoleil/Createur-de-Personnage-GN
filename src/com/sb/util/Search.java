@@ -192,10 +192,10 @@ public class Search {
 			for (SearchThread thread : threads) {
 			    LinkedList<Pair<AbilityView, AbilityViewController>> list = toRemove.get(
 				    thread.libraryController);
-			    debugPrint("Removal list for thread " + thread.id + " is "
+			    debugPrint("Removal LIST for thread " + thread.id + " is "
 				    + (list.isEmpty() ? "empty" : "not empty"));
 			    while (!list.isEmpty()) {
-				Pair<AbilityView, AbilityViewController> ability = list.removeLast(); // Remove from the end of the list in hope of reducing number of elements to move in the UI
+				Pair<AbilityView, AbilityViewController> ability = list.removeLast(); // Remove from the end of the LIST in hope of reducing number of elements to move in the UI
 				thread.libraryController.getList().getItems().remove(ability.getX());
 				thread.displayed[thread.indexes.get(ability)] = false;
 			    }

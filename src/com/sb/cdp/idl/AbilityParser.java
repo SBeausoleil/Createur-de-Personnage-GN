@@ -104,7 +104,7 @@ public class AbilityParser {
 	    int level = captures[LEVEL] != null ? extractLevel(captures[LEVEL]) + i : 0;
 	    String name = captures[NAME] + (level != 0 ? " " + level : "");
 	    String prerequisites = captures[PREREQUISITES];
-	    if (i > 0) // When generating abilities from a range, add the precedent level of the skill to the prerequisites list.
+	    if (i > 0) // When generating abilities from a range, add the precedent level of the skill to the prerequisites LIST.
 		prerequisites += captures[NAME] + " " + (level - 1);
 	    rawAbilities.add(new RawAbility(name, Integer.parseInt(captures[COST]), captures[CLASSES],
 		    prerequisites, captures[DESCRIPTION]));

@@ -4,4 +4,4 @@
  * @author Samuel Beausoleil
  *
  */
-package com.sb.cdp.gui.view.css;
+package com.sb.cdp.gui.css;

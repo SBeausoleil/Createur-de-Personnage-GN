@@ -70,6 +70,7 @@ public class DesktopApplication extends Application {
     /**
      * Returns the rootLayout.
      * To set views, use {@link #getRootContext()} instead.
+     * 
      * @return the rootLayout
      * @see #getRootContext()
      */
@@ -150,10 +151,10 @@ public class DesktopApplication extends Application {
 	this.rootContext = root.getY().getContext();
 
 	Scene scene = new Scene(rootLayout);
-	
+
 	// Add CSS style sheets
-	scene.getStylesheets().add("com/sb/cdp/gui/view/css/Error.css");
-	
+	scene.getStylesheets().add("com/sb/cdp/gui/css/Stylesheet.css");
+
 	primaryStage.setScene(scene);
 	primaryStage.show();
     }

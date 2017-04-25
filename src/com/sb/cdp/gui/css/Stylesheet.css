@@ -1,3 +1,7 @@
 .error {
 	-fx-effect: dropshadow(gaussian, rgba(255, 0, 0, 0.5) , 1, 1, 1, 1);
 }
+
+.text:disabled { /* TESTME  */
+    -fx-opacity: 0.4;
+}

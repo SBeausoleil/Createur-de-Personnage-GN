@@ -38,7 +38,7 @@ public class AbilityListEditViewController implements Controller {
     }
 
     private void initializeExtended() {
-	view.librariesController.setLibraries(availableLibraries);
+	view.extendedLibrariesController.setLibraries(availableLibraries);
     }
 
     @Override
@@ -53,6 +53,7 @@ public class AbilityListEditViewController implements Controller {
 	LinkedList<Ability> abilitiesList = new LinkedList<>();
 	abilitiesList.addAll(abilities.getY());
 	setter.set(pc, abilitiesList);
+	DesktopApplication.get().getRootContext().precedent(true);
     }
 
     /**
@@ -124,6 +125,15 @@ public class AbilityListEditViewController implements Controller {
 	for (Ability ability : getter.get(pc))
 	    abilities.put(ability.getName(), ability);
 	view.abilitiesController.setAbilities(abilities);
+	view.abilitiesController.getView().setCollapsible(false);
+	
+	updateAvailableAbilities();
+    }
+
+    private void updateAvailableAbilities() {
+	for (AbilityLibraryViewController libraryController : view.extendedLibrariesController.getLibrariesControllers())
+	    for (Pair<AbilityView, AbilityViewController> view : libraryController.getViews())
+		view.getX().setDisable(!view.getY().getAbility().accept(pc));
     }
 
     /**

@@ -17,7 +17,7 @@ public class AbilityView extends AnchorPane {
 
     public AbilityView() {
 	final double PREF_WIDTH = 400;
-	minWidth(300);
+	minWidth(200);
 	prefWidth(PREF_WIDTH);
 	prefHeight(100);
 
@@ -44,14 +44,14 @@ public class AbilityView extends AnchorPane {
 
 	description = new Text("DESCRIPTION");
 	getChildren().add(description);
-	final double LEFT_ANCHOR = 5;
-	setLeftAnchor(description, LEFT_ANCHOR);
+	final double DISTANCE_FROM_BORDER = 5;
+	setLeftAnchor(description, DISTANCE_FROM_BORDER);
 	setTopAnchor(description, 52d);
 	// Wrap the description text
 	//description.wrappingWidthProperty().bind(widthProperty()); // Fails because the anchorpane automatically resizes for it
 	ModifiedIntegerProperty wrapProperty = new ModifiedIntegerProperty();
 	wrapProperty.bind(widthProperty());
-	wrapProperty.setModifier((int) -LEFT_ANCHOR * 2); // Compensate for the left anchor and simulate it on the right side
+	wrapProperty.setModifier((int) -DISTANCE_FROM_BORDER * 2); // Compensate for the left anchor and simulate it on the right side
 	description.wrappingWidthProperty().bind(wrapProperty);
 	description.setTextAlignment(TextAlignment.JUSTIFY);
     }

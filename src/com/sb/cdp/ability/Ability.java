@@ -8,7 +8,6 @@ import com.sb.cdp.PlayerCharacter;
  * An ability owned by a PlayerCharacter.
  * 
  * @author Samuel Beausoleil
- *
  */
 public class Ability {
     private String name;
@@ -16,19 +15,102 @@ public class Ability {
     private CharacterTypeCondition[] characterTypeConditions;
     private Condition[] prerequisites;
     private String description;
-    private int maxTimesTaken; // TODO integrate in the system the maximum number of times an ability can be taken
+    private int maxTimesTaken;
 
     public Ability(String name) {
-	this(name, 0, null, null, null);
+	this(name, 1, null, null, null);
     }
 
-    public Ability(String name, int cost, CharacterTypeCondition[] characterTypeConditions, Condition[] prerequisites, String description) {
+    public Ability(String name, int cost, CharacterTypeCondition[] characterTypeConditions, Condition[] prerequisites,
+	    String description) {
 	this.name = name;
 	this.cost = cost;
 	this.characterTypeConditions = characterTypeConditions;
 	this.prerequisites = prerequisites;
 	this.description = description;
 	maxTimesTaken = 1;
+    }
+
+    public boolean accept(PlayerCharacter pc) {
+	if (pc.getAvailableAbilityPoints() < cost)
+	    return false;
+
+	boolean accepted = checkNumberTimesTaken(pc) <= maxTimesTaken;
+
+	if (accepted && prerequisites != null) {
+	    for (Condition prequesite : prerequisites)
+		if (!prequesite.accept(pc)) {
+		    accepted = false;
+		    break;
+		}
+	}
+	debug(accepted, pc);
+	return accepted;
+    }
+
+    private void debug(boolean accepted, PlayerCharacter pc) {
+	System.out.println(name + ": " + (accepted ? "accepted" : "not accepted"));
+	System.out.println("Times taken: " + checkNumberTimesTaken(pc) + " (" + maxTimesTaken + ")");
+	for (Condition prerequisite : prerequisites) {
+	    accepted = prerequisite.accept(pc);
+	    System.out.println(prerequisite.getClass().getSimpleName() + " : " + prerequisite.describe());
+	    System.out.println(accepted);
+	}
+	System.out.println();
+    }
+
+    /**
+     * Checks the number of times this ability is present in the pc's normal abilities list.
+     * 
+     * @param pc
+     * @return
+     */
+    public int checkNumberTimesTaken(PlayerCharacter pc) {
+	int nTimes = 0;
+	for (Ability ability : pc.getAbilities())
+	    if (this.equals(ability))
+		nTimes++;
+	return nTimes;
+    }
+
+    public boolean equals(Ability ability) {
+	return name.equals(ability.getName());
+    }
+
+    /**
+     * Returns the characterTypeConditions.
+     * 
+     * @return the characterTypeConditions
+     */
+    public CharacterTypeCondition[] getCharacterTypeConditions() {
+	return characterTypeConditions;
+    }
+
+    /**
+     * Returns the cost.
+     * 
+     * @return the cost
+     */
+    public int getCost() {
+	return cost;
+    }
+
+    /**
+     * Returns the description.
+     * 
+     * @return the description
+     */
+    public String getDescription() {
+	return description;
+    }
+
+    /**
+     * Returns the maxTimesTaken.
+     * 
+     * @return the maxTimesTaken
+     */
+    public int getMaxTimesTaken() {
+	return maxTimesTaken;
     }
 
     /**
@@ -41,22 +123,22 @@ public class Ability {
     }
 
     /**
-     * Sets the value of name to that of the parameter.
+     * Returns the prerequisites.
      * 
-     * @param name
-     *            the name to set
+     * @return the prerequisites
      */
-    public void setName(String name) {
-	this.name = name;
+    public Condition[] getPrerequisites() {
+	return prerequisites;
     }
 
     /**
-     * Returns the cost.
+     * Sets the value of characterTypeConditions to that of the parameter.
      * 
-     * @return the cost
+     * @param characterTypeConditions
+     *            the characterTypeConditions to set
      */
-    public int getCost() {
-	return cost;
+    public void setCharacterTypeConditions(CharacterTypeCondition[] characterTypeConditions) {
+	this.characterTypeConditions = characterTypeConditions;
     }
 
     /**
@@ -70,12 +152,33 @@ public class Ability {
     }
 
     /**
-     * Returns the prerequisites.
+     * Sets the value of description to that of the parameter.
      * 
-     * @return the prerequisites
+     * @param description
+     *            the description to set
      */
-    public Condition[] getPrerequisites() {
-	return prerequisites;
+    public void setDescription(String description) {
+	this.description = description;
+    }
+
+    /**
+     * Sets the value of maxTimesTaken to that of the parameter.
+     * 
+     * @param maxTimesTaken
+     *            the maxTimesTaken to set
+     */
+    public void setMaxTimesTaken(int maxTimesTaken) {
+	this.maxTimesTaken = maxTimesTaken;
+    }
+
+    /**
+     * Sets the value of name to that of the parameter.
+     * 
+     * @param name
+     *            the name to set
+     */
+    public void setName(String name) {
+	this.name = name;
     }
 
     /**
@@ -88,42 +191,6 @@ public class Ability {
 	this.prerequisites = prerequisites;
     }
 
-    /**
-     * Returns the description.
-     * 
-     * @return the description
-     */
-    public String getDescription() {
-	return description;
-    }
-
-    /**
-     * Sets the value of description to that of the parameter.
-     * 
-     * @param description
-     *            the description to set
-     */
-    public void setDescription(String description) {
-	this.description = description;
-    }
-
-    public boolean accept(PlayerCharacter pc) {
-	boolean accepted = false;
-	// TODO deal with classes & races
-	if (accepted && prerequisites != null) {
-	    for (Condition prequesite : prerequisites)
-		if (!prequesite.accept(pc)) {
-		    accepted = false;
-		    break;
-		}
-	}
-	return accepted;
-    }
-
-    public boolean equals(Ability ability) {
-	return name.equals(ability.getName());
-    }
-
     /*
      * (non-Javadoc)
      * 
@@ -133,37 +200,5 @@ public class Ability {
     public String toString() {
 	return "Ability [name=" + name + ", cost=" + cost + ", prerequisites="
 		+ Arrays.toString(prerequisites) + ", description=" + description + "]";
-    }
-
-    /**
-     * Returns the maxTimesTaken.
-     * @return the maxTimesTaken
-     */
-    public int getMaxTimesTaken() {
-        return maxTimesTaken;
-    }
-
-    /**
-     * Sets the value of maxTimesTaken to that of the parameter.
-     * @param maxTimesTaken the maxTimesTaken to set
-     */
-    public void setMaxTimesTaken(int maxTimesTaken) {
-        this.maxTimesTaken = maxTimesTaken;
-    }
-
-    /**
-     * Returns the characterTypeConditions.
-     * @return the characterTypeConditions
-     */
-    public CharacterTypeCondition[] getCharacterTypeConditions() {
-        return characterTypeConditions;
-    }
-
-    /**
-     * Sets the value of characterTypeConditions to that of the parameter.
-     * @param characterTypeConditions the characterTypeConditions to set
-     */
-    public void setCharacterTypeConditions(CharacterTypeCondition[] characterTypeConditions) {
-        this.characterTypeConditions = characterTypeConditions;
     }
 }

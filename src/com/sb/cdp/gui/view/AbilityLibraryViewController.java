@@ -9,15 +9,11 @@ import com.sb.util.Pair;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.fxml.FXML;
 import javafx.scene.control.ListView;
-import javafx.scene.control.TitledPane;
 
 public class AbilityLibraryViewController implements Controller {
-    @FXML
-    private TitledPane titledPane;
-    @FXML
-    private ListView<AbilityView> list;
+    private TitledListView<AbilityView> view;
+
     private ObservableList<AbilityView> items;
 
     private Pair<String, Collection<Ability>> abilities;
@@ -26,9 +22,8 @@ public class AbilityLibraryViewController implements Controller {
 
     public AbilityLibraryViewController() {}
 
-    @FXML
-    private void initialize() {
-	list.setPrefWidth(Double.MAX_VALUE); // TESTME
+    public AbilityLibraryViewController(TitledListView view) {
+	this.view = view;
     }
 
     /**
@@ -49,13 +44,13 @@ public class AbilityLibraryViewController implements Controller {
     public void setAbilities(Pair<String, Collection<Ability>> abilities) {
 	this.abilities = abilities;
 	if (abilities != null)
-	    titledPane.setText(abilities.getX());
+	    view.setText(abilities.getX());
 	update();
     }
 
     @Override
     public void update() {
-	if (abilities != null) {
+	if (abilities != null && view != null) {
 	    this.views = new ConcretePair[abilities.getY().size()];
 	    items = FXCollections.observableArrayList();
 	    int nViews = 0;
@@ -65,9 +60,9 @@ public class AbilityLibraryViewController implements Controller {
 		items.add(pair.getX());
 		this.views[nViews++] = pair;
 	    }
-	    list.setItems(items);
-	} else {
-	    titledPane.setText("");
+	    view.getList().setItems(items);
+	} else if (view != null) {
+	    view.setText("");
 	    if (items != null)
 		items.clear();
 	    views = null;
@@ -86,9 +81,17 @@ public class AbilityLibraryViewController implements Controller {
     /**
      * Returns the list.
      * 
-     * @return the list
+     * @return the list of AbilityView.
      */
     public ListView<AbilityView> getList() {
-	return list;
+	return view.getList();
+    }
+
+    /**
+     * Returns the view.
+     * @return the view
+     */
+    public TitledListView<AbilityView> getView() {
+        return view;
     }
 }

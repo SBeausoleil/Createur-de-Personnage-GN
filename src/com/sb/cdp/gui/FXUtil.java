@@ -16,6 +16,7 @@ import com.sb.cdp.gui.view.AbilityViewController;
 import com.sb.cdp.gui.view.CharacterEditViewController;
 import com.sb.cdp.gui.view.ExtendedAbilityLibraryViewController;
 import com.sb.cdp.gui.view.RootLayoutController;
+import com.sb.cdp.gui.view.TitledListView;
 import com.sb.cdp.gui.view.UserCharacterViewController;
 import com.sb.cdp.gui.view.UserEditViewController;
 import com.sb.cdp.gui.view.UserViewController;
@@ -40,25 +41,20 @@ import javafx.scene.layout.VBox;
 public final class FXUtil {
     public static MasterObserver<MilliStopWatch> abilityLibraryObserver = new MasterObserver("abilityLibraryView");
 
-    public static ConcretePair<AnchorPane, AbilityLibraryViewController> abilityLibraryView(
+    public static ConcretePair<TitledListView<AbilityView>, AbilityLibraryViewController> abilityLibraryView(
 	    Pair<String, Collection<Ability>> library) {
 	MilliStopWatch stopWatch = new MilliStopWatch();
 	stopWatch.start();
-	try {
-	    ConcretePair<AnchorPane, AbilityLibraryViewController> pair = new ConcretePair<>();
-	    FXMLLoader loader = new FXMLLoader();
-	    loader.setLocation(FXUtil.class.getResource("view/AbilityLibraryView.fxml"));
-	    pair.setX((AnchorPane) loader.load());
-	    pair.setY(loader.getController());
-	    pair.getY().setAbilities(library);
 
-	    stopWatch.stop();
-	    abilityLibraryObserver.addObserver(stopWatch);
+	ConcretePair<TitledListView<AbilityView>, AbilityLibraryViewController> pair = new ConcretePair<>();
+	pair.setX(new TitledListView());
+	pair.setY(new AbilityLibraryViewController(pair.getX()));
+	pair.getY().setAbilities(library);
 
-	    return pair;
-	} catch (IOException e) {
-	    throw new RuntimeException(e);
-	}
+	stopWatch.stop();
+	abilityLibraryObserver.addObserver(stopWatch);
+
+	return pair;
     }
 
     public static MasterObserver<MilliStopWatch> abilityListEditObserver = new MasterObserver("abilityListEditView");
@@ -92,7 +88,7 @@ public final class FXUtil {
     public static ConcretePair<AbilityView, AbilityViewController> abilityView(Ability ability) {
 	MilliStopWatch stopWatch = new MilliStopWatch();
 	stopWatch.start();
-	
+
 	ConcretePair<AbilityView, AbilityViewController> pair = new ConcretePair<>();
 	AbilityView view = new AbilityView();
 	AbilityViewController controller = new AbilityViewController(view);

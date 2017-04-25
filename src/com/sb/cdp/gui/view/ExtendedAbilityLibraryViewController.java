@@ -1,7 +1,9 @@
 package com.sb.cdp.gui.view;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.LinkedList;
+import java.util.List;
 
 import com.sb.cdp.ability.Ability;
 import com.sb.cdp.gui.FXUtil;
@@ -11,7 +13,6 @@ import com.sb.util.Search;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 
 public class ExtendedAbilityLibraryViewController implements Controller {
@@ -22,6 +23,8 @@ public class ExtendedAbilityLibraryViewController implements Controller {
 
     private Collection<Pair<String, Collection<Ability>>> libraries;
 
+    private LinkedList<AbilityLibraryViewController> librariesControllers;
+    
     private Search searcher;
 
     public ExtendedAbilityLibraryViewController() {}
@@ -43,16 +46,16 @@ public class ExtendedAbilityLibraryViewController implements Controller {
 	if (libraries != null) {
 	    // Get the total number of abilityLibraryViews that will be stored (this is an optimization to avoid resizing the abilityLibraryViews arraylist and taking more memory than needed)
 
-	    LinkedList<AbilityLibraryViewController> libs = new LinkedList<>();
+	    librariesControllers = new LinkedList<>();
 	    // Add AbilityLibraryView for each libraries
 	    for (Pair<String, Collection<Ability>> lib : libraries) {
-		ConcretePair<AnchorPane, AbilityLibraryViewController> viewPair = FXUtil.abilityLibraryView(lib);
+		ConcretePair<TitledListView<AbilityView>, AbilityLibraryViewController> viewPair = FXUtil.abilityLibraryView(lib);
 		layout.getChildren().add(viewPair.getX());
-		libs.add(viewPair.getY());
+		librariesControllers.add(viewPair.getY());
 	    }
 
-	    if (libs.size() > 0)
-		searcher = new Search(libs);
+	    if (librariesControllers.size() > 0)
+		searcher = new Search(librariesControllers);
 	}
     }
 
@@ -81,5 +84,13 @@ public class ExtendedAbilityLibraryViewController implements Controller {
 	System.out.println("finalizing " + ExtendedAbilityLibraryViewController.class.getName());
 	searcher.stop(false);
 	searcher = null;
+    }
+
+    /**
+     * Returns an unmodifiable list of all the library views.
+     * @return the librariesControllers
+     */
+    public List<AbilityLibraryViewController> getLibrariesControllers() {
+        return Collections.unmodifiableList(librariesControllers);
     }
 }
