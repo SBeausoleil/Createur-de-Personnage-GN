@@ -3,7 +3,6 @@ package com.sb.cdp.idl;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
@@ -14,7 +13,7 @@ import com.sb.cdp.Library;
 import com.sb.cdp.RPG;
 import com.sb.cdp.ability.Ability;
 import com.sb.cdp.magic.Domain;
-import com.sb.cdp.magic.DomainLibrary;
+import com.sb.cdp.magic.DomainsLibrary;
 import com.sb.cdp.magic.God;
 import com.thoughtworks.xstream.XStream;
 
@@ -33,60 +32,63 @@ public class Initializer {
 	idl.getParameters().setXpPerLevel(10);
 	
 	idl.setCharacterTypes(characterType());
-		//Library<String, Ability> abilities = readAbilities(idl.getCharacterTypes());
-		//idl.getAbilityLibraries().put(abilities.getName(), abilities);
-	idl.setAbilityLibraries(readXMLAbilities());
+	Library<Ability> abilities = readAbilities(idl.getCharacterTypes());
+	idl.getAbilityLibraries().put(abilities.getName(), abilities);
+	//idl.setAbilityLibraries(readAbilities());
 	idl.setGods(gods());
-	//DomainLibrary spellDomains = spellDomains();
-	//readSpells(spellDomains);
-	//idl.registerDomainLibrary(spellDomains);
-	//DomainLibrary prayerDomains = prayerDomains(idl.getGods().values());
-	//idl.registerDomainLibrary(prayerDomains);
-	Collection<Set<DomainLibrary>> domains = readXMLDomainLibraries().values();
-	for (Set<DomainLibrary> set : domains) {
-	    for (DomainLibrary lib : set) {
+	DomainsLibrary spellDomains = spellDomains();
+	readSpells(spellDomains);
+	idl.registerDomainLibrary(spellDomains);
+	DomainsLibrary prayerDomains = prayerDomains(idl.getGods().values());
+	idl.registerDomainLibrary(prayerDomains);
+	/*Collection<Set<DomainsLibrary>> domains = readDomainLibraries().values();
+	for (Set<DomainsLibrary> set : domains) {
+	    for (DomainsLibrary lib : set) {
 		idl.registerDomainLibrary(lib);
 	    }
-	}
+	}*/
 	return idl;
     }
 
-    public static DomainLibrary prayerDomains(Iterable<God> gods) {
-	DomainLibrary domains = new DomainLibrary("Prières publiques", PRAYER);
+    public static Library<Ability> readAbilities(CharacterTypePool characterTypes) throws FileNotFoundException, IOException {
+	return AbilityParser.parseAbilities(new File("IDL_Inline_Abilities.txt"), null, characterTypes);
+    }
+
+    public static DomainsLibrary prayerDomains(Iterable<God> gods) {
+	DomainsLibrary domains = new DomainsLibrary("Prières publiques", PRAYER);
 	// Start by registering the already existing domains within the gods
 	for (God god : gods)
 	    for (Domain domain : god.getDomains())
-		domains.put(domain.getName(), domain);
+		domains.add(domain);
 
-	domains.put("Guérison", new Domain("Guérison", PRAYER));
-	domains.put("Bénédiction", new Domain("Bénédiction", PRAYER));
-	domains.put("Protection", new Domain("Protection", PRAYER));
-	domains.put("Divination", new Domain("Divination", PRAYER));
+	domains.add(new Domain("Guérison", PRAYER));
+	domains.add(new Domain("Bénédiction", PRAYER));
+	domains.add(new Domain("Protection", PRAYER));
+	domains.add(new Domain("Divination", PRAYER));
 	return domains;
     }
 
-    public static DomainLibrary spellDomains() {
-	DomainLibrary domains = new DomainLibrary("Sorts publiques", SPELL);
-	domains.put("Évocation", new Domain("Évocation", SPELL,
+    public static DomainsLibrary spellDomains() {
+	DomainsLibrary domains = new DomainsLibrary("Sorts publiques", SPELL);
+	domains.add(new Domain("Évocation", SPELL,
 		"La magie d’évocation canalise l’énergie magique en une force d’attaque. L’évocateur est le spécialiste des attaques puissantes à distance ou au touché qu’elle soit dirigé envers une personne ou un groupe. L’évocateur  peut aussi devenir un combattant de mêlée redoutable. Que ce soit les améliorations d’armes, l’amélioration des capacités de combat ou tout ce qui peut aider aux guerriers pendant un combat."));
-	domains.put("Protection", new Domain("Protection", SPELL,
+	domains.add( new Domain("Protection", SPELL,
 		"Cette école offre des sorts de protections contre les attaques physiques, mentales et magiques pour une personne ou un groupe. "));
-	domains.put("Nécromancie", new Domain("Nécromancie", SPELL,
+	domains.add(new Domain("Nécromancie", SPELL,
 		"Les nécromanciens utilisent les énergies magiques pour contrôler une entité morte, sans utiliser les pouvoirs de Narzul."));
-	domains.put("Divination", new Domain("Divination", SPELL,
+	domains.add(new Domain("Divination", SPELL,
 		"Cette école permet de voir, de prédire ou d’influencer certaines choses que le commun des mortels ne peut contrôler."));
-	domains.put("Enchantement", new Domain("Enchantement", SPELL,
+	domains.add(new Domain("Enchantement", SPELL,
 		"L’école de l’enchantement permet d’influencer et de soumettre l’esprit d’être vivant selon la volonté du magicien. Elle permet aussi d’enchanter des objets."));
-	domains.put("Général", new Domain("Général", SPELL,
+	domains.add(new Domain("Général", SPELL,
 		"Cette école  englobe tout ce qui n’a aucun rapport avec les autres magies."));
 	return domains;
     }
 
-    public static Map<String, Domain> readSpells(Map<String, Domain> domains)
+    public static void readSpells(DomainsLibrary spellDomains)
 	    throws FileNotFoundException, IOException {
 	// Will be changed later to read from a Json document. However until that will not be ready until the whole data structure of the application is set in stone.
-	domains = SpellParser.parseSpells(new File("IDL_Spells.txt"), domains);
-	return domains;
+	SpellParser.parseSpells(new File("IDL_Spells.txt"), spellDomains);
     }
 
     public static CharacterTypePool characterType() {
@@ -121,24 +123,15 @@ public class Initializer {
 
 	return ctPool;
     }
-
-    public static Library<String, Ability> readAbilities(CharacterTypePool ctPool)
-	    throws FileNotFoundException, IOException {
-	Library<String, Ability> lib = new Library<>(ABILITY_LIBRARY, String.class, Ability.class);
-	// Will be changed later to read from a Json document. However until that will not be ready until the whole data structure of the application is set in stone.
-	AbilityParser.parseAbilities(new File("IDL_Inline_Abilities.txt"), lib, ctPool);
-	lib.setPublic(true);
-	return lib;
-    }
-
-    public static Map<String, Library<String, Ability>> readXMLAbilities() {
+    
+    public static Map<String, Library<Ability>> readAbilities() {
 	XStream xml = new XStream();
-	return (Map<String, Library<String, Ability>>) xml.fromXML(new File("IDL_Abilities.xml"));
+	return (Map<String, Library<Ability>>) xml.fromXML(new File("IDL_Abilities.xml"));
     }
     
-    public static Map<String, Set<DomainLibrary>> readXMLDomainLibraries() {
+    public static Map<String, Set<DomainsLibrary>> readDomainLibraries() {
 	XStream xml = new XStream();
-	return (Map<String, Set<DomainLibrary>>) xml.fromXML(new File("IDL_Spells.xml"));
+	return (Map<String, Set<DomainsLibrary>>) xml.fromXML(new File("IDL_Spells.xml"));
     }
     
     public static Map<String, God> gods() {

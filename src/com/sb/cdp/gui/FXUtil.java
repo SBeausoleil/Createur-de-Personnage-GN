@@ -124,14 +124,14 @@ public final class FXUtil {
     public static MasterObserver<MilliStopWatch> extendedAbilityLibraryObserver = new MasterObserver(
 	    "extendedAbilityLibraryView");
 
-    public static ConcretePair<AnchorPane, ExtendedAbilityLibraryViewController> extendedAbilityLibraryView(
+    public static ConcretePair<VBox, ExtendedAbilityLibraryViewController> extendedAbilityLibraryView(
 	    Collection<Pair<String, Collection<Ability>>> abilities) {
 
 	MilliStopWatch stopWatch = new MilliStopWatch();
 	stopWatch.start();
 
 	try {
-	    ConcretePair<AnchorPane, ExtendedAbilityLibraryViewController> pair = new ConcretePair<>();
+	    ConcretePair<VBox, ExtendedAbilityLibraryViewController> pair = new ConcretePair<>();
 	    FXMLLoader loader = new FXMLLoader();
 	    loader.setLocation(FXUtil.class.getResource("view/ExtendedAbilityLibraryView.fxml"));
 	    pair.setX(loader.load());

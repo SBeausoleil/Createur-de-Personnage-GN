@@ -9,7 +9,7 @@ import com.sb.cdp.PlayerCharacter;
  * 
  * @author Samuel Beausoleil
  */
-public class Ability {
+public class Ability implements Comparable<Ability> {
     private String name;
     private int cost;
     private CharacterTypeCondition[] characterTypeConditions;
@@ -44,10 +44,11 @@ public class Ability {
 		    break;
 		}
 	}
-	debug(accepted, pc);
+	//debug(accepted, pc);
 	return accepted;
     }
 
+    @SuppressWarnings("unused")
     private void debug(boolean accepted, PlayerCharacter pc) {
 	System.out.println(name + ": " + (accepted ? "accepted" : "not accepted"));
 	System.out.println("Times taken: " + checkNumberTimesTaken(pc) + " (" + maxTimesTaken + ")");
@@ -200,5 +201,10 @@ public class Ability {
     public String toString() {
 	return "Ability [name=" + name + ", cost=" + cost + ", prerequisites="
 		+ Arrays.toString(prerequisites) + ", description=" + description + "]";
+    }
+
+    @Override
+    public int compareTo(Ability a) {
+	return this.name.compareTo(a.getName());
     }
 }

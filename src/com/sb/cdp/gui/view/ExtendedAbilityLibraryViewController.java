@@ -93,4 +93,12 @@ public class ExtendedAbilityLibraryViewController implements Controller {
     public List<AbilityLibraryViewController> getLibrariesControllers() {
         return Collections.unmodifiableList(librariesControllers);
     }
+
+    /**
+     * Returns the layout.
+     * @return the layout
+     */
+    public VBox getLayout() {
+        return layout;
+    }
 }

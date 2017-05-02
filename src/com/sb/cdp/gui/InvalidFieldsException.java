@@ -6,12 +6,12 @@ import com.sb.util.ConcretePair;
 
 import javafx.scene.control.TextField;
 
-public class InvalidFieldException extends IllegalStateException {
+public class InvalidFieldsException extends IllegalStateException {
     private static final long serialVersionUID = -3197261795827942830L;
 
     private LinkedList<ConcretePair<String, TextField>> invalidFields;
 
-    public InvalidFieldException(LinkedList<ConcretePair<String, TextField>> invalidFields) {
+    public InvalidFieldsException(LinkedList<ConcretePair<String, TextField>> invalidFields) {
 	this.invalidFields = invalidFields;
     }
 

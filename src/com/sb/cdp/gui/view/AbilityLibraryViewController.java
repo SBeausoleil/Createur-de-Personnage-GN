@@ -94,4 +94,15 @@ public class AbilityLibraryViewController implements Controller {
     public TitledListView<AbilityView> getView() {
         return view;
     }
+    
+    /**
+     * Removes an ability from the library and the view.
+     * @param ability
+     * @return true if library was modified.
+     */
+    public boolean remove(Ability ability) {
+	view.getList().getItems().remove(ability);
+	// TODO finish
+	return false;
+    }
 }

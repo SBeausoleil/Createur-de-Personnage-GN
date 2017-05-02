@@ -7,7 +7,7 @@ import java.util.TreeMap;
 import java.util.TreeSet;
 
 import com.sb.cdp.ability.Ability;
-import com.sb.cdp.magic.DomainLibrary;
+import com.sb.cdp.magic.DomainsLibrary;
 import com.sb.cdp.magic.God;
 
 public class RPG implements Serializable {
@@ -20,13 +20,18 @@ public class RPG implements Serializable {
      * A map of all the registered ability libraries.
      * Map key: the name of the library.
      */
-    private Map<String, Library<String, Ability>> abilityLibraries;
+    private Map<String, Library<Ability>> abilityLibraries;
     /**
      * A map of all the registered Magic libraries.
-     * Map key: the magic type of the DomainLibrary.
-     * Map value: the libraries linked to this magic type
+     * Map key: the magic type of the DomainsLibrary.
+     * Map value: the libraries linked to this magic type.
      */
-    private Map<String, Set<DomainLibrary>> domainLibraries;
+    private Map<String, Set<DomainsLibrary>> domainLibraries;
+    /**
+     * A map of all the registered users.
+     * Map key: the e-mail of the user.
+     * Map value: the user.
+     */
     private Map<String, User> users;
     private Map<String, God> gods;
     
@@ -89,7 +94,7 @@ public class RPG implements Serializable {
      * 
      * @return the abilityLibraries
      */
-    public Map<String, Library<String, Ability>> getAbilityLibraries() {
+    public Map<String, Library<Ability>> getAbilityLibraries() {
 	return abilityLibraries;
     }
 
@@ -99,7 +104,7 @@ public class RPG implements Serializable {
      * @param abilityLibraries
      *            the abilityLibraries to set
      */
-    public void setAbilityLibraries(Map<String, Library<String, Ability>> abilityLibraries) {
+    public void setAbilityLibraries(Map<String, Library<Ability>> abilityLibraries) {
 	this.abilityLibraries = abilityLibraries;
     }
 
@@ -144,16 +149,16 @@ public class RPG implements Serializable {
     /**
      * Returns the domainLibraries.
      * Be careful when modifying the Map or it's underlying set when using this method. If you wish
-     * to insert new data, use the {@link #registerDomainLibrary(DomainLibrary)} method instead.
+     * to insert new data, use the {@link #registerDomainLibrary(DomainsLibrary)} method instead.
      * 
      * @return the domainLibraries
      */
-    public Map<String, Set<DomainLibrary>> getDomainLibraries() {
+    public Map<String, Set<DomainsLibrary>> getDomainLibraries() {
 	return domainLibraries;
     }
 
-    public void registerDomainLibrary(DomainLibrary dl) {
-	Set<DomainLibrary> registeredLibraries = domainLibraries.get(dl.getMagicType());
+    public void registerDomainLibrary(DomainsLibrary dl) {
+	Set<DomainsLibrary> registeredLibraries = domainLibraries.get(dl.getMagicType());
 	if (registeredLibraries == null) {
 	    registeredLibraries = new TreeSet<>();
 	    domainLibraries.put(dl.getMagicType(), registeredLibraries);

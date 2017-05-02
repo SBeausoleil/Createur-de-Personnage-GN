@@ -11,10 +11,21 @@ import com.sb.cdp.PlayerCharacter;
 import com.sb.cdp.RPG;
 import com.sb.cdp.User;
 import com.sb.cdp.ability.Ability;
+import com.sb.cdp.gui.Effects;
+import com.sb.util.ConcretePair;
 import com.sb.util.Getter;
 import com.sb.util.Pair;
 import com.sb.util.Setter;
 
+import javafx.scene.paint.Color;
+
+/**
+ * Controls an AbilityListEditView.
+ * This allows editing a PlayerCharacter's ability list. The list which is edited depends upon the
+ * getter and setter methods that are provided.
+ * 
+ * @author Samuel Beausoleil
+ */
 public class AbilityListEditViewController implements Controller {
 
     private AbilityListEditView view;
@@ -26,6 +37,10 @@ public class AbilityListEditViewController implements Controller {
     private Getter<PlayerCharacter, List<Ability>> getter;
     private Setter<PlayerCharacter, List<Ability>> setter;
 
+    // Ability transfer
+    private boolean fromPlayer;
+    private Ability transferedAbility;
+
     public AbilityListEditViewController(AbilityListEditView view) {
 	availableLibraries = new LinkedHashSet<>();
 	this.view = view;
@@ -34,11 +49,48 @@ public class AbilityListEditViewController implements Controller {
     }
 
     private void initialize() {
+	view.confirm.setOnAction((e) -> confirm());
 	view.cancel.setOnAction((e) -> DesktopApplication.get().getRootContext().precedent(false));
     }
 
     private void initializeExtended() {
+	if (availableLibraries == null)
+	    return;
+
 	view.extendedLibrariesController.setLibraries(availableLibraries);
+
+	// Drag & Drop section
+	for (AbilityLibraryViewController libraryController : view.extendedLibrariesController.getLibrariesControllers()) {
+	    for (Pair<AbilityView, AbilityViewController> abilityPair : libraryController.getViews()) {
+		// Drag start
+		abilityPair.getX().setOnDragDetected((event) -> {
+		    System.out.println("dragDetected");
+		    fromPlayer = false;
+		    transferedAbility = abilityPair.getY().getAbility();
+		    event.consume();
+		});
+	    }
+	}
+	view.extendedLibrariesController.getLayout().setOnDragEntered((event) -> {
+	    System.out.println("layout.onDragEntered");
+	    if (fromPlayer) // Make the border green
+		view.extendedLibrariesController.getLayout().setEffect(Effects.glow(Color.GREEN));
+	    else // Make the border red
+		view.extendedLibrariesController.getLayout().setEffect(Effects.glow(Color.RED));
+	    event.consume();
+	});
+	view.extendedLibrariesController.getLayout().setOnDragExited((event) -> {
+	    System.out.println("layout.onDragExited");
+	    view.extendedLibrariesController.getLayout().setEffect(null);
+	    event.consume();
+	});
+	view.extendedLibrariesController.getLayout().setOnDragDropped((event) -> {
+	    System.out.println("layout.onDragDropped");
+	    if (fromPlayer) {
+		view.abilitiesController.getAbilities().getY().remove(transferedAbility); // Remove from the character
+		//view.abilitiesController.getView(). // Remove from the displayed list
+	    }
+	});
     }
 
     @Override
@@ -53,7 +105,7 @@ public class AbilityListEditViewController implements Controller {
 	LinkedList<Ability> abilitiesList = new LinkedList<>();
 	abilitiesList.addAll(abilities.getY());
 	setter.set(pc, abilitiesList);
-	DesktopApplication.get().getRootContext().precedent(true);
+	DesktopApplication.get().getRootContext().precedent(true); // FIXME #1 somehow this changes the number of classes and races in the precedent CharacterEditView
     }
 
     /**
@@ -120,13 +172,14 @@ public class AbilityListEditViewController implements Controller {
     }
 
     private void initializeCharacter() {
+	if (pc == null)
+	    return;
+
 	updateAvailablePoints();
-	Library<String, Ability> abilities = new Library<>(pcSectionTitle, String.class, Ability.class);
-	for (Ability ability : getter.get(pc))
-	    abilities.put(ability.getName(), ability);
+	ConcretePair<String, Collection<Ability>> abilities = new ConcretePair(pcSectionTitle, getter.get(pc));
 	view.abilitiesController.setAbilities(abilities);
 	view.abilitiesController.getView().setCollapsible(false);
-	
+
 	updateAvailableAbilities();
     }
 
@@ -140,7 +193,10 @@ public class AbilityListEditViewController implements Controller {
      * Updates the displayed amount of available points.
      */
     private void updateAvailablePoints() {
-	view.nAbilityPoints.setText("Points disponibles: " + pc.getAvailableAbilityPoints());
+	if (pc != null)
+	    view.nAbilityPoints.setText("Points disponibles: " + pc.getAvailableAbilityPoints());
+	else
+	    view.nAbilityPoints.setText("");
     }
 
     /**
@@ -156,11 +212,11 @@ public class AbilityListEditViewController implements Controller {
 	extractPublicAbilities(rpg.getAbilityLibraries().values());
     }
 
-    public void extractPublicAbilities(Iterable<Library<String, Ability>> libs) {
-	for (Library<String, Ability> lib : libs)
+    public void extractPublicAbilities(Iterable<Library<Ability>> libs) {
+	for (Library<Ability> lib : libs)
 	    if (lib.isPublic())
 		availableLibraries.add(lib);
-	initializeExtended();
+	update();
     }
 
     /**

@@ -14,8 +14,9 @@ import com.sb.cdp.PlayerCharacter;
 import com.sb.cdp.RPG;
 import com.sb.cdp.User;
 import com.sb.cdp.ability.Ability;
+import com.sb.cdp.gui.Effects;
 import com.sb.cdp.gui.FXUtil;
-import com.sb.cdp.gui.InvalidFieldException;
+import com.sb.cdp.gui.InvalidFieldsException;
 import com.sb.cdp.magic.God;
 import com.sb.util.ConcretePair;
 import com.sb.util.Regexs;
@@ -38,6 +39,7 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.util.Callback;
 
 public class CharacterEditViewController implements Controller {
@@ -148,6 +150,11 @@ public class CharacterEditViewController implements Controller {
      */
     private RPG rpg;
 
+    /**
+     * A list of all the invalid fields.
+     */
+    private InvalidFieldsException invalidFields = null;
+
     public CharacterEditViewController() {}
 
     @FXML
@@ -181,7 +188,7 @@ public class CharacterEditViewController implements Controller {
     /**
      * Applies UI info to the tmp.
      */
-    private void applyToTmp() throws InvalidFieldException {
+    private void applyToTmp() throws InvalidFieldsException {
 	validateFields();
 
 	tmp.setName(name.getText());
@@ -215,12 +222,13 @@ public class CharacterEditViewController implements Controller {
      */
     @FXML
     public void draft() {
+	clearInvalidFieldsEffects();
 	try {
 	    applyToTmp();
 	    if (user != null)
 		user.addAsDraft(tmp);
 	    DesktopApplication.get().getRootContext().precedent(true);
-	} catch (InvalidFieldException e) {
+	} catch (InvalidFieldsException e) {
 	    handleInvalidFieldException(e);
 	}
     }
@@ -233,8 +241,10 @@ public class CharacterEditViewController implements Controller {
 	return rpg;
     }
 
-    private void handleInvalidFieldException(InvalidFieldException e) {
+    private void handleInvalidFieldException(InvalidFieldsException e) {
 	System.out.println("handleInvalidFieldException()");
+	this.invalidFields = e;
+
 	// Alert the user
 	Alert alert = new Alert(AlertType.ERROR);
 	alert.setTitle(String.format("Champ%1$s invalide%1$s", e.getInvalidFields().size() > 1 ? "s" : ""));
@@ -244,9 +254,8 @@ public class CharacterEditViewController implements Controller {
 
 	StringBuilder sb = new StringBuilder();
 	Label alertLabel = new Label();
-	for (ConcretePair<String, ?> msg : e.getInvalidFields()) {
+	for (ConcretePair<String, ?> msg : e.getInvalidFields())
 	    sb.append(msg.getX() + "\n");
-	}
 	alertLabel.setText(sb.toString());
 	alertLabel.setWrapText(true);
 	alert.getDialogPane().setContent(alertLabel);
@@ -254,7 +263,16 @@ public class CharacterEditViewController implements Controller {
 
 	// Give a red glow to the invalid fields
 	for (ConcretePair<?, TextField> field : e.getInvalidFields())
-	    field.getY().getStyleClass().add("error");
+	    field.getY().setEffect(Effects.glow(Color.RED));
+    }
+
+    /**
+     * Clears all effects placed on the invalid fields.
+     */
+    private void clearInvalidFieldsEffects() {
+	if (invalidFields != null)
+	    for (ConcretePair<?, TextField> field : invalidFields.getInvalidFields())
+		field.getY().setEffect(null);
     }
 
     /**
@@ -304,7 +322,7 @@ public class CharacterEditViewController implements Controller {
 	buttonBar.getButtons().add(cancel);
     }
 
-    private void initializeOptions() {
+    private void initializeOptions() { // FIXME #1 might be the cause of the empty boxes
 	if (rpg == null)
 	    throw new IllegalStateException("Cannot initialize the options while the rpg is null.");
 
@@ -371,23 +389,25 @@ public class CharacterEditViewController implements Controller {
 		});
 	statsTable.setItems(FXCollections.observableArrayList(tmp.getStats().entrySet()));
 
-	// Abilities
-	Library<String, Ability> abilities = new Library<>("Abilités", String.class, Ability.class);
-	Library<String, Ability> specialAbilities = new Library<>("Abilités spéciales", String.class, Ability.class);
-	for (Ability ability : tmp.getAbilities())
-	    abilities.put(ability.getName(), ability);
-	for (Ability ability : tmp.getSpecialAbilities())
-	    specialAbilities.put(ability.getName(), ability);
-	this.normalAbilities.getY().setAbilities(abilities);
-	this.specialAbilities.getY().setAbilities(specialAbilities);
-	
-	// Magic
-	int nGods = 0;
-	for (God god : tmp.getGods()) {
-	    if (nGods != 0)
-		addGodChoice();
-	    gods.getLast().setValue(god);
-	    nGods++;
+	{ // Abilities
+	    Library<Ability> abilities = new Library<>("Abilités", Ability.class);
+	    Library<Ability> specialAbilities = new Library<>("Abilités spéciales", Ability.class);
+	    for (Ability ability : tmp.getAbilities())
+		abilities.add(ability);
+	    for (Ability ability : tmp.getSpecialAbilities())
+		specialAbilities.add(ability);
+	    this.normalAbilities.getY().setAbilities(abilities);
+	    this.specialAbilities.getY().setAbilities(specialAbilities);
+	}
+
+	{ // Magic
+	    int nGods = 0;
+	    for (God god : tmp.getGods()) {
+		if (nGods != 0)
+		    addGodChoice();
+		gods.getLast().setValue(god);
+		nGods++;
+	    }
 	}
 
 	// Notes
@@ -396,17 +416,17 @@ public class CharacterEditViewController implements Controller {
 
     @FXML
     public void modifyAbilities() {
-	ConcretePair<AbilityListEditView, AbilityListEditViewController> pair = FXUtil.abilityListEditView(rpg, user,
+	ConcretePair<AbilityListEditView, AbilityListEditViewController> view = FXUtil.abilityListEditView(rpg, user,
 		tmp,
 		"Abilités", PlayerCharacter::getAbilities, PlayerCharacter::setAbilities);
-	DesktopApplication.get().getRootContext().enter(pair);
+	DesktopApplication.get().getRootContext().enter(view);
     }
 
     public void modifySpecialAbilities() {
-	ConcretePair<AbilityListEditView, AbilityListEditViewController> pair = FXUtil.abilityListEditView(rpg, user,
+	ConcretePair<AbilityListEditView, AbilityListEditViewController> view = FXUtil.abilityListEditView(rpg, user,
 		tmp,
 		"Abilités Spéciales", PlayerCharacter::getSpecialAbilities, PlayerCharacter::setSpecialAbilities);
-	DesktopApplication.get().getRootContext().enter(pair);
+	DesktopApplication.get().getRootContext().enter(view);
     }
 
     @FXML
@@ -469,6 +489,7 @@ public class CharacterEditViewController implements Controller {
 
     @FXML
     public void submit() {
+	clearInvalidFieldsEffects();
 	try {
 	    applyToTmp();
 	    if (user != null)
@@ -476,7 +497,7 @@ public class CharacterEditViewController implements Controller {
 	    else
 		tmp.copy(pc);
 	    DesktopApplication.get().getRootContext().precedent(true);
-	} catch (InvalidFieldException e) {
+	} catch (InvalidFieldsException e) {
 	    handleInvalidFieldException(e);
 	}
     }
@@ -488,7 +509,7 @@ public class CharacterEditViewController implements Controller {
 	initializeButtonBar();
     }
 
-    private void validateFields() throws InvalidFieldException {
+    private void validateFields() throws InvalidFieldsException {
 	LinkedList<ConcretePair<String, TextField>> invalidFields = new LinkedList<>();
 
 	if (name.getText().isEmpty())
@@ -505,6 +526,6 @@ public class CharacterEditViewController implements Controller {
 	    invalidFields.add(new ConcretePair("La quantité de points d'abilités doit être un entier.", abilityPoints));
 
 	if (!invalidFields.isEmpty())
-	    throw new InvalidFieldException(invalidFields);
+	    throw new InvalidFieldsException(invalidFields);
     }
 }

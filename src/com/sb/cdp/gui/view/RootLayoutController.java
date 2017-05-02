@@ -65,19 +65,13 @@ public class RootLayoutController implements Controller {
     @FXML
     private void handleAbilities() {
 	context.clear();
-	
-	Collection<Library<String, Ability>> abilities = DesktopApplication.get().getRpg().getAbilityLibraries().values();
-	ArrayList<Pair<String,Collection<Ability>>> pairs = new ArrayList<>(abilities.size());
-	for (Library<String, Ability> lib : abilities)
+
+	Collection<Library<Ability>> abilities = DesktopApplication.get().getRpg().getAbilityLibraries().values();
+	ArrayList<Pair<String, Collection<Ability>>> pairs = new ArrayList<>(abilities.size());
+	for (Library<Ability> lib : abilities)
 	    pairs.add(lib);
-	
+
 	context.enter(FXUtil.extendedAbilityLibraryView(pairs));
-	
-//	FXUtil.extendedAbilityLibraryObserver.printReport();
-//	System.out.println();
-//	FXUtil.abilityLibraryObserver.printReport();
-//	System.out.println();
-//	FXUtil.abilityObserver.printReport();
     }
 
     @FXML

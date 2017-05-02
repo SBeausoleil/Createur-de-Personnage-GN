@@ -171,10 +171,10 @@ public class DesktopApplication extends Application {
 	pc.getCharacterTypes().add(rpg.getCharacterTypes().get("Elf", Classification.RACE));
 	pc.getCharacterTypes().add(rpg.getCharacterTypes().get("Humain", Classification.RACE));
 
-	Library<String, Ability> lib = rpg.getAbilityLibraries().get(Initializer.ABILITY_LIBRARY);
-	pc.getAbilities().add(lib.get("Arme courte"));
-	pc.getAbilities().add(lib.get("Armures"));
-	pc.getAbilities().add(lib.get("Esquive"));
+	Library<Ability> lib = rpg.getAbilityLibraries().get(Initializer.ABILITY_LIBRARY);
+	pc.getAbilities().add(lib.search(Ability::getName, "Arme courte"));
+	pc.getAbilities().add(lib.search(Ability::getName, "Armures"));
+	pc.getAbilities().add(lib.search(Ability::getName, "Esquive"));
 
 	pc.getGods().add(rpg.getGods().get("Terra"));
 	return pc;
@@ -190,14 +190,14 @@ public class DesktopApplication extends Application {
 	pc.getCharacterTypes().add(rpg.getCharacterTypes().get("Guerrier", Classification.CLASS));
 	pc.getCharacterTypes().add(rpg.getCharacterTypes().get("Barbare", Classification.RACE));
 
-	Library<String, Ability> lib = rpg.getAbilityLibraries().get(Initializer.ABILITY_LIBRARY);
-	pc.getAbilities().add(lib.get("Arme courte"));
-	pc.getAbilities().add(lib.get("Armures"));
-	pc.getAbilities().add(lib.get("Esquive"));
+	Library<Ability> lib = rpg.getAbilityLibraries().get(Initializer.ABILITY_LIBRARY);
+	pc.getAbilities().add(lib.search(Ability::getName, "Arme courte"));
+	pc.getAbilities().add(lib.search(Ability::getName, "Armures"));
+	pc.getAbilities().add(lib.search(Ability::getName, "Esquive"));
 
-	pc.getSpecialAbilities().add(lib.get("Alchimie 1"));
-	pc.getSpecialAbilities().add(lib.get("Alchimie 2"));
-	pc.getSpecialAbilities().add(lib.get("Alchimie 3"));
+	pc.getSpecialAbilities().add(lib.search(Ability::getName, "Alchimie 1"));
+	pc.getSpecialAbilities().add(lib.search(Ability::getName, "Alchimie 2"));
+	pc.getSpecialAbilities().add(lib.search(Ability::getName, "Alchimie 3"));
 
 	return pc;
     }

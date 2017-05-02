@@ -21,12 +21,4 @@ public interface LibraryPermissionHolder {
 		list.add(lib);
 	return list.toArray(new Pair[list.size()]);
     }
-
-    default <K, V> Library<K, V>[] getAllowedLibrariesFor(Class<K> keyType, Class<V> valueType) {
-	LinkedList<Library<K, V>> list = new LinkedList<>();
-	for (Library lib : getAllowedLibraries())
-	    if (lib.getKeyType() == keyType && lib.getValueType() == valueType)
-		list.add(lib);
-	return list.toArray(new Library[list.size()]);
-    }
 }

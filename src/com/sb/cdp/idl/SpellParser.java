@@ -5,12 +5,11 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.Map;
-import java.util.TreeMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.sb.cdp.magic.Domain;
+import com.sb.cdp.magic.DomainsLibrary;
 import com.sb.cdp.magic.Magic;
 
 public class SpellParser {
@@ -28,10 +27,10 @@ public class SpellParser {
     public static int castingTimeLevelMultiplier = 10;
     //public static int
     // TESTME
-    public static Map<String, Domain> parseSpells(File spellsFile,
-	    Map<String, Domain> domains) throws FileNotFoundException, IOException {
-	if (domains == null)
-	    domains = new TreeMap<>();
+    public static void parseSpells(File spellsFile,
+	    DomainsLibrary spellDomains) throws FileNotFoundException, IOException {
+	if (spellDomains == null)
+	    throw new IllegalArgumentException("spellDomains cannot be null");
 
 	try (BufferedReader in = new BufferedReader(new FileReader(spellsFile))) {
 	    String line;
@@ -44,10 +43,10 @@ public class SpellParser {
 		// Check if new domain declaration
 		matcher = DOMAIN_PATTERN.matcher(line);
 		if (matcher.find()) {
-		    currentDomain = domains.get(matcher.group(1).trim());
+		    currentDomain = spellDomains.search(Domain::getName, matcher.group(1).trim());
 		    if (currentDomain == null) {
 			currentDomain = new Domain(matcher.group(1).trim(), Initializer.SPELL);
-			domains.put(currentDomain.getName(), currentDomain);
+			spellDomains.add(currentDomain);
 		    }
 		} else {
 		    // Else check if new level declaration
@@ -67,8 +66,6 @@ public class SpellParser {
 
 	    }
 	}
-
-	return domains;
     }
 
     private static Magic parseSpell(Matcher matcher, Domain currentDomain, int currentLevel) {
@@ -95,14 +92,5 @@ public class SpellParser {
 	    return 3;
 	}
 	return 0;
-    }
-
-    public static void main(String[] args) throws FileNotFoundException, IOException {
-	Map<String, Domain> domains = new TreeMap<>();
-	parseSpells(new File("IDL_Spells.txt"), domains);
-
-	for (Domain domain : domains.values())
-	    for (Magic spell : domain.getSpells())
-		System.out.println(spell);
     }
 }
