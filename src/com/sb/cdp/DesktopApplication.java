@@ -153,7 +153,7 @@ public class DesktopApplication extends Application {
 	Scene scene = new Scene(rootLayout);
 
 	// Add CSS style sheets
-	scene.getStylesheets().add("com/sb/cdp/gui/css/Stylesheet.css");
+	// scene.getStylesheets().add("com/sb/cdp/gui/css/Stylesheet.css"); // Disabled since no CSS is currently used
 
 	primaryStage.setScene(scene);
 	primaryStage.show();

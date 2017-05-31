@@ -13,7 +13,7 @@ public class Library<V> implements Collection<V>, Comparable<Library>, Pair<Stri
     // TODO add some form of version control to allow merging of libraries and updating etc...
 
     private String name;
-    private Collection<V> data;
+    protected Collection<V> data;
     private boolean isPublic;
     private final Class<V> VALUE_TYPE;
 
@@ -60,16 +60,6 @@ public class Library<V> implements Collection<V>, Comparable<Library>, Pair<Stri
 	if (comparison != 0)
 	    return comparison;
 	return Integer.compare(size(), lib.size());
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see java.lang.Object#toString()
-     */
-    @Override
-    public String toString() {
-	return "Library [name=" + name + "]";
     }
 
     @Override

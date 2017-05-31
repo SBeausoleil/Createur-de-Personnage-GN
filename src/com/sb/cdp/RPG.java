@@ -90,19 +90,19 @@ public class RPG implements Serializable {
     }
 
     /**
-     * Returns the abilityLibraries.
+     * Returns the availableLibraries.
      * 
-     * @return the abilityLibraries
+     * @return the availableLibraries
      */
     public Map<String, Library<Ability>> getAbilityLibraries() {
 	return abilityLibraries;
     }
 
     /**
-     * Sets the value of abilityLibraries to that of the parameter.
+     * Sets the value of availableLibraries to that of the parameter.
      * 
-     * @param abilityLibraries
-     *            the abilityLibraries to set
+     * @param availableLibraries
+     *            the availableLibraries to set
      */
     public void setAbilityLibraries(Map<String, Library<Ability>> abilityLibraries) {
 	this.abilityLibraries = abilityLibraries;

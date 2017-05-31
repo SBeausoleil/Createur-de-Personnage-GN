@@ -57,40 +57,78 @@ public class AbilityListEditViewController implements Controller {
 	if (availableLibraries == null)
 	    return;
 
-	view.extendedLibrariesController.setLibraries(availableLibraries);
+	view.availableLibraries.setLibraries(availableLibraries);
 
 	// Drag & Drop section
-	for (AbilityLibraryViewController libraryController : view.extendedLibrariesController.getLibrariesControllers()) {
+	System.out.println("setting D&D extended.abilities...");
+	for (AbilityLibraryViewController libraryController : view.availableLibraries.getLibrariesControllers()) {
 	    for (Pair<AbilityView, AbilityViewController> abilityPair : libraryController.getViews()) {
 		// Drag start
 		abilityPair.getX().setOnDragDetected((event) -> {
-		    System.out.println("dragDetected");
+		    System.out.println("extended.ability.dragDetected");
 		    fromPlayer = false;
 		    transferedAbility = abilityPair.getY().getAbility();
 		    event.consume();
 		});
 	    }
 	}
-	view.extendedLibrariesController.getLayout().setOnDragEntered((event) -> {
-	    System.out.println("layout.onDragEntered");
+	System.out.println("setting D&D character.abilities...");
+	// FIXME all following drag operations are not detected
+	for (Pair<AbilityView, AbilityViewController> abilityPair : view.characterAbilities.getViews()) { 
+	    abilityPair.getX().setOnDragDetected((event) -> {
+		System.out.println("character.abilities.dragDetected");
+		fromPlayer = true;
+		transferedAbility = abilityPair.getY().getAbility();
+		event.consume();
+	    });
+	}
+	System.out.println("setting D&D libraries.layout entered...");
+	view.availableLibraries.getLayout().setOnDragEntered((event) -> {
+	    System.out.println("libraries.layout.onDragEntered");
 	    if (fromPlayer) // Make the border green
-		view.extendedLibrariesController.getLayout().setEffect(Effects.glow(Color.GREEN));
+		view.availableLibraries.getLayout().setEffect(Effects.glow(Color.GREEN));
 	    else // Make the border red
-		view.extendedLibrariesController.getLayout().setEffect(Effects.glow(Color.RED));
+		view.availableLibraries.getLayout().setEffect(Effects.glow(Color.RED));
 	    event.consume();
 	});
-	view.extendedLibrariesController.getLayout().setOnDragExited((event) -> {
-	    System.out.println("layout.onDragExited");
-	    view.extendedLibrariesController.getLayout().setEffect(null);
+	System.out.println("setting D&D libraries.layout exited...");
+	view.availableLibraries.getLayout().setOnDragExited((event) -> {
+	    System.out.println("libraries.layout.onDragExited");
+	    view.availableLibraries.getLayout().setEffect(null);
 	    event.consume();
 	});
-	view.extendedLibrariesController.getLayout().setOnDragDropped((event) -> {
-	    System.out.println("layout.onDragDropped");
-	    if (fromPlayer) {
-		view.abilitiesController.getAbilities().getY().remove(transferedAbility); // Remove from the character
+	System.out.println("setting D&D libraries.layout dropped...");
+	view.availableLibraries.getLayout().setOnDragDropped((event) -> {
+	    System.out.println("libraries.layout.onDragDropped");
+	    if (fromPlayer && transferedAbility != null) {
+		view.characterAbilities.getAbilities().getY().remove(transferedAbility); // Remove from the character
 		//view.abilitiesController.getView(). // Remove from the displayed list
+		resetDragAndDrop();
 	    }
+	    event.consume();
 	});
+	System.out.println("setting D&D character.view entered...");
+	view.characterAbilities.getView().setOnDragEntered((event) -> {
+	    System.out.println("characterAbilities.view.onDragEntered");
+	    if (!fromPlayer) // Make the border green
+		view.availableLibraries.getLayout().setEffect(Effects.glow(Color.GREEN));
+	    else // Make the border red
+		view.availableLibraries.getLayout().setEffect(Effects.glow(Color.RED));
+	    event.consume();
+	});
+	System.out.println("setting D&D character.view dropped...");
+	view.characterAbilities.getView().setOnDragDropped((event) -> {
+	    if (!fromPlayer && transferedAbility != null) {
+		view.characterAbilities.getAbilities().getY().add(transferedAbility);
+		resetDragAndDrop();
+	    }
+	    event.consume();
+	});
+    }
+
+    private void resetDragAndDrop() {
+	fromPlayer = false;
+	transferedAbility = null;
     }
 
     @Override
@@ -101,7 +139,7 @@ public class AbilityListEditViewController implements Controller {
 
     public void confirm() {
 	// TESTME
-	Pair<String, Collection<Ability>> abilities = view.abilitiesController.getAbilities();
+	Pair<String, Collection<Ability>> abilities = view.characterAbilities.getAbilities();
 	LinkedList<Ability> abilitiesList = new LinkedList<>();
 	abilitiesList.addAll(abilities.getY());
 	setter.set(pc, abilitiesList);
@@ -177,14 +215,14 @@ public class AbilityListEditViewController implements Controller {
 
 	updateAvailablePoints();
 	ConcretePair<String, Collection<Ability>> abilities = new ConcretePair(pcSectionTitle, getter.get(pc));
-	view.abilitiesController.setAbilities(abilities);
-	view.abilitiesController.getView().setCollapsible(false);
+	view.characterAbilities.setAbilities(abilities);
+	view.characterAbilities.getView().setCollapsible(false);
 
 	updateAvailableAbilities();
     }
 
     private void updateAvailableAbilities() {
-	for (AbilityLibraryViewController libraryController : view.extendedLibrariesController.getLibrariesControllers())
+	for (AbilityLibraryViewController libraryController : view.availableLibraries.getLibrariesControllers())
 	    for (Pair<AbilityView, AbilityViewController> view : libraryController.getViews())
 		view.getX().setDisable(!view.getY().getAbility().accept(pc));
     }

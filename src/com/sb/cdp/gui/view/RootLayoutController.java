@@ -11,8 +11,10 @@ import com.sb.cdp.gui.FXUtil;
 import com.sb.util.Pair;
 
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.TitledPane;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 
 public class RootLayoutController implements Controller {
@@ -35,6 +37,8 @@ public class RootLayoutController implements Controller {
 
     @FXML
     private BorderPane layout;
+    
+    private AnchorPane mainViewPort;
 
     private Context context;
 
@@ -52,8 +56,24 @@ public class RootLayoutController implements Controller {
 	save.setPrefWidth(Double.MAX_VALUE);
 	exit.setPrefWidth(Double.MAX_VALUE);
 
+	mainViewPort = new AnchorPane();
+	AnchorPane.setTopAnchor(mainViewPort, 0d);
+	AnchorPane.setBottomAnchor(mainViewPort, 0d);
+	AnchorPane.setLeftAnchor(mainViewPort, 0d);
+	AnchorPane.setRightAnchor(mainViewPort, 0d);
+	layout.setCenter(mainViewPort);
+	
 	// Create the context
-	context = new Context(layout::setCenter);
+	context = new Context(this::setMainView);
+    }
+
+    public <N extends Node> void setMainView(N node) {
+	AnchorPane.setTopAnchor(node, 0d);
+	AnchorPane.setBottomAnchor(node, 0d);
+	AnchorPane.setLeftAnchor(node, 0d);
+	AnchorPane.setRightAnchor(node, 0d);
+	mainViewPort.getChildren().clear();
+	mainViewPort.getChildren().add(node);
     }
 
     @FXML

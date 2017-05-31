@@ -21,9 +21,9 @@ public class AbilityListEditView extends VBox {
 
     HBox horizontal;
     //private AnchorPane abilities;
-    AbilityLibraryViewController abilitiesController;
+    AbilityLibraryViewController characterAbilities;
     //private AnchorPane extendedAbilityLibraryView;
-    ExtendedAbilityLibraryViewController extendedLibrariesController;
+    ExtendedAbilityLibraryViewController availableLibraries;
 
     ButtonBar buttons;
     Button confirm;
@@ -37,12 +37,12 @@ public class AbilityListEditView extends VBox {
 
 	ConcretePair<AnchorPane, AbilityLibraryViewController> abilities = FXUtil.abilityLibraryView(new Library("", Ability.class));
 	horizontal.getChildren().add(abilities.getX());
-	abilitiesController = abilities.getY();
+	characterAbilities = abilities.getY();
 
 	LinkedList<Pair<String, Collection<Ability>>> abilityLibs = new LinkedList();
 	ConcretePair<VBox, ExtendedAbilityLibraryViewController> extended = FXUtil.extendedAbilityLibraryView(abilityLibs);
 	horizontal.getChildren().add(extended.getX());
-	extendedLibrariesController = extended.getY();
+	availableLibraries = extended.getY();
 
 	buttons = new ButtonBar();
 	confirm = new Button("Confirmer");
@@ -50,5 +50,6 @@ public class AbilityListEditView extends VBox {
 	buttons.getButtons().add(confirm);
 	buttons.getButtons().add(cancel);
 	getChildren().add(buttons);
+	
     }
 }
