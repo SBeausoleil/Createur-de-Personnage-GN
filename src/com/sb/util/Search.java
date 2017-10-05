@@ -19,6 +19,10 @@ public class Search {
     public static boolean debug = false;
 
     private int idGiver = 0;
+    /**
+     * Indicates to the subthreads that they should stop and die.
+     * Once set to true, this Search object is useless.
+     */
     private boolean die = false;
     private boolean resetWhenFinalizing = false;
 
@@ -212,12 +216,6 @@ public class Search {
 		    libraryController.getList().getItems().add(entry.getValue(), entry.getKey().getX());
 		    displayed[entry.getValue()] = true;
 		}
-	}
-
-	@Override
-	protected void finalize() {
-	    // TODO delete me when certain that finalization is always ready correctly.
-	    System.out.println("SearchThread " + id + " finalized");
 	}
 
 	private void debugPrint(String msg) {

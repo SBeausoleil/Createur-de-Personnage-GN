@@ -25,8 +25,6 @@ import com.sb.util.DraftModel;
 import com.sb.util.Getter;
 import com.sb.util.Pair;
 import com.sb.util.Setter;
-import com.sb.util.performance.MasterObserver;
-import com.sb.util.performance.MilliStopWatch;
 
 import javafx.fxml.FXMLLoader;
 import javafx.scene.layout.AnchorPane;
@@ -39,33 +37,23 @@ import javafx.scene.layout.VBox;
  * @author Samuel Beausoleil
  */
 public final class FXUtil {
-    public static MasterObserver<MilliStopWatch> abilityLibraryObserver = new MasterObserver("abilityLibraryView");
 
     public static ConcretePair<TitledListView<AbilityView>, AbilityLibraryViewController> abilityLibraryView(
 	    Pair<String, Collection<Ability>> library) {
-	MilliStopWatch stopWatch = new MilliStopWatch();
-	stopWatch.start();
 
 	ConcretePair<TitledListView<AbilityView>, AbilityLibraryViewController> pair = new ConcretePair<>();
 	pair.setX(new TitledListView());
 	pair.setY(new AbilityLibraryViewController(pair.getX()));
 	pair.getY().setAbilities(library);
 
-	stopWatch.stop();
-	abilityLibraryObserver.addObserver(stopWatch);
-
 	return pair;
     }
 
-    public static MasterObserver<MilliStopWatch> abilityListEditObserver = new MasterObserver("abilityListEditView");
 
     public static ConcretePair<AbilityListEditView, AbilityListEditViewController> abilityListEditView(RPG rpg,
 	    User user,
 	    PlayerCharacter pc, String pcSectionTitle, Getter<PlayerCharacter, List<Ability>> getter,
 	    Setter<PlayerCharacter, List<Ability>> setter) {
-
-	MilliStopWatch stopWatch = new MilliStopWatch();
-	stopWatch.start();
 
 	AbilityListEditView view = new AbilityListEditView();
 	AbilityListEditViewController controller = new AbilityListEditViewController(view);
@@ -77,28 +65,16 @@ public final class FXUtil {
 	controller.setSetter(setter);
 	controller.setPc(pc);
 
-	stopWatch.stop();
-	abilityListEditObserver.addObserver(stopWatch);
-
 	return new ConcretePair<>(view, controller);
     }
 
-    public static MasterObserver<MilliStopWatch> abilityObserver = new MasterObserver("abilityView");
-
     public static ConcretePair<AbilityView, AbilityViewController> abilityView(Ability ability) {
-	MilliStopWatch stopWatch = new MilliStopWatch();
-	stopWatch.start();
-
 	ConcretePair<AbilityView, AbilityViewController> pair = new ConcretePair<>();
 	AbilityView view = new AbilityView();
 	AbilityViewController controller = new AbilityViewController(view);
 	controller.setAbility(ability);
 	pair.setX(view);
 	pair.setY(controller);
-
-	stopWatch.stop();
-	abilityObserver.addObserver(stopWatch);
-
 	return pair;
 
     }
@@ -121,14 +97,8 @@ public final class FXUtil {
 	}
     }
 
-    public static MasterObserver<MilliStopWatch> extendedAbilityLibraryObserver = new MasterObserver(
-	    "extendedAbilityLibraryView");
-
     public static ConcretePair<VBox, ExtendedAbilityLibraryViewController> extendedAbilityLibraryView(
 	    Collection<Pair<String, Collection<Ability>>> abilities) {
-
-	MilliStopWatch stopWatch = new MilliStopWatch();
-	stopWatch.start();
 
 	try {
 	    ConcretePair<VBox, ExtendedAbilityLibraryViewController> pair = new ConcretePair<>();
@@ -137,9 +107,6 @@ public final class FXUtil {
 	    pair.setX(loader.load());
 	    pair.setY(loader.getController());
 	    pair.getY().setLibraries(abilities);
-
-	    stopWatch.stop();
-	    extendedAbilityLibraryObserver.addObserver(stopWatch);
 
 	    return pair;
 	} catch (IOException e) {
